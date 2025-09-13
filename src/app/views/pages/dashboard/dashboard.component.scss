@@ -1,0 +1,48 @@
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+
+.grid-card-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden; /* Evita que el icono se desborde */
+  min-height: 70px;  /* Asegura altura uniforme para todas las tarjetas */
+}
+
+.material-icons {
+  flex-shrink: 0;     /* Evita que el icono se reduzca */
+  font-size: 36px;
+  margin-right: 15px;
+  color: #3f51b5;
+}
+
+.text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

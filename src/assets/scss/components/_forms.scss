@@ -1,0 +1,122 @@
+// Forms 
+
+.form-control-xs,
+.form-select-xs {
+  padding: $input-padding-y-xs $input-padding-x-xs;
+  font-size: $input-font-size-xs;
+}
+
+.form-control-xs {
+  + .input-group-text {
+    padding-top: $input-padding-y-xs;
+    padding-bottom: $input-padding-y-xs;
+  }
+}
+
+.form-check-input {
+  margin-top: .13em; // height adjustment
+}
+
+.input-group-text {
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.input-group {
+  // To fix Bootstrap-datepicker in RTL
+  direction: ltr;
+}
+
+// For RTL
+[type="tel"], 
+[type="url"], 
+[type="email"], 
+[type="number"] {
+  direction: ltr;
+}
+
+.p-top {
+  padding-top: 30px;
+}
+
+.header {
+  height: 0px;
+}
+
+.margin-button{
+  margin-right: 10px;
+}
+
+.top-rotar-list{
+    margin-top: 22px;
+}
+
+.mat-tab-body-content {
+    overflow: hidden !important;
+}
+
+.padding-top-input{
+  padding-top: 15px;
+}
+
+.padding-top-slider{
+  padding-top: 30px;
+}
+
+.text-aling-center{
+  text-align: center;
+}
+
+.value-slider{
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: #2196F3 !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: #2196F3 !important;
+}
+
+.mat-slider.mat-accent .mat-slider-track-fill, .mat-slider.mat-accent .mat-slider-thumb, .mat-slider.mat-accent .mat-slider-thumb-label {
+    background-color: cornflowerblue !important;
+}
+
+mat-slider {
+  width: 300px;
+}
+
+.habladores{
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.font-size-14{
+  font-size: 12px;
+}
+
+.heigt-start-event{
+  height: 32px;
+}
+
+.compact-time .mat-form-field-wrapper {
+  align-items: center;
+  display: flex;
+  height: 56px; /* Asegura consistencia con otros campos */
+}
+
+.compact-time input[type="time"] {
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 36px; /* Ajusta para igualar altura visual */
+  padding: 0 12px;
+}
+
+
+
+

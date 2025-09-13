@@ -1,0 +1,61 @@
+<div class="row w-100 mx-0 auth-page">
+  <div class="col-md-8 col-xl-6 mx-auto">
+    <div class="card">
+      <div class="row">
+        <div class="col-md-4 pe-md-0">
+          <div class="auth-side-wrapper" [ngStyle]="{ 'background-image': 'url(https://via.placeholder.com/219x452)' }">
+
+          </div>
+        </div>
+        <div class="col-md-8 ps-md-0">
+
+          <div class="auth-form-wrapper px-4 py-5">
+            <a routerLink="." class="nobleui-logo d-block mb-2">Logo<span>Aqui</span></a>
+            <h5 class="text-muted fw-normal mb-4">Bienvenido!</h5>
+            <div *ngIf="inputError"
+            class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
+              <div [innerHtml]="inputError"></div>
+            </div>
+            <form name="loginForm" #loginForm="ngForm" (ngSubmit)="loginForm.valid && onLoggedin(loginForm)"
+              class="forms-sample">
+              <div class="form-group mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email</label>
+                <input name="emailInput" #emailInput="ngModel" [(ngModel)]="email" type="text" class="form-control"
+                [ngClass]="{'ng-dirty ng-invalid' : emailInput.errors && ( emailInput.dirty || emailInput.touched || loginForm.submitted) }"
+                  id="exampleInputEmail1" placeholder="Email" email required>
+                <div *ngIf="emailInput.invalid && loginForm.submitted" class="invalid-feedback">
+                  <div *ngIf="emailInput.errors?.required">Campo requerido.
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input name="passwordInput" #passwordInput="ngModel" [(ngModel)]="password" type="password"
+                [ngClass]="{'ng-dirty ng-invalid' : passwordInput.errors && ( passwordInput.dirty || passwordInput.touched || loginForm.submitted) }"
+                  class="form-control" placeholder="Password" required>
+                <div *ngIf="passwordInput.invalid && loginForm.submitted" class="invalid-feedback">
+                  <div *ngIf="passwordInput.errors?.required">Campo requerido.
+                  </div>
+                </div>
+              </div>
+             <!--<div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="authCheck">
+                <label class="form-check-label" for="authCheck">
+                  Remember me
+                </label>
+              </div>-->
+              <div>
+                <button type="submit" class="btn btn-primary me-2 mb-2 mb-md-0">Iniciar sesión</button>
+                <!--<button type="button" class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">
+                  <i class="feather icon-twitter btn-icon-prepend"></i>
+                  Login with twitter
+                </button>-->
+              </div> 
+              <a routerLink="/" class="d-block mt-3 text-muted">¿Olvidaste tú password?</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

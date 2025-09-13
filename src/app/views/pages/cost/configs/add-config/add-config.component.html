@@ -1,0 +1,292 @@
+<div class="main-content">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Configuración</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Crear</li>
+    </ol>
+  </nav>
+ 
+<div class="card">
+    <div class="card-body">
+      <form [formGroup]="form">
+        <mat-tab-group animationDuration="0ms">
+          <mat-tab label="Perfil de la Empresa">
+            <div class="row padding-top-input">
+              <div class="col-12">
+                  <mat-form-field>
+                      <mat-label>Nombre</mat-label>
+                      <input type="text" matInput formControlName="nombre" maxlength="25" [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" >
+                      <mat-error *ngIf="submitted && f.nombre.errors">
+                          <mat-error *ngIf="f.nombre.errors.required">Ingrese nombre del proyecto</mat-error>
+                      </mat-error>
+                  </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field>
+                  <mat-label>Tipo de Empresa</mat-label>
+                  <mat-select formControlName="tipo">
+                    <mat-option value="Pyme">Pyme</mat-option>
+                    <mat-option value="Grande">Grande</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="submitted && f.tipo.errors">
+                    <mat-error *ngIf="f.tipo.errors.required">Seleccione el tipo de empresa</mat-error>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-4">
+                  <mat-form-field>
+                      <mat-label>Sector</mat-label>
+                      <input matInput formControlName="sector" maxlength="100" placeholder="Sector al que pertenece" [ngClass]="{ 'is-invalid': submitted && f.sector.errors }">
+                      <mat-error *ngIf="submitted && f.sector.errors">
+                          <mat-error *ngIf="f.sector.errors.required">Ingrese el sector al que pertenece</mat-error>
+                      </mat-error>
+                  </mat-form-field>
+              </div>
+      
+              <div class="col-4">
+                  <mat-form-field>
+                      <mat-label>Nro. Empleados</mat-label>
+                      <input type="number" matInput formControlName="empleados" maxlength="5" placeholder="# empleados" [ngClass]="{ 'is-invalid': submitted && f.empleados.errors }">
+                      <mat-error *ngIf="submitted && f.empleados.errors">
+                          <mat-error *ngIf="f.empleados.errors.required">Ingrese la cantidad de empleados</mat-error>
+                      </mat-error>
+                  </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                  <mat-form-field>
+                      <mat-label>RIF / ID Fiscal</mat-label>
+                      <input matInput formControlName="rif" maxlength="25" placeholder="RIF / ID Fiscal" [ngClass]="{ 'is-invalid': submitted && f.rif.errors }">
+                      <mat-error *ngIf="submitted && f.rif.errors">
+                          <mat-error *ngIf="f.rif.errors.required">Ingrese el RIF de la empresa</mat-error>
+                      </mat-error>
+                  </mat-form-field>
+              </div>
+
+              <div class="col-4">
+                <mat-form-field>
+                  <mat-label>Período Contable</mat-label>
+                  <mat-select formControlName="periodo">
+                    <mat-option value="Mensual">Mensual</mat-option>
+                    <mat-option value="Trimestral">Trimestral</mat-option>
+                    <mat-option value="Semestral">Semestral</mat-option>
+                    <mat-option value="Anual">Anual</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="submitted && f.periodo.errors">
+                    <mat-error *ngIf="f.periodo.errors.required">Seleccione el período contable</mat-error>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-4">
+                <mat-form-field>
+                  <mat-label>Monedas de Operación</mat-label>
+                  <mat-select formControlName="moneda">
+                    <mat-option value="Bs">Bolívares</mat-option>
+                    <mat-option value="Dólares">Dólares</mat-option>
+                    <mat-option value="Euro">Euro</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="submitted && f.moneda.errors">
+                    <mat-error *ngIf="f.moneda.errors.required">Seleccione el período contable</mat-error>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                  <mat-form-field>
+                      <mat-label>Dirección Fiscal</mat-label>
+                      <textarea matInput formControlName="direccion" maxlength="1000" placeholder="Dirección Fiscal" [ngClass]="{ 'is-invalid': submitted && f.direccion.errors }"></textarea>
+                      <mat-error *ngIf="submitted && f.direccion.errors">
+                          <mat-error *ngIf="f.direccion.errors.required">Ingrese la Dirección Fiscal</mat-error>
+                      </mat-error>
+                  </mat-form-field>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Parámetros Operativos">
+            <div class="row padding-top-input">
+              <div class="col-3">
+                <mat-form-field>
+                  <mat-label>Unidad de Medida</mat-label>
+                  <mat-select formControlName="medida">
+                    <mat-option value="Metros">Metros</mat-option>
+                    <mat-option value="kilos">Kilos</mat-option>
+                    <mat-option value="Toneladas">Toneladas</mat-option>
+                    <mat-option value="Gramos">Gramos</mat-option>
+                    <mat-option value="Litros">Litros</mat-option>
+                    <mat-option value="Unidades">Unidades</mat-option>
+                    <mat-option value="Paquetes">Paquetes</mat-option>
+                    <mat-option value="Cajas">Cajas</mat-option>
+                    <mat-option value="Bultos">Bultos</mat-option>
+                    <mat-option value="Horas máquina">Horas máquina</mat-option>
+                    <mat-option value="Horas hombres">Horas hombres</mat-option>
+                    <mat-option value="Turnos">Turnos</mat-option>
+                    <mat-option value="Kilómetros">Kilómetros</mat-option>
+                    <mat-option value="Transacciones">Transacciones - Operaciones</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="submitted && f.medida.errors">
+                  <mat-error *ngIf="f.medida.errors.required">Seleccione la unidad de medida</mat-error>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                  <mat-form-field>
+                    <mat-label>Tipo</mat-label>
+                    <input matInput formControlName="type_machine" maxlength="50" 
+                    [ngClass]="{ 'is-invalid': submitted && f.type_machine.errors }"
+                    style="text-transform: uppercase;">
+                    <mat-error *ngIf="submitted && f.type_machine.errors">
+                        <mat-error *ngIf="f.type_machine.errors.required">Ingrese el tipo</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+              </div>
+              <div class="col-3">
+                  <mat-form-field>
+                    <mat-label>Descripción</mat-label>
+                    <input matInput formControlName="description" maxlength="100" 
+                    [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+                    style="text-transform: uppercase;">
+                    <mat-error *ngIf="submitted && f.description.errors">
+                        <mat-error *ngIf="f.description.errors.required">Ingrese la descripción</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-3">
+                  <mat-form-field>
+                    <mat-label>Producción Máx / Horas</mat-label>
+                    <input type="number" matInput formControlName="productMax" maxlength="3"  [ngClass]="{ 'is-invalid': submitted && f.productMax.errors }">
+                    <mat-error *ngIf="submitted && f.productMax.errors">
+                        <mat-error *ngIf="f.productMax.errors.required">Ingrese Producción Máxima</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+              </div>
+              <div class="col-3">
+                  <mat-form-field>
+                    <mat-label>Horas Máximas</mat-label>
+                    <input type="number" matInput formControlName="hoursMax" maxlength="3"  [ngClass]="{ 'is-invalid': submitted && f.hoursMax.errors }">
+                    <mat-error *ngIf="submitted && f.hoursMax.errors">
+                        <mat-error *ngIf="f.hoursMax.errors.required">Ingrese Horas Máximas</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+              </div>
+              <div class="col-3">
+                  <mat-form-field>
+                    <mat-label>Horas de uso</mat-label>
+                    <input type="number" matInput formControlName="hoursUse" maxlength="3" [ngClass]="{ 'is-invalid': submitted && f.hoursUse.errors }">
+                    <mat-error *ngIf="submitted && f.hoursUse.errors">
+                        <mat-error *ngIf="f.hoursUse.errors.required">Ingrese Horas de Uso</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+              </div>
+              <div class="col-1">
+                <button mat-icon-button color="primary" (click)="addMachine()">
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tablas agrupadas por unidad de medida -->
+            <div *ngFor="let group of groupedCapacities" class="group-table">
+              <h3>Unidad de Medida: {{group.medida}}</h3>
+              
+              <table mat-table [dataSource]="group.machines" class="mat-elevation-z2">
+                <!-- Columnas -->
+                <ng-container matColumnDef="tipo">
+                  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                  <td mat-cell *matCellDef="let machine">{{machine.tipo}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let machine">{{machine.descripcion}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="prodMaxHoras">
+                  <th mat-header-cell *matHeaderCellDef>Prod. Máx/Hora</th>
+                  <td mat-cell *matCellDef="let machine">{{machine.prodMaxHoras}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="horasMax">
+                  <th mat-header-cell *matHeaderCellDef>Horas Máx</th>
+                  <td mat-cell *matCellDef="let machine">{{machine.horasMax}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="horasUso">
+                  <th mat-header-cell *matHeaderCellDef>Horas Uso</th>
+                  <td mat-cell *matCellDef="let machine">{{machine.horasUso}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['tipo', 'descripcion', 'prodMaxHoras', 'horasMax', 'horasUso']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['tipo', 'descripcion', 'prodMaxHoras', 'horasMax', 'horasUso'];"></tr>
+              </table>
+
+              <!-- Resumen de capacidades por grupo -->
+              <div class="capacity-summary">
+                <h4>Resumen de Capacidades ({{group.medida}})</h4>
+                <p><strong>Capacidad Instalada:</strong> {{group.capacities.installedCapacity}}</p>
+                <p><strong>Capacidad de Producción:</strong> {{group.capacities.productionCapacity}}</p>
+                <p><strong>Capacidad Ociosa:</strong> {{group.capacities.idleCapacity }}</p>
+                <p><strong>Utilización:</strong> {{group.capacities.utilizationPercentage }}%</p>
+              </div>
+            </div>
+
+            <!-- Resumen General -->
+            <div *ngIf="groupedCapacities.length > 0" class="total-summary">
+              <h3>Resumen General</h3>
+              <p><strong>Capacidad Instalada Total:</strong> {{capacidadInstalada }}</p>
+              <p><strong>Capacidad de Producción Total:</strong> {{capacidadProduccion }}</p>
+              <p><strong>Capacidad Ociosa Total:</strong> {{capacidadOciosa }}</p>
+              <p><strong>Utilización Total:</strong> {{utilizacion }}%</p>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+  
+
+        <div class="row">
+          <div class="col-12">
+            <div class="btn-flex-end">
+              <div class="margin-button">
+                <button mat-raised-button class="button-add-color" (click)="back()">
+                  <div class="btn-content">
+                    <div class="button-txt">
+                      Regresar
+                    </div>
+                    <div class="icon">
+                      <mat-icon>undo</mat-icon>
+                    </div>
+                  </div>
+                </button>
+              </div>  
+        
+              <button  mat-raised-button [disabled]="loading" class="button-add-color" (click)="onSubmit()">
+                <div class="btn-content">
+                    <div class="button-txt">
+                      Guardar
+                    </div>
+                    <div class="icon">
+                      <mat-icon>save</mat-icon>
+                    </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+

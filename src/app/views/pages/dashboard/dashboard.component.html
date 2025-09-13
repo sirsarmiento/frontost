@@ -1,0 +1,46 @@
+<div class="container mt-4">
+
+  <!-- Bienvenida centrada -->
+  <div class="text-center mb-4" *ngIf="user">
+    <h4>Bienvenido {{ user.firstName + ' ' + user.lastName }}</h4>
+  </div>
+
+  <!-- Grid de tarjetas centrado -->
+  <div class="d-flex justify-content-center">
+    <div class="grid-card-container">
+
+      <div class="card">
+        <span class="material-icons">assignment</span>
+        <div class="text">A: {{ processes }}</div>
+      </div>
+
+      <div class="card">
+        <span class="material-icons">warning</span>
+        <div class="text">B: {{ risks }}</div>
+      </div>
+
+      <div class="card">
+        <span class="material-icons">security</span>
+        <div class="text">C: {{ controls }}</div>
+      </div>
+
+      <div class="card">
+        <span class="material-icons">event</span>
+        <div class="text">D: {{ events }}</div>
+      </div>
+
+      <div class="card">
+        <span class="material-icons">description</span>
+        <div class="text">E: {{ plans }}</div>
+      </div>
+
+      <div class="card">
+        <span class="material-icons">verified_user</span>
+        <div class="text">F: {{ evaluations }}</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+

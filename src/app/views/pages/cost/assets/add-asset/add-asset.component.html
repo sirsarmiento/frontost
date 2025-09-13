@@ -1,0 +1,108 @@
+<div class="main-content">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Activo</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Crear</li>
+    </ol>
+  </nav>
+ 
+  <div class="card">
+    <div class="card-body">        
+      <form [formGroup]="form"> 
+        
+        <div class="row padding-top-input">
+          <div class="col-12">
+              <mat-form-field>
+                  <mat-label>Nombre de Activo</mat-label>
+                  <input type="number" matInput formControlName="asset_name" maxlength="250" [ngClass]="{ 'is-invalid': submitted && f.asset_name.errors }" >
+                  <mat-error *ngIf="submitted && f.asset_name.errors">
+                      <mat-error *ngIf="f.asset_name.errors.required">Ingrese el Nombre de Activo</mat-error>
+                  </mat-error>
+              </mat-form-field>
+          </div>
+        </div>
+
+      <div class="row">
+          <div class="col-12">
+              <mat-form-field>
+                  <mat-label>Costo Inicial</mat-label>
+                  <input type="number" matInput formControlName="costo_inicial" maxlength="250" [ngClass]="{ 'is-invalid': submitted && f.costo_inicial.errors }" >
+                  <mat-error *ngIf="submitted && f.costo_inicial.errors">
+                      <mat-error *ngIf="f.costo_inicial.errors.required">Ingrese el costo Inicial</mat-error>
+                  </mat-error>
+              </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+              <mat-form-field>
+                  <mat-label>Valor Residual</mat-label>
+                  <input type="number" matInput formControlName="valor_residual" maxlength="250" [ngClass]="{ 'is-invalid': submitted && f.valor_residual.errors }" >
+                  <mat-error *ngIf="submitted && f.valor_residual.errors">
+                      <mat-error *ngIf="f.valor_residual.errors.required">Ingrese el Valor Residual</mat-error>
+                  </mat-error>
+              </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+              <mat-form-field>
+                  <mat-label>Vida Útil (Años)</mat-label>
+                  <input type="number" matInput formControlName="vida_util" maxlength="250" [ngClass]="{ 'is-invalid': submitted && f.vida_util.errors }" >
+                  <mat-error *ngIf="submitted && f.vida_util.errors">
+                      <mat-error *ngIf="f.vida_util.errors.required">Ingrese la Vida Útil (Años)</mat-error>
+                  </mat-error>
+              </mat-form-field>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-2">
+              <mat-form-field>
+                <mat-label>Fecha de Adquisición</mat-label>
+                <input formControlName="billDate" matInput [matDatepicker]="billDate" readonly>
+                <mat-datepicker-toggle matSuffix [for]="billDate"></mat-datepicker-toggle>
+                <mat-datepicker #billDate></mat-datepicker>
+              </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="btn-flex-end">
+              <div class="margin-button">
+                <button mat-raised-button class="button-add-color" (click)="back()">
+                  <div class="btn-content">
+                    <div class="button-txt">
+                      Regresar
+                    </div>
+                    <div class="icon">
+                      <mat-icon>undo</mat-icon>
+                    </div>
+                  </div>
+                </button>
+              </div>  
+        
+              <button  mat-raised-button [disabled]="loading" class="button-add-color" (click)="onSubmit()">
+                <div class="btn-content">
+                    <div class="button-txt">
+                      Guardar
+                    </div>
+                    <div class="icon">
+                      <mat-icon>save</mat-icon>
+                    </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+

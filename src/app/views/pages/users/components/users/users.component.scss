@@ -1,0 +1,127 @@
+@media screen and (max-width: 800px) {
+    .desktop-hidden {
+      display: initial;
+    }
+    .mobile-hidden {
+      display: none;
+    }
+  }
+  @media screen and (min-width: 800px) {
+    .desktop-hidden {
+      display: none;
+    }
+    .mobile-hidden {
+      display: initial;
+    }
+  }
+
+table {
+  width: 100%;
+}
+  
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.title{
+  padding-top: 10px;
+  font-size: 14px;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+  
+.filter-class{
+  width: 50%;
+}
+
+th.mat-header-cell {
+  color: #FFF;
+  background-color: #023E8A;
+  font-size: 18px;
+  td.mat-cell, th.mat-header-cell {
+    text-align: center;
+    justify-content:center;
+  }
+  .mat-sort-header-arrow {
+    color: #fff !important;
+  }
+}
+
+//Usado para los casos donde uso dos tablas una sobre otra. La que se muestra usara el azul claro de abajo y la que se oculta el azul oscuro del codigo de arriba
+.mat-header-cell-init {
+  th.mat-header-cell {
+      background-color: #2196F3 !important;
+  }
+}
+
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  .mat-table{
+    width: 100%;
+    max-width: 100%;
+    display: table;
+    border-collapse: collapse;
+    margin: 0px;
+  }
+  .mat-row,
+  .mat-header-row {
+    display: table-row;
+  }
+  .mat-cell,
+  .mat-header-cell {
+    word-wrap: initial;
+    display: table-cell;
+    padding: 0px 5px;
+    line-break: unset;
+    width: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+  }
+}
+
+.selected {
+  font-weight: bold;
+}
+
+.mat-row .mat-cell {
+  cursor: pointer;
+}
+
+.mat-row:hover .mat-cell {
+  border-bottom: 1.5px solid #023e8a;
+  border-top: 1.5px solid #023e8a;
+}
+
+.table-vertical-scroll {
+  height: 500px;
+  overflow: auto;
+}
+
+/** Centra los mensajes No hay datos que coincidan con en las lista **/
+.msg-no-found{
+  text-align: center; 
+}
+
+.align-right{
+  text-align: end;
+}
+
+.align-radio-button{
+  margin-left: 35px;
+  margin-right: 15px;
+}
+
+//Mat-Table
+
+.mat-cell {
+  font-size: smaller;
+  min-height: 12px;
+}
+
+tr.mat-row, tr.mat-footer-row {
+  height: 40px !important;
+}

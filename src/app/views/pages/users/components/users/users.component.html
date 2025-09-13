@@ -1,0 +1,98 @@
+<div class="main-content">
+  <div class="row header">
+      <div class="col-4">
+        <nav class="page-breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink=".">Usuarios</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Listado</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="col-8">
+        <div class="btn-flex-end">
+            <button mat-raised-button class="button-add-color" (click)="openAdd()">
+              <div class="btn-content">
+                <div class="button-txt">
+                  Agregar
+                </div>
+                <div class="icon">
+                  <mat-icon>add_circle_outline</mat-icon>
+                </div>
+              </div>
+            </button>
+          </div>
+      </div>
+    </div>
+
+  <div class="row" [hidden]="loading">
+    <div class="col-8">
+      <div class="filter-class p-top">
+        <mat-form-field appearance="standard">
+          <mat-label>Buscar</mat-label>
+          <input matInput (keyup)="applyFilter($event)"  #input>
+        </mat-form-field>
+      </div>
+    </div>
+ 
+    <div class="mat-elevation-z8 ">
+      <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>
+            <td mat-cell *matCellDef="let row"> {{row.username}} </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="fullName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre y Apellido</th>
+            <td mat-cell *matCellDef="let row"> {{row.fullName}} </td>  
+          </ng-container>
+
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
+            <td mat-cell *matCellDef="let row"> {{row.position.label}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dependence">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Dependencia</th>
+            <td mat-cell *matCellDef="let row"> {{row.dependence.Descripcion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+            <td mat-cell *matCellDef="let row"> {{row.status.label}} </td>
+          </ng-container>   
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button class="edit-color" matTooltip="Editar"     
+              (click)="onEdit(row)">
+                  <mat-icon class="font-weight-boldest">create</mat-icon>
+              </button>
+              <button mat-icon-button class="delete-color" matTooltip="Eliminar"
+              (click)="onDelele(row.id, row.fullName)"> 
+                <mat-icon class="font-weight-boldest">delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" 
+            (click)="selectedRow = selectedRow === row ? null : row" [ngClass]="{ 'selected': row === selectedRow }"
+          > 
+          </tr>
+  
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell msg-no-found" colspan="8">No hay datos que coincidan"</td>
+          </tr>
+        </table>
+      </div>
+      <mat-paginator [pageSizeOptions]="[10, 20, 50]" aria-label="Select page of users"></mat-paginator>
+    </div>
+  </div>

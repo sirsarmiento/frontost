@@ -1,0 +1,57 @@
+<div class="main-content">
+    <div class="row">
+      <div class="col-11 msg-no-found">
+          <h4>{{title}}</h4>
+      </div>
+      <div class="col-1 align-right">
+          <button mat-icon-button class="delete-color" matTooltip="Cerrar"
+          (click)="closeModal()"> 
+              <mat-icon class="font-weight-boldest">close</mat-icon>
+          </button>
+      </div>
+    </div> 
+    <div class="card">
+      <div class="card-body">
+        <form [formGroup]="form">
+          <div class="row">
+            <div class="col-12">
+                <mat-form-field>
+                    <mat-label>Peso Diseño</mat-label>
+                    <input type="number" matInput formControlName="design" [ngClass]="{ 'is-invalid': submitted && f.design.errors }" >
+                    <mat-error *ngIf="submitted && f.design.errors">
+                        <mat-error *ngIf="f.design.errors.required">Ingrese peso</mat-error>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+                <mat-form-field>
+                    <mat-label>Peso Ejecución</mat-label>
+                    <input type="number" matInput formControlName="execution" [ngClass]="{ 'is-invalid': submitted && f.execution.errors }" >
+                    <mat-error *ngIf="submitted && f.execution.errors">
+                        <mat-error *ngIf="f.execution.errors.required">Ingrese peso</mat-error>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="btn-flex-end">
+                <button  mat-raised-button [disabled]="loading" class="button-add-color" (click)="onSubmit()">
+                  <div class="btn-content">
+                      <div class="button-txt">
+                        Actualizar
+                      </div>
+                      <div class="icon">
+                        <mat-icon>save</mat-icon>
+                      </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
