@@ -267,7 +267,12 @@ export class AddConfigComponent implements OnInit {
         this.f.periodo.setValue(data.periodo);
         this.f.direccion.setValue(data.direccion);
         this.f.moneda.setValue(data.moneda);
+        this.machines = data.parametros;
         this.id = data.id;
+
+        this.calculateGroupedCapacities();
+        this.refreshList();
+        this.clearForm();
       }
     });
   }
@@ -316,11 +321,11 @@ export class AddConfigComponent implements OnInit {
 
     console.log(perfil);
 
-    // if(this.id == 0 || this.id == undefined){
-    //   this.configService.add(perfil);
-    // }else{
-    //   this.configService.update(this.id, perfil);
-    // }
+    if(this.id == 0 || this.id == undefined){
+      this.configService.add(perfil);
+    }else{
+      this.configService.update(this.id, perfil);
+    }
 
   }
 }

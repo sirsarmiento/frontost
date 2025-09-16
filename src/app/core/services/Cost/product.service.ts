@@ -6,26 +6,24 @@ import { environment } from '../../../../environments/environment';
 
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { Config } from '../../models/Cost/config';
+import { Product } from '../../models/Cost/product';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConfigService extends HttpService {
-  private sharingObservable: BehaviorSubject<Config> = 
-    new BehaviorSubject<Config>(this.getEmptyConfig());
+export class ProductService extends HttpService {
+  private sharingObservable: BehaviorSubject<Product> = 
+    new BehaviorSubject<Product>(this.getEmptyConfig());
 
-  getEmptyConfig(): Config {
+  getEmptyConfig(): Product {
     return {
       id: 0,
       nombre: '',
-      tipo: '',
-      sector: '',
-      empleados: 0,
-      rif: '',
-      periodo: '',
-      direccion: '',
-      moneda: '',
+      sku: '',
+      medida: '',
+      clasificacion: '',
+      descripcion: ''
     };
 
   }
@@ -41,7 +39,7 @@ export class ConfigService extends HttpService {
     return this.sharingObservable.asObservable();
   }
 
-  set sharingData (data: Config){
+  set sharingData (data: Product){
     this.sharingObservable.next(data);
   }
 
@@ -50,7 +48,7 @@ export class ConfigService extends HttpService {
   }
 
   getAll() {
-      return this.get(environment.apiUrl, '/perfil');
+      return this.get(environment.apiUrl, '/productos');
   }
 
   /**
@@ -59,9 +57,9 @@ export class ConfigService extends HttpService {
    */
   async add(data: any) {
     try {
-      await firstValueFrom(this.post(environment.apiUrl, '/perfil', data));
-      this.toastrService.success('Perfil registrado con éxito.');
-      this.router.navigate(['/configs']);
+      await firstValueFrom(this.post(environment.apiUrl, '/producto', data));
+      this.toastrService.success('Producto registrado con éxito.');
+      this.router.navigate(['/products']);
     } catch (error: any) {        
       if (error.status == 409) {
         this.toastrService.error('', error.error.msg);
@@ -74,24 +72,10 @@ export class ConfigService extends HttpService {
 
   async update(id: number, data: any) {
     try {
-      await firstValueFrom(this.put(environment.apiUrl, `/perfil/${id}`, data));
+      await firstValueFrom(this.put(environment.apiUrl, `/producto/${id}`, data));
       this.resetData(); //// Resetear los valores del observable después de actualizar
       this.toastrService.success('Perfil actualizado con éxito.');
-      this.router.navigate(['/configs']);
-    } catch (error: any) {
-      if (error.status == 409) {
-        this.toastrService.error('', error.msg);
-      }
-      if (error.status != 500) {
-        this.toastrService.error('', 'Ha ocurrido un error. Intente más tarde.');
-      }
-    }
-  }
-
-  async deleteUser(id: number, userId: number) {
-    try {
-      await firstValueFrom(this.delete(environment.apiUrl, `/config/${id}/remove-user/${userId}`));
-      this.toastrService.success('Responsable eliminado con éxito.');
+      this.router.navigate(['/products']);
     } catch (error: any) {
       if (error.status == 409) {
         this.toastrService.error('', error.msg);

@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Config } from 'src/app/core/models/Cost/config';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfigService } from 'src/app/core/services/Cost/config.service';
+import { Product } from 'src/app/core/models/Cost/product';
+import { ProductService } from 'src/app/core/services/Cost/product.service';
 
 @Component({
   selector: 'app-product',
@@ -15,32 +15,32 @@ export class ProductComponent implements OnInit {
 
   loading = true;
   selectedRow;
-  displayedColumns: string[] = ['iduser', 'name','actions'];
-  dataSource: MatTableDataSource<Config>;
+  displayedColumns: string[] = ['nombre', 'sku', 'medida', 'clasificacion','actions'];
+  dataSource: MatTableDataSource<Product>;
 
     
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private configService: ConfigService, 
+    private productService: ProductService, 
     private router: Router,
     public matDialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
-    //this.getConfigs();
+    this.getProducts();
   }
 
-  getConfigs(){
-    this.configService.getAll().subscribe(( data => {
-         this.initTable(data);
+  getProducts(){
+    this.productService.getAll().subscribe(( resp => {
+         this.initTable(resp.data);
       }
     ));
   }
 
-  initTable(config: Config[]){
-    this.dataSource = new MatTableDataSource(config);
+  initTable(product: Product[]){
+    this.dataSource = new MatTableDataSource(product);
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -58,9 +58,9 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  onEdit(row: Config){
+  onEdit(row: Product){
     this.router.navigate(['/products/add-product']);
-    //this.projectService.sharingProjectData = row;
+    this.productService.sharingData = row;
   }
 
   openAdd(){

@@ -15,7 +15,7 @@ export class ConfigComponent implements OnInit {
 
   loading = true;
   selectedRow;
-  displayedColumns: string[] = ['iduser', 'name','actions'];
+  displayedColumns: string[] = ['nombre', 'rif', 'tipo','sector', 'empleados','actions'];
   dataSource: MatTableDataSource<Config>;
 
     
@@ -29,12 +29,12 @@ export class ConfigComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    //this.getConfigs();
+    this.getConfigs();
   }
 
   getConfigs(){
-    this.configService.getAll().subscribe(( data => {
-         this.initTable(data);
+    this.configService.getAll().subscribe(( resp => {
+        this.initTable(resp.data);
       }
     ));
   }

@@ -15,9 +15,9 @@
               <div class="col-12">
                 <mat-form-field>
                   <mat-label>Nombre del producto</mat-label>
-                    <input type="text" matInput formControlName="product_name" maxlength="100" [ngClass]="{ 'is-invalid': submitted && f.product_name.errors }" >
-                    <mat-error *ngIf="submitted && f.product_name.errors">
-                    <mat-error *ngIf="f.product_name.errors.required">Ingrese nombre del proyecto</mat-error>
+                    <input type="text" matInput formControlName="nombre" maxlength="100" [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" >
+                    <mat-error *ngIf="submitted && f.nombre.errors">
+                    <mat-error *ngIf="f.nombre.errors.required">Ingrese nombre del proyecto</mat-error>
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -27,7 +27,7 @@
                 <div class="col-4">
                   <mat-form-field>
                       <mat-label>Código / SKU</mat-label>
-                      <input type="number" matInput formControlName="sku" maxlength="25" [ngClass]="{ 'is-invalid': submitted && f.sku.errors }" >
+                      <input matInput formControlName="sku" maxlength="25" [ngClass]="{ 'is-invalid': submitted && f.sku.errors }" >
                       <mat-error *ngIf="submitted && f.sku.errors">
                           <mat-error *ngIf="f.sku.errors.required">Ingrese el código del producto</mat-error>
                       </mat-error>
@@ -60,13 +60,13 @@
               <div class="col-4">
                 <mat-form-field>
                   <mat-label>Clasificación de Costo</mat-label>
-                  <mat-select formControlName="clasificacion_costo">
+                  <mat-select formControlName="clasificacion">
                     <mat-option value="Proyecto">Proyecto</mat-option>
                     <mat-option value="Servicio">Servicio</mat-option>
                     <mat-option value="Actividad">Actividad</mat-option>
                   </mat-select>
-                  <mat-error *ngIf="submitted && f.clasificacion_costo.errors">
-                  <mat-error *ngIf="f.clasificacion_costo.errors.required">Ingrese la Clasificación de Costo</mat-error>
+                  <mat-error *ngIf="submitted && f.clasificacion.errors">
+                  <mat-error *ngIf="f.clasificacion.errors.required">Ingrese la Clasificación de Costo</mat-error>
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -76,129 +76,14 @@
               <div class="col-12">
                 <mat-form-field>
                   <mat-label>Descripción</mat-label>
-                    <textarea matInput formControlName="product_description" maxlength="1000" placeholder="Description del producto" [ngClass]="{ 'is-invalid': submitted && f.product_description.errors }"></textarea>
-                    <mat-error *ngIf="submitted && f.product_description.errors">
-                    <mat-error *ngIf="f.product_description.errors.required">Ingrese nombre del proyecto</mat-error>
+                    <textarea matInput formControlName="descripcion" maxlength="1000" placeholder="Description del producto" [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }"></textarea>
+                    <mat-error *ngIf="submitted && f.descripcion.errors">
+                    <mat-error *ngIf="f.descripcion.errors.required">Ingrese description del producto</mat-error>
                   </mat-error>
                 </mat-form-field>
               </div>
             </div>
           </mat-tab>
-
-          <!-- <mat-tab label="Catálogo de Insumos y Recursos">
-            <div class="row padding-top-input">
-              <div class="col-12 mb-3">
-                <h4>Materia Prima</h4>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <mat-form-field>
-                  <mat-label>Unidad de Medida</mat-label>
-                  <mat-select formControlName="unidad_medida">
-                    <mat-option value="Metros">Metros</mat-option>
-                    <mat-option value="kilos">Kilos</mat-option>
-                    <mat-option value="Toneladas">Toneladas</mat-option>
-                    <mat-option value="Gramos">Gramos</mat-option>
-                    <mat-option value="Unidades">Unidades</mat-option>
-                    <mat-option value="Paquetes">Paquetes</mat-option>
-                    <mat-option value="Cajas">Cajas</mat-option>
-                    <mat-option value="Bultos">Bultos</mat-option>
-                    <mat-option value="Horas máquina">Horas máquina</mat-option>
-                    <mat-option value="Horas hombres">Horas hombres</mat-option>
-                    <mat-option value="Turnos">Turnos</mat-option>
-                    <mat-option value="Kilómetros">Kilómetros</mat-option>
-                    <mat-option value="Transacciones - Operaciones">Transacciones - Operaciones</mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="submitted && f.unidad_medida.errors">
-                  <mat-error *ngIf="f.unidad_medida.errors.required">Seleccione la unidad de medida</mat-error>
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-12">
-                <mat-form-field>
-                  <mat-label>Descripción</mat-label>
-                    <textarea matInput formControlName="mp_description" maxlength="1000" placeholder="Description de la Materia Prima" [ngClass]="{ 'is-invalid': submitted && f.mp_description.errors }"></textarea>
-                    <mat-error *ngIf="submitted && f.mp_description.errors">
-                    <mat-error *ngIf="f.mp_description.errors.required">Ingrese la Descripción de la Materia Prima</mat-error>
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-12">   
-                <mat-form-field>
-                  <mat-label>Proveedor</mat-label>
-                    <input type="text" matInput formControlName="proveedor" maxlength="25" [ngClass]="{ 'is-invalid': submitted && f.proveedor.errors }" >
-                    <mat-error *ngIf="submitted && f.proveedor.errors">
-                    <mat-error *ngIf="f.proveedor.errors.required">Ingrese el Proveedor</mat-error>
-                  </mat-error>
-                </mat-form-field>
-              </div>
-  
-            </div>
-
-            <div class="row">
-              <div class="col-6">
-                  <mat-form-field>
-                      <mat-label>Costo Estándar</mat-label>
-                      <input type="number" matInput formControlName="costo_estandar" maxlength="25" [ngClass]="{ 'is-invalid': submitted && f.costo_estandar.errors }" >
-                      <mat-error *ngIf="submitted && f.costo_estandar.errors">
-                          <mat-error *ngIf="f.costo_estandar.errors.required">Ingrese el Costo Estándar</mat-error>
-                      </mat-error>
-                  </mat-form-field>
-              </div>
-              <div class="col-6">   
-                <mat-form-field>
-                  <mat-label>Costo Real</mat-label>
-                    <input type="number" matInput formControlName="costo_real" maxlength="25" [ngClass]="{ 'is-invalid': submitted && f.costo_real.errors }" >
-                    <mat-error *ngIf="submitted && f.costo_real.errors">
-                    <mat-error *ngIf="f.costo_real.errors.required">Ingrese el Costo Real</mat-error>
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-          </mat-tab> -->
-  <!-- lo comentado va en otro componente -->
-          <!-- <mat-tab label="Asignación de Costos (Receta del Producto)">
-            <div class="row padding-top-input">
-              <div class="col-6">   
-                <mat-form-field>    
-                  <mat-label>Cantidad de Materia Prima</mat-label>
-                    <input type="number" matInput formControlName="mp_cantidad" maxlength="25" [ngClass]="{ 'is-invalid': submitted && f.mp_cantidad.errors }" >
-                    <mat-error *ngIf="submitted && f.mp_cantidad.errors">
-                    <mat-error *ngIf="f.mp_cantidad.errors.required">Ingrese la Cantidad de Materia Prima</mat-error>
-                  </mat-error>
-                </mat-form-field>
-              </div>
-        
-              <div class="col-6">
-                  <mat-form-field>
-                      <mat-label>Horas de Mano de Obra Directa</mat-label>
-                      <input type="number" matInput formControlName="mo_horas" maxlength="25" [ngClass]="{ 'is-invalid': submitted && f.mo_horas.errors }" >
-                      <mat-error *ngIf="submitted && f.mo_horas.errors">
-                          <mat-error *ngIf="f.mo_horas.errors.required">Ingrese las Horas de Mano de Obra Directa</mat-error>
-                      </mat-error>
-                  </mat-form-field>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-12">   
-                <mat-form-field>
-                  <mat-label>Tasa de Aplicación de Costos Indirectos</mat-label>
-                    <input type="text" matInput formControlName="tasa_aplicacion" maxlength="25" [ngClass]="{ 'is-invalid': submitted && f.tasa_aplicacion.errors }" >
-                    <mat-error *ngIf="submitted && f.tasa_aplicacion.errors">
-                    <mat-error *ngIf="f.tasa_aplicacion.errors.required">Ingrese la Tasa de Aplicación de Costos Indirectos</mat-error>
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-          </mat-tab> -->
         </mat-tab-group>
   
 
