@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Fixe } from 'src/app/core/models/Cost/fixe';
 import { FixeService } from 'src/app/core/services/Cost/fixe.service';
+import { ProductService } from 'src/app/core/services/Cost/product.service';
 
 @Component({
   selector: 'app-add-fixe',
@@ -15,8 +16,10 @@ export class AddFixeComponent implements OnInit {
   id: number;
   loading = false;
   submitted = false;
+  products: any[] = [];
 
   constructor(
+    private productService: ProductService,
     private fixeService: FixeService,
     private formBuilder: FormBuilder,
     private router: Router,
@@ -28,7 +31,15 @@ export class AddFixeComponent implements OnInit {
   get f() { return this.form.controls; }
 
   ngOnInit() {
+    this.loadProducts();
     this.setValues();
+  }
+
+  loadProducts() {
+    this.productService.getAll().subscribe((resp: any) => {
+      this.products = resp.data || []; 
+      console.log('Productos cargados:', this.products);
+    });
   }
 
   back() {
@@ -55,7 +66,7 @@ export class AddFixeComponent implements OnInit {
       concepto: ['',Validators.required],
       precio: ['',Validators.required],
       clasificacion: ['',Validators.required],
-      product: [''],
+      producto: [''],
     })
   }
 

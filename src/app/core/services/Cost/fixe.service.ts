@@ -59,7 +59,7 @@ export class FixeService extends HttpService {
     try {
       await firstValueFrom(this.post(environment.apiUrl, '/costo', data));
       this.toastrService.success('Costo registrado con éxito.');
-      this.router.navigate(['/Fixes']);
+      this.router.navigate(['/fixes']);
     } catch (error: any) {        
       if (error.status == 409) {
         this.toastrService.error('', error.error.msg);
@@ -75,7 +75,7 @@ export class FixeService extends HttpService {
       await firstValueFrom(this.put(environment.apiUrl, `/costo/${id}`, data));
       this.resetData(); //// Resetear los valores del observable después de actualizar
       this.toastrService.success('Perfil actualizado con éxito.');
-      this.router.navigate(['/Fixes']);
+      this.router.navigate(['/fixes']);
     } catch (error: any) {
       if (error.status == 409) {
         this.toastrService.error('', error.msg);

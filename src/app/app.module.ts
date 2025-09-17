@@ -4,6 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { registerLocaleData } from '@angular/common'; //
+import localeEs from '@angular/common/locales/es'; //
+import localeEsExtra from '@angular/common/locales/extra/es'; //
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { AuthGuard } from './core/guard/auth.guard';
@@ -21,6 +25,8 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 //import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
 //const config: SocketIoConfig = { url: environment.wsserver, options: {} };
+
+registerLocaleData(localeEs, 'es', localeEsExtra); //
 
 @NgModule({
   declarations: [

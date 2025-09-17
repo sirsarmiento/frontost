@@ -29,8 +29,9 @@ export class FixeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fixeService.getAll().subscribe(( data => {
-         this.initTable(data);
+    this.fixeService.getAll().subscribe(( resp => {
+         //console.log('RESP.DATA:', resp.data);
+         this.initTable(resp.data);
       }
     ));
   }
