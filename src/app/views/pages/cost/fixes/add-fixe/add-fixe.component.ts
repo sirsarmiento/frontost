@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Fixe } from 'src/app/core/models/Cost/fixe';
+import { FixeService } from 'src/app/core/services/Cost/fixe.service';
 
 @Component({
   selector: 'app-add-fixe',
@@ -16,12 +17,12 @@ export class AddFixeComponent implements OnInit {
   submitted = false;
 
   constructor(
-    //private projectService: ProjectService,
+    private fixeService: FixeService,
     private formBuilder: FormBuilder,
     private router: Router,
   ) {
       this.myFormValues();
-      //this.data$ = projectService.sharingProject;
+      this.data$ = fixeService.sharingProject;
    }
 
   get f() { return this.form.controls; }
@@ -30,34 +31,30 @@ export class AddFixeComponent implements OnInit {
     this.setValues();
   }
 
-
-
-
   back() {
     this.router.navigate(['/fixes']);
-    //this.projectService.resetData();
+    this.fixeService.resetData();
   }
 
-
-
-
   setValues(){
-    // this.data$.subscribe( data => {
-    //   if(data.id > 0){
-    //     this.f.concept.setValue(data.concept);
-    //     this.f.amount.setValue(data.amount);
-    //     this.f.clasification.setValue(data.clasification);
-    //     this.id = data.id;
-    //   }
-    // });
+    this.data$.subscribe( data => {
+      if(data.id > 0){
+        this.f.tipo.setValue(data.tipo);
+        this.f.concepto.setValue(data.concepto);
+        this.f.precio.setValue(data.precio);
+        this.f.clasificacion.setValue(data.clasificacion);
+        this.f.producto.setValue(data.producto);
+        this.id = data.id;
+      }
+    });
   }
 
   myFormValues() {
     this.form = this.formBuilder.group({
-      type: ['',Validators.required],
-      concept: ['',Validators.required],
-      amount: ['',Validators.required],
-      clasification: ['Indirecto',Validators.required],
+      tipo: ['',Validators.required],
+      concepto: ['',Validators.required],
+      precio: ['',Validators.required],
+      clasificacion: ['',Validators.required],
       product: [''],
     })
   }
@@ -70,20 +67,20 @@ export class AddFixeComponent implements OnInit {
 
     this.loading = true;
 
-    const fixe: Fixe = {
-      concept: this.f.concept.value,
-      amount: this.f.type.value,
-      clasification: this.f.clasification.value,
-      productId: this.f.product.value,
-
+    const costo: Fixe = {
+      tipo: this.f.tipo.value,
+      concepto: this.f.concepto.value,
+      precio: this.f.precio.value,
+      clasificacion: this.f.clasificacion.value,
+      producto: this.f.producto.value,
     }
 
-    console.log(fixe);
+    console.log(costo);
 
     if(this.id == 0 || this.id == undefined){
-      //this.projectService.add(project);
+      this.fixeService.add(costo);
     }else{
-      //this.projectService.update(this.id, project);
+      this.fixeService.update(this.id, costo);
     }
 
   }

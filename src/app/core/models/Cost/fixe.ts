@@ -1,7 +1,8 @@
 export class Fixe{
     id?: number;
-    concept: string;
-    amount: number;
-    clasification: string;
-    productId?: number;
+    tipo: string;
+    concepto: string;
+    precio: number;
+    clasificacion: string;
+    producto?: number;
 }

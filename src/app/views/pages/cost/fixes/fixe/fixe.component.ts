@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Config } from 'src/app/core/models/Cost/config';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfigService } from 'src/app/core/services/Cost/config.service';
+import { Fixe } from 'src/app/core/models/Cost/fixe';
+import { FixeService } from 'src/app/core/services/Cost/fixe.service';
 
 @Component({
   selector: 'app-fixe',
@@ -15,27 +15,27 @@ export class FixeComponent implements OnInit {
 
   loading = true;
   selectedRow;
-  displayedColumns: string[] = ['iduser', 'name','actions'];
-  dataSource: MatTableDataSource<Config>;
+  displayedColumns: string[] = ['tipo', 'concepto', 'precio', 'clasificacion','actions'];
+  dataSource: MatTableDataSource<Fixe>;
 
     
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private configService: ConfigService,
+    private fixeService: FixeService,
     private router: Router,
     public matDialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
-    // this.configService.getAll().subscribe(( data => {
-    //      this.initTable(data);
-    //   }
-    // ));
+    this.fixeService.getAll().subscribe(( data => {
+         this.initTable(data);
+      }
+    ));
   }
 
-  initTable(project: Config[]){
+  initTable(project: Fixe[]){
     this.dataSource = new MatTableDataSource(project);
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
@@ -54,9 +54,9 @@ export class FixeComponent implements OnInit {
     }
   }
 
-  onEdit(row: Config){
+  onEdit(row: Fixe){
     this.router.navigate(['/fixes/add-fixe']);
-    this.configService.sharingData = row;
+    this.fixeService.sharingData = row;
   }
 
   openAdd(){

@@ -38,14 +38,24 @@
       <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort>
 
-          <ng-container matColumnDef="iduser">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-            <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+          <ng-container matColumnDef="tipo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+            <td mat-cell *matCellDef="let row"> {{ row.tipo }} </td>
           </ng-container>
 
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+          <ng-container matColumnDef="concepto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Concepto</th>
+            <td mat-cell *matCellDef="let row"> {{ row.concepto }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="precio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+            <td mat-cell *matCellDef="let row"> {{ row.precio | number: '1.0-2' }} </td>
+          </ng-container>
+
+           <ng-container matColumnDef="clasificacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Clasificación</th>
+            <td mat-cell *matCellDef="let row"> {{ row.clasificacion }} </td>
           </ng-container>
         
           <ng-container matColumnDef="actions">
