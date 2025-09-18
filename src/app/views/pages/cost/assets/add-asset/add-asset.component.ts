@@ -1,27 +1,28 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
-import { Config} from 'src/app/core/models/Cost/config';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AssetService } from 'src/app/core/services/Cost/asset.service';
+import { Asset } from 'src/app/core/models/Cost/asset';
 
 @Component({
   selector: 'app-add-asset',
   templateUrl: './add-asset.component.html'
 })
 export class AddAssetComponent implements OnInit {
-  private data$: Observable<Config>;
+  private data$: Observable<Asset>;
   form: FormGroup;
   id: number;
   loading = false;
   submitted = false;
 
   constructor(
-    //private projectService: ProjectService,
+    private assetService: AssetService,
     private formBuilder: FormBuilder,
     private router: Router,
   ) {
       this.myFormValues();
-      //this.data$ = projectService.sharingProject;
+      this.data$ = assetService.sharingProject;
    }
 
   get f() { return this.form.controls; }
@@ -30,22 +31,19 @@ export class AddAssetComponent implements OnInit {
     this.setValues();
   }
 
-
-
-
   back() {
     this.router.navigate(['/assets']);
-    //this.projectService.resetData();
+    this.assetService.resetData();
   }
-
-
-
 
   setValues(){
     this.data$.subscribe( data => {
       if(data.id > 0){
-        // this.f.name.setValue(data.name);
-        // this.f.description.setValue(data.type);
+        this.f.nombre.setValue(data.nombre);
+        this.f.costoInicial.setValue(data.costoInicial);
+        this.f.valorResidual.setValue(data.valorResidual);
+        this.f.vidaUtil.setValue(data.vidaUtil);
+        this.f.fechaCompra.setValue(data.fechaCompra);
         this.id = data.id;
       }
     });
@@ -53,12 +51,11 @@ export class AddAssetComponent implements OnInit {
 
   myFormValues() {
     this.form = this.formBuilder.group({
-      asset_type: ['',Validators.required],
-      asset_name: ['',Validators.required],
-      costo_inicial: ['',Validators.required],
-      valor_residual: ['',Validators.required],
-      vida_util: ['',Validators.required],
-      adquisicion_fecha: ['',Validators.required]
+      nombre: ['',Validators.required],
+      costoInicial: ['',Validators.required],
+      valorResidual: ['',Validators.required],
+      vidaUtil: ['',Validators.required],
+      fechaCompra: ['',Validators.required],
     })
   }
 
@@ -70,28 +67,20 @@ export class AddAssetComponent implements OnInit {
 
     this.loading = true;
 
-    // const config: Config = {
-    //   name: this.f.name.value,
-    //   type: this.f.type.value,
-    //   sector: this.f.sector.value,
-    //   empleados: this.f.empleados.value,
-    //   rif: this.f.rif.value,
-    //   periodo_contable: this.f.periodo_contable.value,
-    //   direccion_fiscal: this.f.direccion_fiscal.value,
+    const activo: Asset = {
+      nombre: this.f.nombre.value,
+      costoInicial: this.f.costoInicial.value,
+      valorResidual: this.f.valorResidual.value,
+      vidaUtil: this.f.vidaUtil.value,
+      fechaCompra: this.f.fechaCompra.value,
+    }
 
-    //   capacidad_instalada: this.f.capacidad_instalada.value,
-    //   capacidad_produccion: this.f.capacidad_produccion.value,
-    //   capacidad_ociosa: this.f.capacidad_ociosa.value,
-    //   moneda_operacion: this.f.moneda_operacion.value,
-    //   centro_costos: this.f.centro_costos.value
-    // }
-
-    // console.log(config);
+    console.log(activo);
 
     if(this.id == 0 || this.id == undefined){
-      //this.projectService.add(project);
+      this.assetService.add(activo);
     }else{
-      //this.projectService.update(this.id, project);
+      this.assetService.update(this.id, activo);
     }
 
   }

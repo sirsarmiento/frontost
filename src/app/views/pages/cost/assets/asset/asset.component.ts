@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Config } from 'src/app/core/models/Cost/config';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfigService } from 'src/app/core/services/Cost/config.service';
+import { Asset } from 'src/app/core/models/Cost/asset';
+import { AssetService } from 'src/app/core/services/Cost/asset.service';
 
 @Component({
   selector: 'app-asset',
@@ -15,27 +15,27 @@ export class AssetComponent implements OnInit {
 
   loading = true;
   selectedRow;
-  displayedColumns: string[] = ['iduser', 'name','actions'];
-  dataSource: MatTableDataSource<Config>;
+  displayedColumns: string[] = ['nombre', 'costoInicial', 'valorResidual', 'vidaUtil', 'fechaCompra', 'actions'];
+  dataSource: MatTableDataSource<Asset>;
 
     
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
-    private configService: ConfigService,
+    private assetService: AssetService,
     private router: Router,
     public matDialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
-    // this.configService.getAll().subscribe(( data => {
-    //      this.initTable(data);
-    //   }
-    // ));
+    this.assetService.getAll().subscribe(( data => {
+         this.initTable(data);
+      }
+    ));
   }
 
-  initTable(project: Config[]){
+  initTable(project: Asset[]){
     this.dataSource = new MatTableDataSource(project);
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;
@@ -54,9 +54,9 @@ export class AssetComponent implements OnInit {
     }
   }
 
-  onEdit(row: Config){
+  onEdit(row: Asset){
     this.router.navigate(['/assets/add-asset']);
-    this.configService.sharingData = row;
+    this.assetService.sharingData = row;
   }
 
   openAdd(){
