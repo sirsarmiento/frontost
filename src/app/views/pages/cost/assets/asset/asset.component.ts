@@ -29,8 +29,13 @@ export class AssetComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.assetService.getAll().subscribe(( data => {
-         this.initTable(data);
+    this.getAssets();
+  }
+
+  getAssets(){
+    this.assetService.getAll().subscribe(( resp => {
+      console.log(resp.data);
+         this.initTable(resp.data);
       }
     ));
   }

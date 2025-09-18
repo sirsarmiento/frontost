@@ -39,6 +39,7 @@ export class AddAssetComponent implements OnInit {
   setValues(){
     this.data$.subscribe( data => {
       if(data.id > 0){
+        console.log(data.fechaCompra);
         this.f.nombre.setValue(data.nombre);
         this.f.costoInicial.setValue(data.costoInicial);
         this.f.valorResidual.setValue(data.valorResidual);

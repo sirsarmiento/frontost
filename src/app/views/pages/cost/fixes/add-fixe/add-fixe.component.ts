@@ -49,6 +49,7 @@ export class AddFixeComponent implements OnInit {
 
   setValues(){
     this.data$.subscribe( data => {
+      console.log(data);
       if(data.id > 0){
         this.f.tipo.setValue(data.tipo);
         this.f.concepto.setValue(data.concepto);

@@ -15,7 +15,7 @@ export class FixeComponent implements OnInit {
 
   loading = true;
   selectedRow;
-  displayedColumns: string[] = ['tipo', 'concepto', 'precio', 'clasificacion','actions'];
+  displayedColumns: string[] = ['tipo', 'concepto', 'precio', 'clasificacion', 'producto', 'actions'];
   dataSource: MatTableDataSource<Fixe>;
 
     
