@@ -56,14 +56,22 @@
           <ng-container matColumnDef="vidaUtil">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Vida Útil</th>
             <td mat-cell *matCellDef="let row"> {{ row.vidaUtil  }} </td>
-          </ng-container><var>
+          </ng-container>
           
           <ng-container matColumnDef="fechaCompra">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Compra</th>
             <td mat-cell *matCellDef="let row"> {{ row.fechaCompra | date: "dd-MM-yyyy"  }} </td>
           </ng-container>
-          </var>
-        
+
+          <ng-container matColumnDef="depreciacionMensual">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Dep. Mensual</th>
+            <td mat-cell *matCellDef="let row"> {{ calcularDepreciacionMensual(row) | number:'1.2-2' }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="depreciacionAnual">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Dep. Anual</th>
+            <td mat-cell *matCellDef="let row"> {{ calcularDepreciacionAnual(row) | number:'1.2-2' }} </td>
+          </ng-container>
         
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> Acciones </th>
@@ -87,5 +95,20 @@
         </table>
       </div>
       <mat-paginator [pageSizeOptions]="[10, 20]" aria-label="Proyectos por página"></mat-paginator>
+    </div>
+  </div>
+
+  <div class="row header">
+  <div class="row padding-top-input">
+    <div class="col-12">
+        <div class="card totales-card">
+          <div class="card-body">
+            <div class="row">
+              <h4>Total Dep. Mensual: 
+              <span>{{ totalDepreciacionMensual | number:'1.2-2' }}</span> </h4>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>

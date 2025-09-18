@@ -33,6 +33,22 @@ export class AddFixeComponent implements OnInit {
   ngOnInit() {
     this.loadProducts();
     this.setValues();
+
+    this.form.get('clasificacion')?.valueChanges.subscribe(value => {
+      this.onClasificacionChange(value);
+    });
+  }
+
+  // Función para mostrar/ocultar campo producto
+  shouldShowProductoField(): boolean {
+    return this.form.get('clasificacion')?.value === 'Directo';
+  }
+
+ // Manejar cambio de clasificación
+  onClasificacionChange(clasificacion: string) {
+    if (clasificacion !== 'Directo') {
+      this.form.get('producto')?.setValue(''); // Limpiar producto si no es directo
+    }
   }
 
   loadProducts() {
@@ -41,6 +57,7 @@ export class AddFixeComponent implements OnInit {
       console.log('Productos cargados:', this.products);
     });
   }
+  
 
   back() {
     this.router.navigate(['/fixes']);

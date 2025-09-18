@@ -197,7 +197,7 @@
             </div>
 
             <!-- Tablas agrupadas por unidad de medida -->
-            <div *ngFor="let group of groupedCapacities" class="group-table">
+             <div *ngFor="let group of groupedCapacities" class="group-table">
               <h3>Unidad de Medida: {{group.medida}}</h3>
               
               <table mat-table [dataSource]="group.machines" class="mat-elevation-z2">
@@ -241,14 +241,6 @@
               </div>
             </div>
 
-            <!-- Resumen General -->
-            <div *ngIf="groupedCapacities.length > 0" class="total-summary">
-              <h3>Resumen General</h3>
-              <p><strong>Capacidad Instalada Total:</strong> {{capacidadInstalada }}</p>
-              <p><strong>Capacidad de Producción Total:</strong> {{capacidadProduccion }}</p>
-              <p><strong>Capacidad Ociosa Total:</strong> {{capacidadOciosa }}</p>
-              <p><strong>Utilización Total:</strong> {{utilizacion }}%</p>
-            </div>
           </mat-tab>
         </mat-tab-group>
   

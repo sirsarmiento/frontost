@@ -23,7 +23,8 @@ export class FixeService extends HttpService {
       tipo: '',
       concepto: '',
       precio: 0,
-      clasificacion: ''
+      clasificacion: '',
+      producto: 0
     };
 
   }
