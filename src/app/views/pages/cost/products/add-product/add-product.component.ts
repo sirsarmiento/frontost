@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Product } from 'src/app/core/models/Cost/product';
 import { ProductService } from 'src/app/core/services/Cost/product.service';
+import { ConfigService } from 'src/app/core/services/Cost/config.service';
 
 @Component({
   selector: 'app-add-product',
@@ -11,13 +12,14 @@ import { ProductService } from 'src/app/core/services/Cost/product.service';
 })
 export class AddProductComponent implements OnInit {
   private data$: Observable<Product>;
-
   form: FormGroup;
   id: number;
   loading = false;
   submitted = false;
+  configs: any[] = [];
 
   constructor(
+    private configService: ConfigService,
     private productService: ProductService,
     private formBuilder: FormBuilder,
     private router: Router,
@@ -29,7 +31,15 @@ export class AddProductComponent implements OnInit {
   get f() { return this.form.controls; }
 
   ngOnInit() {
+    this.loadConfigs();
     this.setValues();
+  }
+
+  loadConfigs() {
+    this.configService.getAll().subscribe((resp: any) => {
+      this.configs = resp.data || []; 
+      console.log('Perfiles cargados:', this.configs);
+    });
   }
 
   back() {
@@ -45,6 +55,7 @@ export class AddProductComponent implements OnInit {
         this.f.sku.setValue(data.sku);
         this.f.clasificacion.setValue(data.clasificacion);
         this.f.descripcion.setValue(data.descripcion);
+        this.f.perfil.setValue(data.perfil);
         this.id = data.id;
       }
     });
@@ -57,6 +68,7 @@ export class AddProductComponent implements OnInit {
       sku: [''],
       descripcion: ['',Validators.required],
       clasificacion: ['',Validators.required],
+      perfil: [''],
     })
   }
 
@@ -74,6 +86,7 @@ export class AddProductComponent implements OnInit {
       descripcion: this.f.descripcion.value,
       clasificacion: this.f.clasificacion.value,
       medida: this.f.medida.value,
+      perfil: this.f.perfil.value,
     }
 
     console.log(product);

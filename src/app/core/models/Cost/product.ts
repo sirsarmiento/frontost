@@ -6,4 +6,5 @@ export class Product {
     medida: string;
     clasificacion: string;
     descripcion: string;
+    perfil: number;
 }

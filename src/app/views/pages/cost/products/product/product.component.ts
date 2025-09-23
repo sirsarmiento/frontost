@@ -15,7 +15,7 @@ export class ProductComponent implements OnInit {
 
   loading = true;
   selectedRow;
-  displayedColumns: string[] = ['nombre', 'sku', 'medida', 'clasificacion','actions'];
+  displayedColumns: string[] = ['nombre', 'sku', 'medida', 'clasificacion', 'perfil','actions'];
   dataSource: MatTableDataSource<Product>;
 
     

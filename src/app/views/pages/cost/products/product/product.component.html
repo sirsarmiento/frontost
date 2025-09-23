@@ -3,7 +3,7 @@
       <div class="col-4">
         <nav class="page-breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a routerLink=".">Configuaración</a></li>
+            <li class="breadcrumb-item"><a routerLink=".">Configuración</a></li>
             <li class="breadcrumb-item active" aria-current="page">Listado</li>
           </ol>
         </nav>
@@ -56,6 +56,11 @@
           <ng-container matColumnDef="clasificacion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Clasificación</th>
             <td mat-cell *matCellDef="let row"> {{row.clasificacion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="perfil">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
+            <td mat-cell *matCellDef="let row"> {{row.perfilName}} </td>
           </ng-container>
         
           <ng-container matColumnDef="actions">

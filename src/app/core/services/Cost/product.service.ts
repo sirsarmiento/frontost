@@ -23,7 +23,8 @@ export class ProductService extends HttpService {
       sku: '',
       medida: '',
       clasificacion: '',
-      descripcion: ''
+      descripcion: '',
+      perfil: 0
     };
 
   }
