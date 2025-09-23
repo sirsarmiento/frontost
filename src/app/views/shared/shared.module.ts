@@ -35,6 +35,17 @@ import { ModalWeightsComponent } from './components/modal-weights/modal-weights.
 import { ModalSolidityComponent } from './components/modal-solidity/modal-solidity.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 
+import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
+
+export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
+  align: "left",
+  allowNegative: true,
+  decimal: ",",
+  precision: 2,
+  prefix: "$",
+  suffix: "",
+  thousands: "."
+};
 
 @NgModule({
   declarations: [BaseComponent, ModalResponsibleComponent, ModalGenericComponent, ModalRiskComponent, ModalImpactComponent, ModalWeightsComponent, ModalSolidityComponent],
@@ -66,7 +77,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
     MatAutocompleteModule,
     MatTabsModule,
     MatSliderModule,
-    ColorPickerModule
+    ColorPickerModule,
+      CurrencyMaskModule,
   ],
   exports:[
     FormsModule,
@@ -99,8 +111,11 @@ import { ColorPickerModule } from 'ngx-color-picker';
     MatAutocompleteModule,
     MatTabsModule,
     MatSliderModule,
-    ColorPickerModule
-  ]
-
+    ColorPickerModule,
+    CurrencyMaskModule,
+  ],
+  providers: [
+    { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
+  ],
 })
 export class SharedModule { }
