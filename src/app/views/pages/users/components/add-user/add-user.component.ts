@@ -100,6 +100,7 @@ export class AddUserComponent implements OnInit {
   setValue(){
     this.userSubscription = this.data$.subscribe( data => {
       if(data != null && data.id > 0){
+        console.log(data);
 
         this.f.firstName.setValue(data.firstName);
         this.f.secondName.setValue(data.secondName);
@@ -117,7 +118,7 @@ export class AddUserComponent implements OnInit {
         this.f.city.setValue(parseInt(data.city.value));
 
         this.setRolesSeleccionados(data.roles);
-
+        this.idEstructura = data.idestructura;
         this.id = data.id;
       }
     });

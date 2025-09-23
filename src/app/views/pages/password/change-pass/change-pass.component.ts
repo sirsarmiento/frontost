@@ -26,7 +26,7 @@ export class ChangePassComponent implements OnInit {
   get f() { return this.form.controls; }
 
   ngOnInit(): void {
-    console.log(this.authService.currentUser.token);
+    //console.log(this.authService.currentUser.token);
   }
 
   async onSubmit(){

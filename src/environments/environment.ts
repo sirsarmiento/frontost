@@ -3,7 +3,7 @@ export const environment = {
   name_system: 'COST',
   ttl: 28800000,
   //apiUrl: 'https://bofficegiepstage.pafar.com.ve/public/api',
-  apiAuth: 'https://bofficegiepstage.pafar.com.ve/public',
+  apiAuth: 'http://localhost:8090/backost/public',
   apiUrl: 'http://localhost:8090/backost/public/api',  
   //apiUrl: 'https://giepboffice.pafar.com.ve/public/api',
   //apiAuth: 'https://giepboffice.pafar.com.ve/public',

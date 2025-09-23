@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment';
   })
 export class AuthInterceptor implements HttpInterceptor {
     constructor(private authService: AuthService) {}
-intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // add auth header with jwt if user is logged in and request is to the api url
         
         const token = this.authService.currentUser?.token;
@@ -20,6 +20,7 @@ intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<an
         if(isInclude){
             return next.handle(request);
         }
+
         const isApiUrl = request.url.startsWith(environment.apiUrl);
         if (token && isApiUrl) {
             request = request.clone({

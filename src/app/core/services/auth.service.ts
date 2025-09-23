@@ -115,7 +115,7 @@ export class AuthService extends HttpService {
    */
   async initRecoverPass(email:string):Promise<any>{    
     try {
-      const resp = await firstValueFrom(this.post(environment.apiAuth, '/account/recovery-password',{email}));
+      const resp = await firstValueFrom(this.post(environment.apiUrl, '/account/recovery-password',{email}));
       this.toastrService.success('','Le fué enviado un email con éxito para que restablezca su password.');
     } catch (error: any) {
       
@@ -136,7 +136,7 @@ export class AuthService extends HttpService {
    */
   async resetPass(data:any):Promise<any>{
     try {
-      await firstValueFrom(this.post(environment.apiAuth, '/api/user/changepassword/perfil',data)); 
+      await firstValueFrom(this.post(environment.apiUrl, '/user/changepassword/perfil',data)); 
       this.toastrService.success('','Su password fué restablecido con éxito.');
       return true;
     } catch (error: any) {

@@ -33,7 +33,6 @@ export class UsersComponent implements OnInit {
 
   async ngOnInit() {
     this.users = await this.userService.getUsers({ page: 1, rowByPage: 9999, word: null });
-    console.log(this.users);
     this.initTable(this.users);
   }
 

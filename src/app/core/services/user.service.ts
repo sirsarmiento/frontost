@@ -223,7 +223,7 @@ export class UserService extends HttpService {
       user.state = new SelectOption(item.estado?.id);
       user.city = new SelectOption(item.ciudad?.id);
       user.roles = item.roles;
-
+      user.idestructura = item.idestructura
       return user;
     });
     return data;
@@ -374,7 +374,7 @@ export class UserService extends HttpService {
  */
   async resetPass(data: any): Promise<any> {
     try {
-      const resp = await firstValueFrom(this.post(environment.apiUrl, '/user/changepassword/perfil', data));
+      const resp = await firstValueFrom(this.post(environment.apiAuth, '/user/changepassword/perfil', data));
       this.toastrService.success('', 'Su password fué cambiado con éxito.');
       return true;
     } catch (error: any) {
@@ -393,7 +393,7 @@ export class UserService extends HttpService {
   */
   async uploadUsers(formData: FormData) {
     try {
-      const resp = await firstValueFrom(this.post(environment.apiUrl, '/user/upload/user', formData));
+      const resp = await firstValueFrom(this.post(environment.apiAuth, '/user/upload/user', formData));
       if (resp && resp.UsuariosNoProcesados && resp.UsuariosNoProcesados.length == 0) {
         this.toastrService.success('', `Han sido registrados ${resp.CantidadRegistrosProcesados} usuario(s) con éxito.`)
       } else {
