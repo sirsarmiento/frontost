@@ -12,7 +12,7 @@
         <mat-tab-group animationDuration="0ms">
           <mat-tab label="Definición de Productos / Servicios">
             <div class="row padding-top-input">
-              <div class="col-12">
+              <div class="col-8">
                 <mat-form-field>
                   <mat-label>Nombre del producto</mat-label>
                     <input type="text" matInput formControlName="nombre" maxlength="100" [ngClass]="{ 'is-invalid': submitted && f.nombre.errors }" >
@@ -21,9 +21,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-            </div>
 
-            <div class="row">
                 <div class="col-4">
                   <mat-form-field>
                       <mat-label>Código / SKU</mat-label>
@@ -33,6 +31,23 @@
                       </mat-error>
                   </mat-form-field>
               </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field>
+                  <mat-label>Clasificación de Costo</mat-label>
+                  <mat-select formControlName="clasificacion">
+                    <mat-option value="Proyecto">Proyecto</mat-option>
+                    <mat-option value="Servicio">Servicio</mat-option>
+                    <mat-option value="Actividad">Actividad</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="submitted && f.clasificacion.errors">
+                  <mat-error *ngIf="f.clasificacion.errors.required">Ingrese la Clasificación de Costo</mat-error>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
               <div class="col-4">
                 <mat-form-field>
                   <mat-label>Unidad de Medida</mat-label>
@@ -57,17 +72,13 @@
                 </mat-form-field>
               </div>
 
-              <div class="col-4">
+              <div class="col-4" *ngIf="shouldShowPeriodoField()">
                 <mat-form-field>
-                  <mat-label>Clasificación de Costo</mat-label>
-                  <mat-select formControlName="clasificacion">
-                    <mat-option value="Proyecto">Proyecto</mat-option>
-                    <mat-option value="Servicio">Servicio</mat-option>
-                    <mat-option value="Actividad">Actividad</mat-option>
+                  <mat-label>Periodo</mat-label>
+                  <mat-select formControlName="periodo">
+                    <mat-option value="Diario">Diario</mat-option>
+                    <mat-option value="Mensual">Mensual</mat-option>
                   </mat-select>
-                  <mat-error *ngIf="submitted && f.clasificacion.errors">
-                  <mat-error *ngIf="f.clasificacion.errors.required">Ingrese la Clasificación de Costo</mat-error>
-                  </mat-error>
                 </mat-form-field>
               </div>
             </div>

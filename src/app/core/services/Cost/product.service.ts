@@ -24,7 +24,8 @@ export class ProductService extends HttpService {
       medida: '',
       clasificacion: '',
       descripcion: '',
-      perfil: 0
+      perfil: 0,
+      periodo: ''
     };
 
   }

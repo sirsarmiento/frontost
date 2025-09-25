@@ -7,4 +7,5 @@ export class Product {
     clasificacion: string;
     descripcion: string;
     perfil: number;
+    periodo?: string;
 }

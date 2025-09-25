@@ -33,6 +33,22 @@ export class AddProductComponent implements OnInit {
   ngOnInit() {
     this.loadConfigs();
     this.setValues();
+
+    this.form.get('medida')?.valueChanges.subscribe(value => {
+      this.onMedidaChange(value);
+    });
+  }
+
+  // Función para mostrar/ocultar campo periodo
+  shouldShowPeriodoField(): boolean {
+    return this.form.get('medida')?.value === 'Horas hombres' || this.form.get('medida')?.value === 'Horas máquina';
+  }
+
+ // Manejar cambio de clasificación
+  onMedidaChange(medida: string) {
+    if (medida !== 'Horas hombres' && 'Horas máquina') {
+      this.form.get('periodo')?.setValue(''); // Limpiar producto si no es directo
+    }
   }
 
   loadConfigs() {
@@ -56,6 +72,7 @@ export class AddProductComponent implements OnInit {
         this.f.clasificacion.setValue(data.clasificacion);
         this.f.descripcion.setValue(data.descripcion);
         this.f.perfil.setValue(data.perfil);
+        this.f.periodo.setValue(data.periodo);
         this.id = data.id;
       }
     });
@@ -69,6 +86,7 @@ export class AddProductComponent implements OnInit {
       descripcion: ['',Validators.required],
       clasificacion: ['',Validators.required],
       perfil: [''],
+      periodo:  [''],
     })
   }
 
@@ -87,6 +105,7 @@ export class AddProductComponent implements OnInit {
       clasificacion: this.f.clasificacion.value,
       medida: this.f.medida.value,
       perfil: this.f.perfil.value,
+      periodo: this.f.periodo.value,
     }
 
     console.log(product);
