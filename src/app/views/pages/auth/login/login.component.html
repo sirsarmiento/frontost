@@ -1,58 +1,122 @@
 <div class="row w-100 mx-0 auth-page">
-  <div class="col-md-8 col-xl-6 mx-auto">
-    <div class="card">
-      <div class="row">
-        <div class="col-md-4 pe-md-0">
-          <div class="auth-side-wrapper" [ngStyle]="{ 'background-image': 'url(https://via.placeholder.com/219x452)' }">
-
+  <div class="col-md-8 col-xl-5 mx-auto">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+      <div class="row g-0">
+        <!-- Sección de imagen mejorada -->
+        <div class="col-md-5 d-none d-md-block">
+          <div class="auth-side-wrapper h-100 position-relative">
+            <div class="auth-overlay position-absolute w-100 h-100 bg-primary opacity-10"></div>
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
+                 alt="Imagen de fondo" class="w-100 h-100 object-fit-cover">
+            <div class="position-absolute top-0 start-0 p-4">
+              <h4 class="text-white fw-bold mb-0">PAFAR</h4>
+              <p class="text-white-50 small">Sistema de gestión de costos</p>
+            </div>
+            <div class="position-absolute bottom-0 start-0 p-4">
+              <p class="text-white mb-0">"La excelencia en cada paso"</p>
+            </div>
           </div>
         </div>
-        <div class="col-md-8 ps-md-0">
-
-          <div class="auth-form-wrapper px-4 py-5">
-            <a routerLink="." class="nobleui-logo d-block mb-2">Logo<span>Aqui</span></a>
-            <h5 class="text-muted fw-normal mb-4">Bienvenido!</h5>
-            <div *ngIf="inputError"
-            class="invalid-feedback text-center pt-0 pb-3 invalid-content-error">
-              <div [innerHtml]="inputError"></div>
+        
+        <!-- Sección del formulario mejorada -->
+        <div class="col-md-7">
+          <div class="auth-form-wrapper p-4 p-md-5">
+            <!-- Logo y título -->
+            <div class="text-center mb-4">
+              <a routerLink="." class="d-inline-block mb-3">
+                <img src="assets/images/others/PAFAR.webp" alt="PAFAR" class="logo-image" style="width: 180px; height: auto;">
+              </a>
+              <h3 class="fw-bold text-primary mb-1">Bienvenido de nuevo</h3>
+              <p class="text-muted">Ingresa tus credenciales para acceder</p>
             </div>
-            <form name="loginForm" #loginForm="ngForm" (ngSubmit)="loginForm.valid && onLoggedin(loginForm)"
-              class="forms-sample">
-              <div class="form-group mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email</label>
-                <input name="emailInput" #emailInput="ngModel" [(ngModel)]="email" type="text" class="form-control"
-                [ngClass]="{'ng-dirty ng-invalid' : emailInput.errors && ( emailInput.dirty || emailInput.touched || loginForm.submitted) }"
-                  id="exampleInputEmail1" placeholder="Email" email required>
-                <div *ngIf="emailInput.invalid && loginForm.submitted" class="invalid-feedback">
-                  <div *ngIf="emailInput.errors?.required">Campo requerido.
-                  </div>
-                </div>
-              </div>
-              <div class="form-group mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input name="passwordInput" #passwordInput="ngModel" [(ngModel)]="password" type="password"
-                [ngClass]="{'ng-dirty ng-invalid' : passwordInput.errors && ( passwordInput.dirty || passwordInput.touched || loginForm.submitted) }"
-                  class="form-control" placeholder="Password" required>
-                <div *ngIf="passwordInput.invalid && loginForm.submitted" class="invalid-feedback">
-                  <div *ngIf="passwordInput.errors?.required">Campo requerido.
-                  </div>
-                </div>
-              </div>
-             <!--<div class="form-check mb-3">
-                <input type="checkbox" class="form-check-input" id="authCheck">
-                <label class="form-check-label" for="authCheck">
-                  Remember me
+            
+            <!-- Mensaje de error mejorado -->
+            <div *ngIf="inputError" class="alert alert-danger d-flex align-items-center" role="alert">
+              <i class="fas fa-exclamation-circle me-2"></i>
+              <div [innerHTML]="inputError"></div>
+            </div>
+            
+            <!-- Formulario mejorado -->
+            <form name="loginForm" #loginForm="ngForm" (ngSubmit)="loginForm.valid && onLoggedin(loginForm)" class="forms-sample">
+              <!-- Campo de email -->
+              <div class="form-floating mb-3">
+                <input name="emailInput" #emailInput="ngModel" [(ngModel)]="email" type="email" 
+                       class="form-control rounded-3" 
+                       [ngClass]="{'is-invalid': emailInput.invalid && (emailInput.dirty || emailInput.touched || loginForm.submitted)}"
+                       id="emailInput" placeholder="nombre@ejemplo.com" required>
+                <label for="emailInput" class="text-muted">
+                  <i class="fas fa-envelope me-2 text-primary"></i>Correo electrónico
                 </label>
-              </div>-->
-              <div>
-                <button type="submit" class="btn btn-primary me-2 mb-2 mb-md-0">Iniciar sesión</button>
-                <!--<button type="button" class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">
-                  <i class="feather icon-twitter btn-icon-prepend"></i>
-                  Login with twitter
-                </button>-->
-              </div> 
-              <a routerLink="/" class="d-block mt-3 text-muted">¿Olvidaste tú password?</a>
+                <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched || loginForm.submitted)" 
+                     class="invalid-feedback d-flex align-items-center">
+                  <i class="fas fa-exclamation-circle me-1"></i>
+                  <span *ngIf="emailInput.errors?.required">Este campo es obligatorio</span>
+                  <span *ngIf="emailInput.errors?.email">Ingresa un correo electrónico válido</span>
+                </div>
+              </div>
+              
+              <!-- Campo de contraseña -->
+              <div class="form-floating mb-4 position-relative">
+                <input name="passwordInput" #passwordInput="ngModel" [(ngModel)]="password" type="password" 
+                       class="form-control rounded-3 pe-5" 
+                       [ngClass]="{'is-invalid': passwordInput.invalid && (passwordInput.dirty || passwordInput.touched || loginForm.submitted)}"
+                       id="passwordInput" placeholder="Contraseña" required>
+                <label for="passwordInput" class="text-muted">
+                  <i class="fas fa-lock me-2 text-primary"></i>Contraseña
+                </label>
+                <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched || loginForm.submitted)" 
+                     class="invalid-feedback d-flex align-items-center">
+                  <i class="fas fa-exclamation-circle me-1"></i>
+                  <span *ngIf="passwordInput.errors?.required">Este campo es obligatorio</span>
+                </div>
+              </div>
+              
+              <!-- Opciones adicionales -->
+              <!-- <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="rememberMe">
+                  <label class="form-check-label text-muted small" for="rememberMe">
+                    Recordarme
+                  </label>
+                </div>
+                <a routerLink="/" class="text-primary text-decoration-none small fw-medium">
+                  ¿Olvidaste tu contraseña?
+                </a>
+              </div> -->
+              
+              <!-- Botón de envío -->
+              <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 fw-medium shadow-sm">
+                <i class="fas fa-sign-in-alt me-2"></i>Iniciar sesión
+              </button>
             </form>
+            
+            <!-- Separador -->
+            <div class="my-4 text-center position-relative">
+              <hr class="my-0">
+              <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">O</span>
+            </div>
+            
+            <!-- Redes sociales (opcional) -->
+            <div class="text-center">
+              <div class="d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-outline-primary rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                  <i class="fab fa-google"></i>
+                </button>
+                <button type="button" class="btn btn-outline-primary rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                  <i class="fab fa-facebook-f"></i>
+                </button>
+                <button type="button" class="btn btn-outline-primary rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                  <i class="fab fa-microsoft"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Enlace de registro -->
+            <!-- <div class="text-center mt-4">
+              <p class="text-muted mb-0">¿No tienes una cuenta? 
+                <a routerLink="/register" class="text-primary text-decoration-none fw-medium">Regístrate</a>
+              </p>
+            </div> -->
           </div>
         </div>
       </div>

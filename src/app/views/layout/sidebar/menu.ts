@@ -11,7 +11,7 @@ export const MENU: MenuItem[] = [
     link: '/dashboard'
   },
   {
-    label: 'Administación',
+    label: 'Administración',
     isTitle: true
   },
   {
@@ -89,6 +89,16 @@ export const MENU: MenuItem[] = [
       {
         label: 'Ver',
         link: '/assets/asset',
+      }
+    ]
+  },
+  {
+    label: 'Presupuestos',
+    icon: 'briefcase',
+    subItems: [
+      {
+        label: 'Ver',
+        link: '/budgets/budget',
       }
     ]
   },

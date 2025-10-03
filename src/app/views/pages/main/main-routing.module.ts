@@ -50,6 +50,10 @@ const routes: Routes = [
         path: 'assets',
         loadChildren: () => import('../cost/assets/assets.module').then(m => m.AssetsModule)
       },
+      {
+        path: 'budgets',
+        loadChildren: () => import('../cost/budget/budgets.module').then(m => m.BudgetsModule)
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

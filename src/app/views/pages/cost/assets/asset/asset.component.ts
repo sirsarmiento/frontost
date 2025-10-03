@@ -55,8 +55,6 @@ export class AssetComponent implements OnInit {
 
   getAssets(){
     this.assetService.getAll().subscribe((resp: any) => {
-      console.log('Datos recibidos:', resp.data);
-      
       // Normalizar los datos numéricos
       const datosNormalizados = resp.data.map((item: any) => ({
         ...item,
@@ -65,7 +63,6 @@ export class AssetComponent implements OnInit {
         vidaUtil: this.normalizarNumero(item.vidaUtil)
       }));
       
-      console.log('Datos normalizados:', datosNormalizados);
       this.initTable(datosNormalizados);
 
       this.calcularTotales(datosNormalizados);
@@ -91,7 +88,6 @@ export class AssetComponent implements OnInit {
       this.totalDepreciacionMensual += this.calcularDepreciacionMensual(asset);
     });
 
-    console.log('Total Depreciación Mensual:', this.totalDepreciacionMensual);
   }
 
   applyFilter(event: Event) {
@@ -114,35 +110,35 @@ export class AssetComponent implements OnInit {
   }
 
   calcularDepreciacionAnual(row: Asset): number {
-    if (!row.costoInicial || !row.valorResidual || !row.vidaUtil) {
-    return 0;
+    if (!row.costoInicial || !row.valorResidual === undefined || !row.vidaUtil) {
+        return 0;
+    }
+
+    const costoInicial = row.costoInicial;
+    const valorResidual = row.valorResidual;
+    const vidaUtil = row.vidaUtil;
+
+    // Validar valores
+    if (costoInicial <= 0 || vidaUtil <= 0 || valorResidual < 0) {
+        return 0;
+    }
+
+    // CORRECCIÓN: Solo retornar 0 si valorResidual es MAYOR que costoInicial
+    if (valorResidual > costoInicial) {
+        return 0;
+    }
+    
+    // Cálculo de depreciación anual
+    const depreciacionAnual = (costoInicial - valorResidual) / vidaUtil;
+    
+    return depreciacionAnual;
   }
 
-  const costoInicial = row.costoInicial;
-  const valorResidual = row.valorResidual;
-  const vidaUtil = row.vidaUtil;
+  calcularDepreciacionMensual(row: Asset): number {
+    const depreciacionAnual = this.calcularDepreciacionAnual(row);
+    // Depreciación mensual
+    const depreciacionMensual = depreciacionAnual / 12;
 
-  // Validar valores
-  if (costoInicial <= 0 || vidaUtil <= 0 || valorResidual < 0) {
-    return 0;
+    return depreciacionMensual;
   }
-
-  if (valorResidual >= costoInicial) {
-    return 0;
-  }
-
-  // Cálculo de depreciación anual
-  const depreciacionAnual = (costoInicial - valorResidual) / vidaUtil;
-  
-  return depreciacionAnual;
-}
-
-calcularDepreciacionMensual(row: Asset): number {
-  const depreciacionAnual = this.calcularDepreciacionAnual(row);
-  
-  // Depreciación mensual
-  const depreciacionMensual = depreciacionAnual / 12;
-
-  return depreciacionMensual;
-}
 }

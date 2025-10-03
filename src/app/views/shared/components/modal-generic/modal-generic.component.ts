@@ -1,17 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { Budget } from 'src/app/core/models/Cost/budge';
 
-export interface DialogData { entity: any[], title: string }
+export interface DialogData { item: Budget }
 
 @Component({
   selector: 'app-modal-generic',
   templateUrl: './modal-generic.component.html'
 })
 export class ModalGenericComponent implements OnInit {
-  selectedRow: any;
-  displayedColumns: string[] = ['name', 'type'];
-  dataSource: MatTableDataSource<any>;
+
   title: string = '';
 
   constructor(
@@ -20,32 +19,13 @@ export class ModalGenericComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data);
-    this.initTable(this.data);
-    this.title = this.data.title;
-  }
-
-  initTable(data: any){
-    this.dataSource = new MatTableDataSource(data.entity);
+    console.log(this.data.item);
+    this.title = 'Esperando por las formulas';
   }
 
   closeModal() {
     this.dialogRef.close();
   }
 
-  getCategory(type: any): string {
-    if (this.data.title === 'Procesos') {
-      switch (type) {
-        case 1:
-          return 'Macroprocesos';
-        case 2:
-          return 'Procesos';
-        case 3:
-          return 'Subprocesos';
-      }
-    }else{
-      return type;
-    }
-  }
 
 }
