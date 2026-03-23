@@ -88,6 +88,19 @@ export class ConfigService extends HttpService {
     }
   }
 
+  async deleteConfig(id: number) {
+    const resp = await firstValueFrom(this.delete(environment.apiUrl, `/config/${id}`));
+  }
+
+  async deleteMachine(configId: number, machineId: number) {
+    try {
+      await firstValueFrom(this.delete(environment.apiUrl, `/perfil/${configId}/machine/${machineId}`));
+      this.toastrService.success('Máquina eliminada con éxito.');
+    } catch (error) {
+      this.toastrService.error('No se pudo eliminar la máquina del servidor.');
+    }
+  }
+
   async deleteUser(id: number, userId: number) {
     try {
       await firstValueFrom(this.delete(environment.apiUrl, `/config/${id}/remove-user/${userId}`));

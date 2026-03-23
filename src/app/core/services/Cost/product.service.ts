@@ -87,4 +87,8 @@ export class ProductService extends HttpService {
       }
     }
   }
+
+  async deleteProduct(id: number) {
+    const resp = await firstValueFrom(this.delete(environment.apiUrl, `/product/${id}`));
+  }
 }

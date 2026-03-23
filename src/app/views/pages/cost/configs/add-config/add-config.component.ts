@@ -57,6 +57,7 @@ export class AddConfigComponent implements OnInit {
       { field: this.f.type_machine, message: 'el tipo de máquina' },
       { field: this.f.description, message: 'la descripción' },
       { field: this.f.productMax, message: 'la producción máxima' },
+      { field: this.f.productMedida, message: 'la unidad de medida de la produccion máxima' },
       { field: this.f.hoursMax, message: 'las horas máximas' },
       { field: this.f.hoursUse, message: 'las horas de uso' }
     ];
@@ -75,7 +76,7 @@ export class AddConfigComponent implements OnInit {
     const type = this.f.type_machine.value.toString().trim();
     
     const exists = this.machines.some(machine =>  
-      machine.tipo.toLowerCase() === type.toLowerCase() && machine.descripcion.toLowerCase() === description.toLowerCase()
+      machine.tipo.toLowerCase() === type.toLowerCase() && machine.descripcion.toLowerCase() === description.toLowerCase() && machine.id !== this.selectedRow?.id
     ); 
 
     if (exists) {
@@ -89,17 +90,27 @@ export class AddConfigComponent implements OnInit {
   }
 
   onAddMachine() {
-    const newMachine = {
+    const machineData = {
       id: this.generateUniqueId(),
       tipo: this.f.type_machine.value.toString().trim().toUpperCase(),
       descripcion: this.f.description.value.toString().trim().toUpperCase(),
       unidad: this.f.medida.value, // Agregar la unidad de medida
       prodMaxHoras: Number(this.f.productMax.value),
+      prodMedida: this.f.productMedida.value,
       horasMax: Number(this.f.hoursMax.value),
       horasUso: Number(this.f.hoursUse.value),
     };
 
-    this.machines.push(newMachine);
+    if (this.selectedRow) {
+    // Si estamos editando, reemplazamos en el arreglo original
+    const index = this.machines.findIndex(m => m.id === this.selectedRow.id);
+    this.machines[index] = machineData;
+    this.selectedRow = null; // Limpiamos la selección
+  } else {
+    // Si es nueva, la agregamos
+    this.machines.push(machineData);
+  }
+  
     this.refreshList();
     this.clearForm();
 
@@ -222,6 +233,7 @@ export class AddConfigComponent implements OnInit {
     this.f.type_machine.setValue('');
     this.f.description.setValue('');
     this.f.productMax.setValue('');
+    this.f.productMedida.setValue('');
     this.f.hoursMax.setValue('');
     this.f.hoursUse.setValue('');
   }
@@ -236,8 +248,6 @@ export class AddConfigComponent implements OnInit {
     }
   }
 
-
-
   onDeleteMachine(row: Machine){
     Swal.fire({
         title:  `¿ Estás seguro que deseas eliminar de la lista ${ row.descripcion }?`,
@@ -247,8 +257,8 @@ export class AddConfigComponent implements OnInit {
           if (result.isConfirmed){
               this.machines.forEach((element,index)=>{
                 if(element.id==row.id) {
-                  this.machines.splice(index,1);
-                  //this.configService.deleteMachine(row.id);
+                  this.machines = this.machines.filter(m => m.id !== row.id);
+                  this.calculateGroupedCapacities();
                   this.refreshList();
                 }
               });
@@ -291,6 +301,7 @@ export class AddConfigComponent implements OnInit {
       type_machine: [],
       description: [],
       productMax: [],
+      productMedida: [],
       hoursMax: [],
       hoursUse: [],
       medida: [],
@@ -300,8 +311,6 @@ export class AddConfigComponent implements OnInit {
   onSubmit() {
 
     this.submitted = true;
-
-
 
     if (this.form.invalid) { return; }
 
@@ -327,5 +336,26 @@ export class AddConfigComponent implements OnInit {
       this.configService.update(this.id, perfil);
     }
 
+  }
+
+  onEdit(row: Machine){
+    // Cargar los valores en los campos del formulario
+    this.f.type_machine.setValue(row.tipo);
+    this.f.description.setValue(row.descripcion);
+    this.f.productMax.setValue(row.prodMaxHoras);
+    this.f.productMedida.setValue(row.prodMedida);
+    this.f.hoursMax.setValue(row.horasMax);
+    this.f.hoursUse.setValue(row.horasUso);
+    this.f.medida.setValue(row.unidad);
+    // Guardamos el ID para saber que estamos editando y no agregando uno nuevo
+    this.selectedRow = row; 
+    // Hacer scrol hacia arriba para que el usuario vea el formulariol
+    window.scrollTo(0, 0);
+  }
+
+  cancelEdit() {
+    this.clearForm();       
+    this.selectedRow = null; 
+    this.submitted = false;  
   }
 }

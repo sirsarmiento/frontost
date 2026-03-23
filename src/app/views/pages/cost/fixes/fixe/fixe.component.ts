@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Fixe } from 'src/app/core/models/Cost/fixe';
 import { FixeService } from 'src/app/core/services/Cost/fixe.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-fixe',
@@ -62,5 +63,17 @@ export class FixeComponent implements OnInit {
 
   openAdd(){
     this.router.navigate(['/fixes/add-fixe']);
+  }
+
+  onDelete(id:number, concepto: string){
+        Swal.fire({
+          title:  `¿ Estás seguro que deseas eliminar ${ concepto }?`,
+          showDenyButton: true,
+          confirmButtonText: `Eliminar`,
+        }).then((result) => {
+          if (result.isConfirmed){
+            console.log(id);
+          }
+        })
   }
 }

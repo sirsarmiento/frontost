@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Product } from 'src/app/core/models/Cost/product';
 import { ProductService } from 'src/app/core/services/Cost/product.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product',
@@ -65,5 +66,17 @@ export class ProductComponent implements OnInit {
 
   openAdd(){
     this.router.navigate(['/products/add-product']);
+  }
+
+  onDelete(id:number, nombre: string){
+        Swal.fire({
+          title:  `¿ Estás seguro que deseas eliminar ${ nombre }?`,
+          showDenyButton: true,
+          confirmButtonText: `Eliminar`,
+        }).then((result) => {
+          if (result.isConfirmed){
+            console.log(id);
+          }
+        })
   }
 }

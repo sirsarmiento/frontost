@@ -162,7 +162,7 @@
             </div>
 
             <div class="row">
-              <div class="col-3">
+              <div class="col-2">
                   <mat-form-field>
                     <mat-label>Producción Máx / Horas</mat-label>
                     <input type="number" matInput formControlName="productMax" maxlength="3"  [ngClass]="{ 'is-invalid': submitted && f.productMax.errors }">
@@ -170,6 +170,17 @@
                         <mat-error *ngIf="f.productMax.errors.required">Ingrese Producción Máxima</mat-error>
                     </mat-error>
                   </mat-form-field>
+              </div>
+              <div class="col-1">
+                <mat-form-field>
+                    <mat-label>Medida</mat-label>
+                    <input matInput formControlName="productMedida" maxlength="50" 
+                    [ngClass]="{ 'is-invalid': submitted && f.productMedida.errors }"
+                    style="text-transform: uppercase;">
+                    <mat-error *ngIf="submitted && f.productMedida.errors">
+                        <mat-error *ngIf="f.productMedida.errors.required">Ingrese la Medida</mat-error>
+                    </mat-error>
+                </mat-form-field>
               </div>
               <div class="col-3">
                   <mat-form-field>
@@ -193,6 +204,9 @@
                 <button mat-icon-button color="primary" (click)="addMachine()">
                   <mat-icon>add_circle</mat-icon>
                 </button>
+                <button *ngIf="selectedRow" mat-icon-button color="warn" (click)="cancelEdit()" matTooltip="Cancelar edición">
+                  <mat-icon>cancel</mat-icon>
+                </button>
               </div>
             </div>
 
@@ -214,7 +228,7 @@
 
                 <ng-container matColumnDef="prodMaxHoras">
                   <th mat-header-cell *matHeaderCellDef>Prod. Máx/Hora</th>
-                  <td mat-cell *matCellDef="let machine">{{machine.prodMaxHoras}}</td>
+                  <td mat-cell *matCellDef="let machine"> {{machine.prodMaxHoras}} {{machine.prodMedida}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="horasMax">
@@ -227,16 +241,30 @@
                   <td mat-cell *matCellDef="let machine">{{machine.horasUso}}</td>
                 </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="['tipo', 'descripcion', 'prodMaxHoras', 'horasMax', 'horasUso']"></tr>
-                <tr mat-row *matRowDef="let row; columns: ['tipo', 'descripcion', 'prodMaxHoras', 'horasMax', 'horasUso'];"></tr>
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                  <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button class="edit-color" matTooltip="Editar"     
+                    (click)="onEdit(row)">
+                        <mat-icon class="font-weight-boldest">create</mat-icon>
+                    </button>
+                    <button mat-icon-button class="delete-color" matTooltip="Eliminar"
+                    (click)="onDeleteMachine(row)"> 
+                      <mat-icon class="font-weight-boldest">delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsActivity"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsActivity;"></tr>
               </table>
 
               <!-- Resumen de capacidades por grupo -->
               <div class="capacity-summary">
                 <h4>Resumen de Capacidades ({{group.medida}})</h4>
-                <p><strong>Capacidad Instalada:</strong> {{group.capacities.installedCapacity}}</p>
-                <p><strong>Capacidad de Producción:</strong> {{group.capacities.productionCapacity}}</p>
-                <p><strong>Capacidad Ociosa:</strong> {{group.capacities.idleCapacity }}</p>
+                <p><strong>Capacidad Instalada:</strong> {{group.capacities.installedCapacity}}{{group.machines[0]?.prodMedida}}</p>
+                <p><strong>Capacidad de Producción:</strong> {{group.capacities.productionCapacity}}{{group.machines[0]?.prodMedida}}</p>
+                <p><strong>Capacidad Ociosa:</strong> {{group.capacities.idleCapacity }}{{group.machines[0]?.prodMedida}}</p>
                 <p><strong>Utilización:</strong> {{group.capacities.utilizationPercentage }}%</p>
               </div>
             </div>

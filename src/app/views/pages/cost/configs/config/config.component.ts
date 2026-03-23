@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfigService } from 'src/app/core/services/Cost/config.service';
 import { Config } from 'src/app/core/models/Cost/config';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-config',
@@ -66,4 +67,16 @@ export class ConfigComponent implements OnInit {
   openAdd(){
     this.router.navigate(['/configs/add-config']);
   }
+
+  onDelete(id:number, nombre: string){
+      Swal.fire({
+        title:  `¿ Estás seguro que deseas eliminar ${ nombre }?`,
+        showDenyButton: true,
+        confirmButtonText: `Eliminar`,
+      }).then((result) => {
+        if (result.isConfirmed){
+          console.log(id);
+        }
+      })
+    }
 }
