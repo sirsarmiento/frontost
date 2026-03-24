@@ -24,66 +24,143 @@
       </div>
     </div>
 
-  <div class="row" [hidden]="loading">
-    <div class="col-8">
-      <div class="filter-class p-top">
-        <mat-form-field appearance="standard">
-          <mat-label>Buscar</mat-label>
-          <input matInput (keyup)="applyFilter($event)"  #input>
-        </mat-form-field>
-      </div>
-    </div>
- 
-    <div class="mat-elevation-z8 ">
-      <div class="table-responsive">
-        <table mat-table [dataSource]="dataSource" matSort>
+  <div class="row p-top" [hidden]="loading">
+    <mat-tab-group animationDuration="0ms">
+      <mat-tab label="Fijos">
 
-          <ng-container matColumnDef="tipo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
-            <td mat-cell *matCellDef="let row"> {{ row.tipo }} </td>
-          </ng-container>
+        <div class="col-8">
+          <div class="filter-class p-top">
+            <mat-form-field appearance="standard">
+              <mat-label>Buscar</mat-label>
+              <!-- Para Fijos -->
+              <input 
+               matInput
+              (keyup)="applyFilterFijos($event)" 
+              placeholder="Filtrar fijos...">
+            </mat-form-field>
+          </div>
+        </div>
 
-          <ng-container matColumnDef="concepto">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Concepto</th>
-            <td mat-cell *matCellDef="let row"> {{ row.concepto }} </td>
-          </ng-container>
+        <div class="mat-elevation-z8 ">
+          <div class="table-responsive">
+             <table mat-table [dataSource]="dataSourceFijos" matSort #sortFijos="matSort">
 
-          <ng-container matColumnDef="precio">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
-            <td mat-cell *matCellDef="let row"> {{ row.precio | number: '1.0-2' }} </td>
-          </ng-container>
+              <ng-container matColumnDef="tipo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+                <td mat-cell *matCellDef="let row"> {{ row.tipo }} </td>
+              </ng-container>
 
-           <ng-container matColumnDef="clasificacion">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Clasificación</th>
-            <td mat-cell *matCellDef="let row"> {{ row.clasificacion }} </td>
-          </ng-container>
+              <ng-container matColumnDef="concepto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Concepto</th>
+                <td mat-cell *matCellDef="let row"> {{ row.concepto }} </td>
+              </ng-container>
 
-          <ng-container matColumnDef="producto">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Producto</th>
-            <td mat-cell *matCellDef="let row"> {{ row.productoName }} </td>
-          </ng-container>
-        
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> Acciones </th>
-            <td mat-cell *matCellDef="let row">
-              <button mat-icon-button class="edit-color" matTooltip="Editar"     
-              (click)="onEdit(row)">
-                  <mat-icon class="font-weight-boldest">create</mat-icon>
-              </button>
-            </td>
-          </ng-container>
+              <ng-container matColumnDef="precio">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+                <td mat-cell *matCellDef="let row"> {{ row.precio | number: '1.0-2' }} </td>
+              </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns" 
-            (click)="selectedRow = selectedRow === row ? null : row" [ngClass]="{ 'selected': row === selectedRow }"
-          > 
-          </tr>
-  
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell msg-no-found" colspan="8">No hay datos que coincidan"</td>
-          </tr>
-        </table>
-      </div>
-      <mat-paginator [pageSizeOptions]="[10, 20]" aria-label="Proyectos por página"></mat-paginator>
-    </div>
+              <ng-container matColumnDef="clasificacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Clasificación</th>
+                <td mat-cell *matCellDef="let row"> {{ row.clasificacion }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="producto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Producto</th>
+                <td mat-cell *matCellDef="let row"> {{ row.productoName }} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let row">
+                  <button mat-icon-button class="edit-color" matTooltip="Editar"     
+                  (click)="onEdit(row)">
+                      <mat-icon class="font-weight-boldest">create</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns" 
+                (click)="selectedRow = selectedRow === row ? null : row" [ngClass]="{ 'selected': row === selectedRow }"
+              > 
+              </tr>
+      
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell msg-no-found" colspan="8">No hay datos que coincidan"</td>
+              </tr>
+            </table>
+          </div>
+          <mat-paginator #paginatorFijos [pageSizeOptions]="[10, 20]" aria-label="Proyectos por página"></mat-paginator>
+        </div>
+      </mat-tab>
+      <mat-tab label="Variables">
+
+        <div class="col-8">
+          <div class="filter-class p-top">
+            <mat-form-field appearance="standard">
+              <mat-label>Buscar</mat-label>
+              <!-- Para Fijos -->
+              <input 
+               matInput
+              (keyup)="applyFilterVariables($event)" 
+              placeholder="Filtrar variables...">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mat-elevation-z8 ">
+          <div class="table-responsive">
+            <table mat-table [dataSource]="dataSourceVariables" matSort #sortVariables="matSort">
+
+              <ng-container matColumnDef="tipo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+                <td mat-cell *matCellDef="let row"> {{ row.tipo }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="concepto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Concepto</th>
+                <td mat-cell *matCellDef="let row"> {{ row.concepto }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="precio">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+                <td mat-cell *matCellDef="let row"> {{ row.precio | number: '1.0-2' }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="clasificacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Clasificación</th>
+                <td mat-cell *matCellDef="let row"> {{ row.clasificacion }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="producto">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Producto</th>
+                <td mat-cell *matCellDef="let row"> {{ row.productoName }} </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let row">
+                  <button mat-icon-button class="edit-color" matTooltip="Editar"     
+                  (click)="onEdit(row)">
+                      <mat-icon class="font-weight-boldest">create</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns" 
+                (click)="selectedRow = selectedRow === row ? null : row" [ngClass]="{ 'selected': row === selectedRow }"
+              > 
+              </tr>
+      
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell msg-no-found" colspan="8">No hay datos que coincidan"</td>
+              </tr>
+            </table>
+          </div>
+          <mat-paginator #paginatorVariables [pageSizeOptions]="[10, 20]" aria-label="Proyectos por página"></mat-paginator>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>

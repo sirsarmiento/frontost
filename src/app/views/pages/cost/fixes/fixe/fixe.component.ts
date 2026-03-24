@@ -16,11 +16,17 @@ export class FixeComponent implements OnInit {
   loading = true;
   selectedRow;
   displayedColumns: string[] = ['tipo', 'concepto', 'precio', 'clasificacion', 'producto', 'actions'];
-  dataSource: MatTableDataSource<Fixe>;
 
-    
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  // Dos dataSources separados
+  dataSourceFijos: MatTableDataSource<Fixe>;
+  dataSourceVariables: MatTableDataSource<Fixe>;
+
+  // Dos pares de Paginator y Sort (uno para cada tabla)
+  @ViewChild('paginatorFijos') paginatorFijos: MatPaginator;
+  @ViewChild('sortFijos', { static: false }) sortFijos: MatSort;
+
+  @ViewChild('paginatorVariables') paginatorVariables: MatPaginator;
+  @ViewChild('sortVariables', { static: false }) sortVariables: MatSort;
 
   constructor(
     private fixeService: FixeService,
@@ -31,27 +37,48 @@ export class FixeComponent implements OnInit {
   ngOnInit(): void {
     this.fixeService.getAll().subscribe(( resp => {
          //console.log('RESP.DATA:', resp.data);
-         this.initTable(resp.data);
+         this.initTables(resp.data);
       }
     ));
   }
 
-  initTable(project: Fixe[]){
-    this.dataSource = new MatTableDataSource(project);
-    if (this.paginator) {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
+  initTables(data: Fixe[]){
+    // Filtrar datos para Fijos
+    const fijos = data.filter(item => item.tipo === 'Fijo');
+    this.dataSourceFijos = new MatTableDataSource(fijos);
+    this.dataSourceFijos.paginator = this.paginatorFijos;
+    this.dataSourceFijos.sort = this.sortFijos;
+
+    // Filtrar datos para Variables
+    const variables = data.filter(item => item.tipo === 'Variable');
+    this.dataSourceVariables = new MatTableDataSource(variables);
+    this.dataSourceVariables.paginator = this.paginatorVariables;
+    this.dataSourceVariables.sort = this.sortVariables;
 
     this.loading = false;
-    this.paginator._intl.itemsPerPageLabel = 'Filas';
+    
+    // Configurar textos de paginación
+    if (this.paginatorFijos) {
+      this.paginatorFijos._intl.itemsPerPageLabel = 'Filas';
+    }
+    if (this.paginatorVariables) {
+      this.paginatorVariables._intl.itemsPerPageLabel = 'Filas';
+    }
   }
 
-  applyFilter(event: Event) {
+  applyFilterFijos(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    this.dataSourceFijos.filter = filterValue.trim().toLowerCase();
+    if (this.dataSourceFijos.paginator) {
+      this.dataSourceFijos.paginator.firstPage();
+    }
+  }
+
+  applyFilterVariables(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceVariables.filter = filterValue.trim().toLowerCase();
+    if (this.dataSourceVariables.paginator) {
+      this.dataSourceVariables.paginator.firstPage();
     }
   }
 

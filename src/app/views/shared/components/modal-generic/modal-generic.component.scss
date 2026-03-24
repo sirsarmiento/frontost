@@ -1,0 +1,222 @@
+/* Contenedor principal */
+.cost-summary-container {
+    margin: 20px 0;
+    padding: 0 15px;
+}
+
+/* Tarjeta de resumen de costos */
+.cost-summary-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.cost-summary-card:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Título */
+.cost-summary-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f0f2f5;
+    display: flex;
+    align-items: center;
+}
+
+/* Estructura de la tabla */
+.cost-table {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Filas */
+.cost-row {
+    display: flex;
+    background: white;
+    transition: background-color 0.2s ease;
+}
+
+.cost-row:hover:not(.header) {
+    background-color: #f8f9fa;
+}
+
+.cost-row.header {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color: white;
+    font-weight: 600;
+}
+
+.cost-row.total {
+    border-top: 2px solid #e0e0e0;
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+/* Columnas */
+.cost-col {
+    padding: 16px 20px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.cost-col.description {
+    flex: 2;
+    font-weight: 500;
+    color: #2d3436;
+}
+
+.cost-col.value {
+    justify-content: flex-end;
+    font-family: 'Roboto Mono', monospace;
+    color: #2d3436;
+}
+
+/* Iconos */
+.cost-icon {
+    margin-right: 12px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #6c5ce7;
+}
+
+.cost-row.header .cost-icon {
+    color: white;
+}
+
+/* Destacados */
+.highlight {
+    color: #0984e3;
+    font-weight: 500;
+}
+
+.total-highlight {
+    color: #00b894;
+    font-size: 1.1em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cost-summary-card {
+        padding: 16px;
+    }
+    
+    .cost-col {
+        padding: 12px 15px;
+    }
+    
+    .cost-summary-title {
+        font-size: 1.3rem;
+    }
+}
+
+
+/* Estilos para la sección de totales mejorada */
+.totals-container {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #e9ecef;
+}
+
+.totals-header {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 10px;
+}
+
+.totals-title {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+.title-icon {
+  margin-right: 10px;
+  color: #6c757d;
+}
+
+.totals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.total-item {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 6px;
+  padding: 15px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.total-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.total-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e9ecef;
+  margin-right: 15px;
+}
+
+.total-icon {
+  color: #495057;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.total-content {
+  flex: 1;
+}
+
+.total-label {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.total-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+  .totals-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .totals-grid {
+    grid-template-columns: 1fr;
+  }
+}
