@@ -1,9 +1,8 @@
 import { User } from './../../../core/models/user';
-import { AuthService } from './../../../core/services/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 import { BaseComponent } from '../../shared/components/base/base.component';
-import { CommonsService } from 'src/app/core/services/commons.service';
+import { ProductService } from 'src/app/core/services/Cost/product.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,36 +11,48 @@ import { CommonsService } from 'src/app/core/services/commons.service';
   preserveWhitespaces: true
 })
 export class DashboardComponent extends BaseComponent implements OnInit {
+  user: User;
+  products: any[] = [];               // Todos los productos
+  perfilesNames: string[] = [];       // Lista única de perfilName
+  selectedPerfilName: string = '';    // PerfilName seleccionado
+  filteredProducts: any[] = [];       // Productos filtrados por el perfilName
 
-  user:User;
-  processes: number = 0;
-  risks: number = 0;
-  controls: number = 0;
-  events: number = 0;
-  plans: number = 0;
-  evaluations: number = 0;
+  // ... tus otras variables (processes, risks, etc.)
 
-  constructor(
-    private authService: AuthService,
-    private common: CommonsService
-  ) {
+  constructor(private productService: ProductService) {
     super();
   }
 
   ngOnInit(): void {
-    this.user = this.authService.currentUser;
-    //this.getResumen();
+    this.getProducts();
   }
 
-  //Si cuando el proyecto anance es necesario colocar un resumen en el home como hice en el proyecto Risko
-  // getResumen(){
-  //   this.common.getResumen().subscribe(( data => {
-  //     this.processes = data.processes;
-  //     this.risks = data.risks;
-  //     this.controls = data.controls;
-  //     this.events = data.events;
-  //     this.plans = data.plans;
-  //     this.evaluations = data.evaluations;
-  //   }))
-  // }
+  getProducts(): void {
+    this.productService.getAll().subscribe(resp => {
+      this.products = resp.data;               // Guardamos todos los productos
+      this.extractUniquePerfilNames();         // Extraemos los perfilName únicos
+      // Si quieres que al cargar se seleccione el primero automáticamente:
+      if (this.perfilesNames.length > 0) {
+        this.selectedPerfilName = this.perfilesNames[0];
+        this.onPerfilNameChange();              // Filtra los productos del primero
+      }
+    });
+  }
+
+  // Extrae valores únicos de perfilName
+  private extractUniquePerfilNames(): void {
+    const names = this.products.map(p => p.perfilName);
+    this.perfilesNames = [...new Set(names)];   // Elimina duplicados
+  }
+
+  // Se ejecuta cada vez que cambia el perfilName seleccionado
+  onPerfilNameChange(): void {
+    if (this.selectedPerfilName) {
+      this.filteredProducts = this.products.filter(
+        p => p.perfilName === this.selectedPerfilName
+      );
+    } else {
+      this.filteredProducts = [];
+    }
+  }
 }

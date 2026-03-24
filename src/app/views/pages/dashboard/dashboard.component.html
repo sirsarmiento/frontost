@@ -5,40 +5,21 @@
     <h4>Bienvenido {{ user.firstName + ' ' + user.lastName }}</h4>
   </div>
 
-  <!-- Grid de tarjetas centrado -->
-  <div class="d-flex justify-content-center">
-    <div class="grid-card-container">
+  <div class="select-group">
+    <div class="select-field">
+      <label for="perfilSelect">Selecciona un perfil:</label>
+      <select id="perfilSelect" [(ngModel)]="selectedPerfilName" (change)="onPerfilNameChange()">
+        <option *ngFor="let name of perfilesNames" [value]="name">{{ name }}</option>
+      </select>
+    </div>
 
-      <div class="card">
-        <span class="material-icons">assignment</span>
-        <div class="text">A: {{ processes }}</div>
-      </div>
-
-      <div class="card">
-        <span class="material-icons">warning</span>
-        <div class="text">B: {{ risks }}</div>
-      </div>
-
-      <div class="card">
-        <span class="material-icons">security</span>
-        <div class="text">C: {{ controls }}</div>
-      </div>
-
-      <div class="card">
-        <span class="material-icons">event</span>
-        <div class="text">D: {{ events }}</div>
-      </div>
-
-      <div class="card">
-        <span class="material-icons">description</span>
-        <div class="text">E: {{ plans }}</div>
-      </div>
-
-      <div class="card">
-        <span class="material-icons">verified_user</span>
-        <div class="text">F: {{ evaluations }}</div>
-      </div>
-
+    <div class="select-field">
+      <label for="productoSelect">Productos disponibles:</label>
+      <select id="productoSelect">
+        <option *ngFor="let prod of filteredProducts" [value]="prod.id">
+          {{ prod.nombre }} - {{ prod.sku }}
+        </option>
+      </select>
     </div>
   </div>
 
