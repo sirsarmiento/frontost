@@ -73,7 +73,7 @@ export class BudgetComponent implements OnInit {
       const dialogConfig = new MatDialogConfig();
       dialogConfig.disableClose = true;
       dialogConfig.id = "report-payment";
-      dialogConfig.width = "60%";
+      dialogConfig.width = "80%";
       dialogConfig.data = { item: row };
   
       const modalDialog = this.matDialog.open(ModalGenericComponent, dialogConfig);
