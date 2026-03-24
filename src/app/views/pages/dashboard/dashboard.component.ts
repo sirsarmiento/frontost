@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { BaseComponent } from '../../shared/components/base/base.component';
 import { ProductService } from 'src/app/core/services/Cost/product.service';
+import { FixeService } from 'src/app/core/services/Cost/fixe.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,14 +18,25 @@ export class DashboardComponent extends BaseComponent implements OnInit {
   selectedPerfilName: string = '';    // PerfilName seleccionado
   filteredProducts: any[] = [];       // Productos filtrados por el perfilName
 
-  // ... tus otras variables (processes, risks, etc.)
+  // Lista completa de costos obtenida del servicio
+  costItems: any[] = [];
+  // Lista filtrada que se mostrará en la vista
+  filteredCostItems: any[] = [];
 
-  constructor(private productService: ProductService) {
+  // Para el select, puedes usar un modelo
+  selectedProductId: any = null;
+  totalPrecio: number = 0;
+
+  constructor(
+    private productService: ProductService,
+    private fixeService: FixeService
+  ) {
     super();
   }
 
   ngOnInit(): void {
     this.getProducts();
+    this.getFixes();
   }
 
   getProducts(): void {
@@ -37,6 +49,16 @@ export class DashboardComponent extends BaseComponent implements OnInit {
         this.onPerfilNameChange();              // Filtra los productos del primero
       }
     });
+  }
+
+  getFixes(): void {
+    this.fixeService.getAll().subscribe(( resp => {
+        console.log('RESP.DATA:', resp.data);
+        this.costItems = resp.data;
+      // Inicialmente muestra todos los costos (sin filtrar)
+        this.filteredCostItems = [...this.costItems];
+      }
+    ));
   }
 
   // Extrae valores únicos de perfilName
@@ -54,5 +76,42 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     } else {
       this.filteredProducts = [];
     }
+    this.selectedProductId = null; // 🔁 Limpia la selección anterior
+  }
+
+    // Método que filtra los costos por el ID del producto seleccionado
+  filterCostsByProduct(productId: number | null): void {
+    if (productId === null || productId === 0) {
+      // Si no hay producto seleccionado, muestra todos
+      this.filteredCostItems = [...this.costItems];
+    } else {
+      // Filtra los costos cuyo campo 'producto' coincida con el ID
+      console.log(productId);
+      this.filteredCostItems = this.costItems.filter(
+        (costo) => costo.producto === productId
+      );
+    }
+
+    console.log('Costos filtrados:', this.filteredCostItems);
+
+    // Actualizar total después de filtrar
+    this.calcularTotal();
+
+  }
+
+    // Opcional: método que se ejecuta al cambiar la selección del dropdown
+  onProductChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const productId = select.value ? parseInt(select.value, 10) : null;
+    this.selectedProductId = productId;
+    this.filterCostsByProduct(productId);
+  }
+
+  calcularTotal() {
+    this.totalPrecio = this.filteredCostItems.reduce((sum, item) => {
+      // Convierte el precio a número (si es string)
+      const precioNum = parseFloat(item.precio);
+      return sum + (isNaN(precioNum) ? 0 : precioNum);
+    }, 0);
   }
 }

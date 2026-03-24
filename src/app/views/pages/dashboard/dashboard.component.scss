@@ -29,3 +29,30 @@
     }
   }
 }
+
+.total-container {
+  margin-top: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9eef3 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: right;
+  font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+}
+
+.total-container strong {
+  font-size: 1.5rem;        /* Aumentado de 1.2rem */
+  font-weight: 600;
+  color: #2c3e50;
+  letter-spacing: 0.5px;
+}
+
+.total-container span {
+  font-size: 2.8rem;        /* Aumentado de 2rem */
+  font-weight: 700;
+  margin-left: 0.75rem;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}

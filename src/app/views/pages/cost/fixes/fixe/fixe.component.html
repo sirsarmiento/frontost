@@ -3,25 +3,12 @@
       <div class="col-4">
         <nav class="page-breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a routerLink=".">Costos</a></li>
+            <li class="breadcrumb-item"><a routerLink=".">Costo</a></li>
             <li class="breadcrumb-item active" aria-current="page">Listado</li>
           </ol>
         </nav>
       </div>
-      <div class="col-8">
-        <div class="btn-flex-end">
-            <button mat-raised-button class="button-add-color" (click)="openAdd()">
-              <div class="btn-content">
-                <div class="button-txt">
-                  Agregar
-                </div>
-                <div class="icon">
-                  <mat-icon>add_circle_outline</mat-icon>
-                </div>
-              </div>
-            </button>
-          </div>
-      </div>
+      
     </div>
 
   <div class="row p-top" [hidden]="loading">
@@ -38,6 +25,14 @@
               (keyup)="applyFilterFijos($event)" 
               placeholder="Filtrar fijos...">
             </mat-form-field>
+          </div>
+        </div>
+
+        <div style="position: relative;">
+          <div class="btn-flex-end" style="position: absolute; top: -80px; right: 0;">
+            <button mat-raised-button class="button-add-color" (click)="openAdd()">
+              Agregar
+            </button>
           </div>
         </div>
 
@@ -110,6 +105,15 @@
               (keyup)="applyFilterVariables($event)" 
               placeholder="Filtrar variables...">
             </mat-form-field>
+          </div>
+        </div>
+
+        
+        <div style="position: relative;">
+          <div class="btn-flex-end" style="position: absolute; top: -80px; right: 0;">
+            <button mat-raised-button class="button-add-color" (click)="openAdd()">
+              Agregar
+            </button>
           </div>
         </div>
 

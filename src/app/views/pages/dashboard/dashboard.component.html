@@ -15,11 +15,17 @@
 
     <div class="select-field">
       <label for="productoSelect">Productos disponibles:</label>
-      <select id="productoSelect">
-        <option *ngFor="let prod of filteredProducts" [value]="prod.id">
+      <select id="productoSelect" [(ngModel)]="selectedProductId" (change)="onProductChange($event)">
+        <option [ngValue]="null" disabled selected>-- Selecciona un producto --</option>
+        <option *ngFor="let prod of filteredProducts" [ngValue]="prod.id">
           {{ prod.nombre }} - {{ prod.sku }}
         </option>
       </select>
+    </div>
+
+    <!-- Nuevo div para total -->
+    <div class="total-container">
+      <strong>Total: {{ totalPrecio | currency:'USD':'symbol':'1.2-2' }}  </strong>
     </div>
   </div>
 
