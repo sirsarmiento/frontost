@@ -11,8 +11,18 @@ export const MENU: MenuItem[] = [
     link: '/dashboard'
   },
   {
-    label: 'Administración',
+    label: 'Admin',
     isTitle: true
+  },
+  {
+    label: 'Perfil',
+    icon: 'briefcase',
+    subItems: [
+      {
+        label: 'Ver',
+        link: '/configs/config',
+      }
+    ]
   },
   {
     label: 'Usuarios',
@@ -47,16 +57,6 @@ export const MENU: MenuItem[] = [
   {
     label: 'MODULOS',
     isTitle: true
-  },
-  {
-    label: 'Perfil',
-    icon: 'briefcase',
-    subItems: [
-      {
-        label: 'Ver',
-        link: '/configs/config',
-      }
-    ]
   },
   {
     label: 'Productos',
