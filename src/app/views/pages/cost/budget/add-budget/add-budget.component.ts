@@ -9,6 +9,7 @@ import { Budget, Parts } from 'src/app/core/models/Cost/budge';
 import { BudgetService } from 'src/app/core/services/Cost/budget.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Product } from 'src/app/core/models/Cost/product';
 
 @Component({
   selector: 'app-add-budget',
@@ -23,11 +24,12 @@ export class AddBudgetComponent implements OnInit {
   loading = false;
   submitted = false;
   showList = true;
+  productosList: Product[] = [];
   piezas: Parts[] = [];
 
   piezaCounter: number = 1;
 
-  displayedColumns: string[] = ['nombre', 'gramos', 'metros', 'horas', 'minutos', 'actions'];
+  displayedColumns: string[] = ['nombre', 'materialTipo', 'gramos', 'metros', 'horas', 'minutos', 'actions'];
   dataSource: MatTableDataSource<Parts>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -46,6 +48,14 @@ export class AddBudgetComponent implements OnInit {
 
   ngOnInit() {
     this.setValues();
+    this.getExistingProducts();
+  }
+
+  getExistingProducts() {
+    this.budgetService.getProductos().subscribe(resp => {
+      this.productosList = resp.data; 
+      console.log('Productos cargados:', this.productosList);
+    });
   }
 
   back() {
@@ -56,6 +66,7 @@ export class AddBudgetComponent implements OnInit {
   addPart(){
     const requiredFields = [
       { field: this.f.nombre, message: 'el nombre' },
+      { field: this.f.materialTipo, message: 'el tipo de material' },
       { field: this.f.gramos, message: 'los gramos' },
       { field: this.f.metros, message: 'los metros' },
       { field: this.f.horas, message: 'las horas' },
@@ -92,6 +103,7 @@ export class AddBudgetComponent implements OnInit {
     const newParts = {
       id: this.generateUniqueId(),
       nombre: this.f.nombre.value.toString().trim().toUpperCase(),
+      materialTipo: this.f.materialTipo.value,
       gramos: this.f.gramos.value,
       metros: this.f.metros.value, 
       horas: this.f.horas.value,
@@ -128,6 +140,7 @@ export class AddBudgetComponent implements OnInit {
   // Método para limpiar el formulario después de agregar
   clearForm() {
     this.f.nombre.setValue(`PIEZA ${this.piezaCounter}`);
+    this.f.materialTipo.setValue('');
     this.f.gramos.setValue('');
     this.f.metros.setValue('');
     this.f.horas.setValue('');
@@ -149,8 +162,6 @@ export class AddBudgetComponent implements OnInit {
       this.showList = false;
     }
   }
-
-
 
   onDelete(row: Parts){
     Swal.fire({
@@ -194,11 +205,13 @@ export class AddBudgetComponent implements OnInit {
   myFormValues() {
     this.form = this.formBuilder.group({
       clasificacion: ['',Validators.required],
+      productoId: [''],
       descripcion: ['',Validators.required],
       numero: ['',Validators.required],
       fecha: ['',Validators.required],
 
       nombre: [`PIEZA ${this.piezaCounter}`],
+      materialTipo: [''],
       gramos: [],
       metros: [],
       horas: [],
@@ -210,9 +223,9 @@ export class AddBudgetComponent implements OnInit {
 
     this.submitted = true;
 
-
-
-    if (this.form.invalid) { return; }
+    if (this.f.clasificacion.value === 'Producto' && !this.f.productoId?.value) {
+      this.f.productoId?.setErrors({ required: true });
+    }
 
     this.loading = true;
 
@@ -221,7 +234,8 @@ export class AddBudgetComponent implements OnInit {
       descripcion: this.f.descripcion.value,
       numero: this.f.numero.value,
       fecha: this.f.fecha.value,
-      piezas: this.piezas
+      piezas: this.piezas,
+      productoId: this.f.clasificacion.value === 'Producto' ? this.f.productoId.value : null
     }
 
     console.log(budget);

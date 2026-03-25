@@ -6,11 +6,13 @@ export class Budget { //Presupuesto
     numero: string;
     fecha: Date;
     piezas?: Parts[];
+    productoId?: number | null;
 }
 
 export class Parts{ //Piezas
     id?: number;
     nombre?: string;
+    materialTipo: string;
     gramos: number;
     metros: number;
     horas: number;
