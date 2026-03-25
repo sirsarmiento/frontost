@@ -53,7 +53,7 @@ export class BudgetService extends HttpService {
   }
 
   getProductos(): Observable<any> { 
-    return this.http.get<any>(`$environment.apiUrl}/producto`);
+    return this.http.get<any>(`${environment.apiUrl}/productos`);
   }
 
   /**

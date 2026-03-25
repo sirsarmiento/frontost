@@ -57,6 +57,7 @@ export class AddAssetComponent implements OnInit {
       valorResidual: ['',Validators.required],
       vidaUtil: ['',Validators.required],
       fechaCompra: ['',Validators.required],
+      tipo: ['Fijo', Validators.required],
     })
   }
 
@@ -74,6 +75,7 @@ export class AddAssetComponent implements OnInit {
       valorResidual: this.f.valorResidual.value,
       vidaUtil: this.f.vidaUtil.value,
       fechaCompra: this.f.fechaCompra.value,
+      tipo: this.f.tipo.value,
     }
 
     console.log(activo);

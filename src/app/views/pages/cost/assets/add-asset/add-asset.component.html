@@ -9,6 +9,19 @@
   <div class="card">
     <div class="card-body">        
       <form [formGroup]="form"> 
+
+        <div class="row padding-top-input">
+          <div class="col-12">
+            <mat-form-field>
+              <mat-label>Tipo de Activo</mat-label>
+              <mat-select formControlName="tipo">
+                <mat-option value="Fijo">Fijo</mat-option>
+                <mat-option value="Circulante">Circulante</mat-option>
+              </mat-select>
+              <mat-error *ngIf="submitted && f.tipo.errors?.required">Seleccione el tipo de activo</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
         
         <div class="row padding-top-input">
           <div class="col-12">
@@ -25,15 +38,16 @@
       <div class="row">
           <div class="col-12">
               <mat-form-field>
-                  <mat-label>Costo Inicial</mat-label>
+                  <mat-label>{{ f.tipo.value === 'Circulante' ? 'Valor Actual' : 'Costo Inicial' }}</mat-label>
                   <input currencyMask  matInput formControlName="costoInicial" [ngClass]="{ 'is-invalid': submitted && f.costoInicial.errors }" >
                   <mat-error *ngIf="submitted && f.costoInicial.errors">
-                      <mat-error *ngIf="f.costoInicial.errors.required">Ingrese el costo Inicial</mat-error>
+                      <mat-error *ngIf="submitted && f.costoInicial.errors.required">Ingrese el costo Inicial</mat-error>
                   </mat-error>
               </mat-form-field>
           </div>
         </div>
 
+      <div *ngIf="f.tipo.value === 'Fijo'">
         <div class="row">
           <div class="col-12">
               <mat-form-field>
@@ -68,6 +82,7 @@
               </mat-form-field>
           </div>
         </div>
+      </div>
 
         <div class="row">
           <div class="col-12">

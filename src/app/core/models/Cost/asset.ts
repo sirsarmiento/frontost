@@ -6,4 +6,7 @@ export class Asset {
     valorResidual: number;
     vidaUtil: number;
     fechaCompra: Date;
+    tipo: string;        
+    depMensual?: number;        
+    depAnual?: number;
 }

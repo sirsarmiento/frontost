@@ -10,7 +10,7 @@
     <div class="card-body">
       <form [formGroup]="form">
         <div class="row padding-top-input">
-          <div class="col-4">
+          <div class="col-3">
             <mat-form-field>
               <mat-label>Clasificación</mat-label>
               <mat-select formControlName="clasificacion">
@@ -24,7 +24,7 @@
             </mat-form-field>
           </div>
 
-          <div class="col-4" *ngIf="f.clasificacion.value === 'Producto'">
+          <div class="col-3" *ngIf="f.clasificacion.value === 'Producto'">
             <mat-form-field>
               <mat-label>Seleccione el Producto</mat-label>
               <mat-select formControlName="productoId">
@@ -38,7 +38,7 @@
             </mat-form-field>
           </div>
 
-          <div class="col-4">
+          <div class="col-3">
               <mat-form-field>
                   <mat-label>Número de Orden</mat-label>
                   <input matInput formControlName="numero" maxlength="25" placeholder="Ticket" [ngClass]="{ 'is-invalid': submitted && f.numero.errors }">
@@ -48,7 +48,7 @@
               </mat-form-field>
           </div>
 
-          <div class="col-4">
+          <div class="col-3">
               <mat-form-field>
                 <mat-label>Fecha</mat-label>
                 <input formControlName="fecha" matInput [matDatepicker]="fecha" readonly>

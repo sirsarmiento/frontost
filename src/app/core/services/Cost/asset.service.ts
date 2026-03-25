@@ -22,7 +22,8 @@ export class AssetService extends HttpService {
       costoInicial: 0,
       valorResidual: 0,
       vidaUtil: 0,
-      fechaCompra: new Date()
+      fechaCompra: new Date(),
+      tipo: ''
     };
 
   }

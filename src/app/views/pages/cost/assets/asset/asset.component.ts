@@ -19,9 +19,17 @@ export class AssetComponent implements OnInit {
   dataSource: MatTableDataSource<Asset>;
   totalDepreciacionMensual: number = 0;
 
-    
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  dataSourceFijos: MatTableDataSource<Asset>;
+  dataSourceCirculantes: MatTableDataSource<Asset>; 
+
+  totalFijos: number = 0;
+  totalCirculantes: number = 0;
+
+  @ViewChild('paginatorFijos') paginatorFijos: MatPaginator;
+  @ViewChild('sortFijos', { static: false }) sortFijos: MatSort;
+
+  @ViewChild('paginatorCirculantes') paginatorCirculantes: MatPaginator;
+  @ViewChild('sortCirculantes', { static: false }) sortCirculantes: MatSort;
 
   constructor(
     private assetService: AssetService,
@@ -53,52 +61,73 @@ export class AssetComponent implements OnInit {
     });
   }
 
-  getAssets(){
+  getAssets() {
     this.assetService.getAll().subscribe((resp: any) => {
-      // Normalizar los datos numéricos
-      const datosNormalizados = resp.data.map((item: any) => ({
-        ...item,
-        costoInicial: this.normalizarNumero(item.costoInicial),
-        valorResidual: this.normalizarNumero(item.valorResidual),
-        vidaUtil: this.normalizarNumero(item.vidaUtil)
-      }));
+      const datosNormalizados = resp.data.map((item: any) => {
+        const asset = {
+          ...item,
+          costoInicial: this.normalizarNumero(item.costoInicial),
+          valorResidual: this.normalizarNumero(item.valorResidual),
+          vidaUtil: this.normalizarNumero(item.vidaUtil)
+        };
+        // Inyectamos los cálculos para que el filtrado y ordenamiento funcionen mejor
+        asset.depMensual = this.calcularDepreciacionMensual(asset);
+        asset.depAnual = this.calcularDepreciacionAnual(asset);
+        return asset;
+      });
       
-      this.initTable(datosNormalizados);
-
-      this.calcularTotales(datosNormalizados);
+      this.initTables(datosNormalizados);
     });
   }
+  
 
-  initTable(project: Asset[]){
-    this.dataSource = new MatTableDataSource(project);
-    if (this.paginator) {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }
+  initTables(data: Asset[]) {
+    // Filtrar y asignar Activos Fijos
+    const fijos = data.filter(item => item.tipo === 'Fijo');
+    this.dataSourceFijos = new MatTableDataSource(fijos);
+    this.totalFijos = fijos.reduce((sum, item) => sum + (item.depMensual || 0), 0);
 
+    // Filtrar y asignar Activos Circulantes
+    const circulantes = data.filter(item => item.tipo === 'Circulante');
+    this.dataSourceCirculantes = new MatTableDataSource(circulantes);
+    this.totalCirculantes = circulantes.reduce((sum, item) => sum + (item.depMensual || 0), 0);
+
+    setTimeout(() => {
+      this.dataSourceFijos.paginator = this.paginatorFijos;
+      this.dataSourceFijos.sort = this.sortFijos;
+      
+      this.dataSourceCirculantes.paginator = this.paginatorCirculantes;
+      this.dataSourceCirculantes.sort = this.sortCirculantes;
+    });
+    
     this.loading = false;
-    this.paginator._intl.itemsPerPageLabel = 'Filas';
-  }
-
-   // Función para calcular totales de depreciación
-  calcularTotales(assets: Asset[]): void {
-    this.totalDepreciacionMensual = 0;
-
-    assets.forEach(asset => {
-      this.totalDepreciacionMensual += this.calcularDepreciacionMensual(asset);
-    });
-
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-    // Recalcular totales cuando se filtra
-    this.calcularTotales(this.dataSource.filteredData);
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    
+    this.dataSourceFijos.filter = filterValue;
+    this.dataSourceCirculantes.filter = filterValue;
+
+    if (this.dataSourceFijos.paginator) this.dataSourceFijos.paginator.firstPage();
+    if (this.dataSourceCirculantes.paginator) this.dataSourceCirculantes.paginator.firstPage();
   }
+
+  applyFilterFijos(event: Event) {
+  const filterValue = (event.target as HTMLInputElement).value;
+  this.dataSourceFijos.filter = filterValue.trim().toLowerCase();
+  if (this.dataSourceFijos.paginator) {
+    this.dataSourceFijos.paginator.firstPage();
+  }
+}
+
+applyFilterCirculantes(event: Event) {
+  const filterValue = (event.target as HTMLInputElement).value;
+  this.dataSourceCirculantes.filter = filterValue.trim().toLowerCase();
+  if (this.dataSourceCirculantes.paginator) {
+    this.dataSourceCirculantes.paginator.firstPage();
+  }
+}
 
   onEdit(row: Asset){
     this.router.navigate(['/assets/add-asset']);
