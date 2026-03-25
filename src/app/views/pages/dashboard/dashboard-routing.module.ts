@@ -8,7 +8,7 @@ const routes: Routes = [
     path: '',
     component: DashboardComponent,
     data: {
-      title: 'Dashboard - Riesgo',
+      title: 'Dashboard - Cost',
     },
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, 

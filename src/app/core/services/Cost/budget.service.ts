@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../http.service';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 import { ToastrService } from 'ngx-toastr';
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Config } from '../../models/Cost/config';
 import { BudgetComponent } from 'src/app/views/pages/cost/budget/budget/budget.component';
 import { Budget } from '../../models/Cost/budge';
+import { Product } from 'src/app/core/models/Cost/product';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +50,10 @@ export class BudgetService extends HttpService {
 
   getAll() {
       return this.get(environment.apiUrl, '/presupuestos');
+  }
+
+  getProductos(): Observable<any> { 
+    return this.http.get<any>(`$environment.apiUrl}/producto`);
   }
 
   /**

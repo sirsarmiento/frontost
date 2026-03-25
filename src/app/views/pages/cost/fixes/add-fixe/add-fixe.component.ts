@@ -30,13 +30,45 @@ export class AddFixeComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
-  ngOnInit() {
+  opcionesConceptos: any = {
+    'Fijo': [
+      'Alquiler', 'Salarios base', 'Seguros', 
+      'Suscripciones y licencias', 'Impuestos fijos', 
+      'Servicios básicos (parte fija)',
+      'Otro'
+    ],
+    'Variable': [
+      'Materia prima e insumos', 'Costos de envío y distribución', 
+      'Comisiones de ventas', 'Empaquetado y embalaje', 
+      'Servicios básicos (por uso)',
+      'Otro'
+    ]
+  };
+
+  conceptosMostrados: string[] = [];
+
+  ngOnInit(): void {
+    // Lógica de Productos y Valores iniciales
     this.loadProducts();
     this.setValues();
 
+    // Lógica de Conceptos Dinámicos 
+    this.form.get('tipo')?.valueChanges.subscribe(valor => {
+      this.conceptosMostrados = this.opcionesConceptos[valor] || [];
+      // Limpiamos el concepto solo si el usuario interactúa 
+      this.form.get('concepto')?.setValue(''); 
+    });
+
+    // Escuchamos el cambio de 'clasificacion'
     this.form.get('clasificacion')?.valueChanges.subscribe(value => {
       this.onClasificacionChange(value);
     });
+
+    // Si ya viene un valor cargamos la lista inicial
+    const tipoInicial = this.form.get('tipo')?.value;
+    if (tipoInicial) {
+      this.conceptosMostrados = this.opcionesConceptos[tipoInicial] || [];
+    }
   }
 
   // Función para mostrar/ocultar campo producto
@@ -82,6 +114,7 @@ export class AddFixeComponent implements OnInit {
     this.form = this.formBuilder.group({
       tipo: ['',Validators.required],
       concepto: ['',Validators.required],
+      otroConcepto: [''],
       precio: ['',Validators.required],
       clasificacion: ['',Validators.required],
       producto: [''],
@@ -89,16 +122,24 @@ export class AddFixeComponent implements OnInit {
   }
 
   onSubmit() {
-
     this.submitted = true;
 
-    if (this.form.invalid) { return; }
+    // Validación manual: Si eligió 'Otro', el campo de texto es obligatorio
+    if (this.f.concepto.value === 'Otro' && !this.f.otroConcepto.value) {
+      this.f.otroConcepto.setErrors({ required: true });
+      return;
+    }
 
+    if (this.form.invalid) { return; }
     this.loading = true;
+
+    const conceptoFinal = this.f.concepto.value === 'Otro' 
+      ? this.f.otroConcepto.value 
+      : this.f.concepto.value;
 
     const costo: Fixe = {
       tipo: this.f.tipo.value,
-      concepto: this.f.concepto.value,
+      concepto: conceptoFinal,
       precio: this.f.precio.value,
       clasificacion: this.f.clasificacion.value,
       producto: this.f.producto.value,
@@ -108,10 +149,9 @@ export class AddFixeComponent implements OnInit {
 
     if(this.id == 0 || this.id == undefined){
       this.fixeService.add(costo);
-    }else{
+    } else {
       this.fixeService.update(this.id, costo);
     }
-
   }
 
 }
