@@ -17,6 +17,8 @@ export class ConfigComponent implements OnInit {
   loading = true;
   selectedRow;
   displayedColumns: string[] = ['nombre', 'rif', 'tipo','sector', 'empleados','actions'];
+  groupedCapacities: any[] = [];
+displayedColumnsActivity: string[] = ['tipo', 'descripcion', 'prodMaxHoras', 'horasMax', 'horasUso'];
   dataSource: MatTableDataSource<Config>;
 
     
@@ -36,9 +38,14 @@ export class ConfigComponent implements OnInit {
   getConfigs(){
     this.configService.getAll().subscribe(( resp => {
         this.initTable(resp.data);
+      // Si hay al menos una empresa, procesamos sus parámetros operativos de una vez
+      if (resp.data.length > 0) {
+        this.calculateGroupedCapacities(resp.data[0].parametros);
       }
-    ));
+    }));
   }
+
+  
 
   initTable(config: Config[]){
     this.dataSource = new MatTableDataSource(config);
@@ -57,6 +64,34 @@ export class ConfigComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  calculateGroupedCapacities(machines: any[]) {
+    if (!machines || machines.length === 0) return;
+
+    const grouped = machines.reduce((groups, machine) => {
+      const medida = machine.unidad || 'Sin medida';
+      if (!groups[medida]) groups[medida] = [];
+      groups[medida].push(machine);
+      return groups;
+    }, {});
+
+    this.groupedCapacities = Object.keys(grouped).map(medida => {
+      const groupMachines = grouped[medida];
+      const installed = groupMachines.reduce((sum, m) => sum + (m.horasMax * m.prodMaxHoras), 0);
+      const production = groupMachines.reduce((sum, m) => sum + (m.horasUso * m.prodMaxHoras), 0);
+      
+      return {
+        medida,
+        machines: groupMachines,
+        capacities: {
+          installedCapacity: installed,
+          productionCapacity: production,
+          idleCapacity: installed - production,
+          utilizationPercentage: installed > 0 ? ((production / installed) * 100).toFixed(2) : 0
+        }
+      };
+    });
   }
 
   onEdit(row: Config){

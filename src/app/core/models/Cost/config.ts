@@ -19,7 +19,6 @@ export class Machine{ //Parametros
     tipo: string;
     descripcion: string;
     prodMaxHoras: number;
-    prodMedida: string;
     horasMax: number;
     horasUso: number;
 }

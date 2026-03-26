@@ -79,8 +79,7 @@
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns" 
-            (click)="selectedRow = selectedRow === row ? null : row" [ngClass]="{ 'selected': row === selectedRow }"
-          > 
+            (click)="selectedRow = selectedRow === row ? null : row" [ngClass]="{ 'selected': row === selectedRow }"> 
           </tr>
   
           <tr class="mat-row" *matNoDataRow>
@@ -89,5 +88,74 @@
         </table>
       </div>
       <mat-paginator [pageSizeOptions]="[10, 20]" aria-label="Proyectos por página"></mat-paginator>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="row mt-5 mb-4" *ngIf="groupedCapacities.length > 0">
+      <div class="col-12">
+        <hr>
+        <h3 class="text-blue">Detalle de Parámetros Operativos</h3>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="groupedCapacities.length > 0">
+      <div class="col-12">
+        <div *ngFor="let group of groupedCapacities" class="card mb-4 shadow-sm border-0">
+          <div class="card-header bg-light text-blue">
+            <h5 class="mb-0">Unidad de Medida: {{group.medida}}</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table mat-table [dataSource]="group.machines" class="w-100">
+                <ng-container matColumnDef="tipo">
+                  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                  <td mat-cell *matCellDef="let m">{{m.tipo}}</td>
+                </ng-container>
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef>Descripción</th>
+                  <td mat-cell *matCellDef="let m">{{m.descripcion}}</td>
+                </ng-container>
+                <ng-container matColumnDef="prodMaxHoras">
+                  <th mat-header-cell *matHeaderCellDef>Capacidad (Máx/H)</th>
+                  <td mat-cell *matCellDef="let m">{{m.prodMaxHoras}} {{group.medida}}</td>
+                </ng-container>
+                <ng-container matColumnDef="horasMax">
+                  <th mat-header-cell *matHeaderCellDef>Horas Disponibles</th>
+                  <td mat-cell *matCellDef="let m">{{m.horasMax}}h</td>
+                </ng-container>
+                <ng-container matColumnDef="horasUso">
+                  <th mat-header-cell *matHeaderCellDef>Horas Planificadas</th>
+                  <td mat-cell *matCellDef="let m">{{m.horasUso}}h</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsActivity"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsActivity;"></tr>
+              </table>
+            </div>
+
+            <div class="bg-light p-3 border-top">
+              <div class="row text-center">
+                <div class="col-md-3">
+                  <small class="text-muted d-block">Capacidad Instalada</small>
+                  <strong>{{group.capacities.installedCapacity}} {{group.medida}}</strong>
+                </div>
+                <div class="col-md-3">
+                  <small class="text-muted d-block">Capacidad de Producción</small>
+                  <strong>{{group.capacities.productionCapacity}} {{group.medida}}</strong>
+                </div>
+                <div class="col-md-3">
+                  <small class="text-muted d-block">Capacidad Ociosa</small>
+                  <strong>{{group.capacities.idleCapacity}} {{group.medida}}</strong>
+                </div>
+                <div class="col-md-3">
+                  <small class="text-muted d-block">% Utilización</small>
+                  <strong class="text-success">{{group.capacities.utilizationPercentage}}%</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>

@@ -63,12 +63,12 @@
 
               <ng-container matColumnDef="depreciacionMensual">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Dep. Mensual</th>
-                <td mat-cell *matCellDef="let row"> {{ row.depMensual | number:'1.2-2' }} </td>
+                <td mat-cell *matCellDef="let row"> {{ calcularDepreciacionMensual(row) | number:'1.2-2' }} </td>
               </ng-container>
 
               <ng-container matColumnDef="depreciacionAnual">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Dep. Anual</th>
-                <td mat-cell *matCellDef="let row"> {{ row.depAnual | number:'1.2-2' }} </td>
+                <td mat-cell *matCellDef="let row"> {{ calcularDepreciacionAnual(row) | number:'1.2-2' }} </td>
               </ng-container>
 
               <ng-container matColumnDef="actions">
@@ -86,6 +86,18 @@
           </div>
           <mat-paginator #paginatorFijos [pageSizeOptions]="[10, 20]"></mat-paginator>
         </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+              <div class="card totales-card">
+                <div class="card-body">
+                  <h4 class="mb-0">Total Depreciación Mensual: 
+                    <span class="font-weight-bold text-primary">{{ totalFijos | number:'1.2-2' }}</span>
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
       </mat-tab>
 
       <mat-tab label="Circulantes">
@@ -135,11 +147,23 @@
                 </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsCirculantes"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumnsCirculantes"></tr>
             </table>
           </div>
           <mat-paginator #paginatorCirculantes [pageSizeOptions]="[10, 20]"></mat-paginator>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-12">
+            <div class="card totales-card">
+              <div class="card-body">
+                <h4 class="mb-0">Total Activos Circulantes: 
+                  <span class="font-weight-bold text-primary">{{ totalCirculantes | number:'1.2-2' }}</span>
+                </h4>
+              </div>
+            </div>
+          </div>
         </div>
       </mat-tab>
 

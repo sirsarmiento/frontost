@@ -38,10 +38,10 @@
       <div class="row">
           <div class="col-12">
               <mat-form-field>
-                  <mat-label>{{ f.tipo.value === 'Circulante' ? 'Valor Actual' : 'Costo Inicial' }}</mat-label>
+                  <mat-label>{{ f.tipo.value === 'Circulante' ? 'Monto / Saldo Actual' : 'Costo Inicial' }}</mat-label>
                   <input currencyMask  matInput formControlName="costoInicial" [ngClass]="{ 'is-invalid': submitted && f.costoInicial.errors }" >
                   <mat-error *ngIf="submitted && f.costoInicial.errors">
-                      <mat-error *ngIf="submitted && f.costoInicial.errors.required">Ingrese el costo Inicial</mat-error>
+                      <mat-error *ngIf="submitted && f.costoInicial.errors.required">Ingrese el Monto</mat-error>
                   </mat-error>
               </mat-form-field>
           </div>

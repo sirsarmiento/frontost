@@ -23,18 +23,45 @@
       </select>
     </div>
 
-    <div class="total-container">
-      <strong>Fijo Indirecto: {{ totalFijoIndirecto | currency:'USD':'symbol':'1.2-2' }}  </strong>
-    </div>
-
-    <div class="total-container">
-      <strong>Total Dep. Mensual: {{ totalDepreciacionMensual | currency:'USD':'symbol':'1.2-2' }}  </strong>
-    </div>
-
     <!-- Nuevo div para total -->
     <div class="total-container">
       <strong>Total: {{ totalPrecio | currency:'USD':'symbol':'1.2-2' }}  </strong>
     </div>
+    
+    <div class="table-container mt-4" *ngIf="selectedProductId">
+      <div class="mat-elevation-z2">
+        <table class="table custom-table">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Concepto</th>
+              <th>Precio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of filteredCostItems">
+              <td>{{ item.tipo }}</td>
+              <td>{{ item.concepto }}</td>
+              <td>{{ item.precio | number: '1.2-2' }}</td>
+            </tr>
+            <tr *ngIf="filteredCostItems.length === 0">
+              <td colspan="3" class="text-center">No hay costos directos para este producto</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="secondary-totals mt-4" >
+      <div class="total-container">
+        <strong>Fijo Indirecto: {{ totalFijoIndirecto | currency:'USD':'symbol':'1.2-2' }}  </strong>
+      </div>
+
+      <div class="total-container">
+        <strong>Total Dep. Mensual: {{ totalDepreciacionMensual | currency:'USD':'symbol':'1.2-2' }}  </strong>
+      </div>
+    </div>
+
   </div>
 
 </div>

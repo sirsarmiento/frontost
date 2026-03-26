@@ -57,7 +57,6 @@ export class AddConfigComponent implements OnInit {
       { field: this.f.type_machine, message: 'el tipo de máquina' },
       { field: this.f.description, message: 'la descripción' },
       { field: this.f.productMax, message: 'la producción máxima' },
-      { field: this.f.productMedida, message: 'la unidad de medida de la produccion máxima' },
       { field: this.f.hoursMax, message: 'las horas máximas' },
       { field: this.f.hoursUse, message: 'las horas de uso' }
     ];
@@ -96,7 +95,6 @@ export class AddConfigComponent implements OnInit {
       descripcion: this.f.description.value.toString().trim().toUpperCase(),
       unidad: this.f.medida.value, // Agregar la unidad de medida
       prodMaxHoras: Number(this.f.productMax.value),
-      prodMedida: this.f.productMedida.value,
       horasMax: Number(this.f.hoursMax.value),
       horasUso: Number(this.f.hoursUse.value),
     };
@@ -233,7 +231,6 @@ export class AddConfigComponent implements OnInit {
     this.f.type_machine.setValue('');
     this.f.description.setValue('');
     this.f.productMax.setValue('');
-    this.f.productMedida.setValue('');
     this.f.hoursMax.setValue('');
     this.f.hoursUse.setValue('');
   }
@@ -301,7 +298,6 @@ export class AddConfigComponent implements OnInit {
       type_machine: [],
       description: [],
       productMax: [],
-      productMedida: [],
       hoursMax: [],
       hoursUse: [],
       medida: [],
@@ -343,7 +339,6 @@ export class AddConfigComponent implements OnInit {
     this.f.type_machine.setValue(row.tipo);
     this.f.description.setValue(row.descripcion);
     this.f.productMax.setValue(row.prodMaxHoras);
-    this.f.productMedida.setValue(row.prodMedida);
     this.f.hoursMax.setValue(row.horasMax);
     this.f.hoursUse.setValue(row.horasUso);
     this.f.medida.setValue(row.unidad);

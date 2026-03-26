@@ -181,7 +181,7 @@ export class DashboardComponent extends BaseComponent implements OnInit {
       // Filtra los costos cuyo campo 'producto' coincida con el ID
       console.log(productId);
       this.filteredCostItems = this.costItems.filter(
-        (costo) => costo.producto === productId
+        (costo) => costo.producto === productId && (costo.tipo === 'Variable' || costo.tipo === 'Fijo')
       );
     }
 

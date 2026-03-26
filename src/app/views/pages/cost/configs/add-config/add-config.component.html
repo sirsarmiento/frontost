@@ -162,25 +162,17 @@
             </div>
 
             <div class="row">
-              <div class="col-2">
+              <div class="col-3">
                   <mat-form-field>
                     <mat-label>Producción Máx / Horas</mat-label>
-                    <input type="number" matInput formControlName="productMax" maxlength="3"  [ngClass]="{ 'is-invalid': submitted && f.productMax.errors }">
-                    <mat-error *ngIf="submitted && f.productMax.errors">
-                        <mat-error *ngIf="f.productMax.errors.required">Ingrese Producción Máxima</mat-error>
-                    </mat-error>
+                      <input type="number" matInput formControlName="productMax" maxlength="3" [ngClass]="{ 'is-invalid': submitted && f.productMax.errors }">
+                      <span matSuffix class="text-muted ml-2" *ngIf="f.medida.value">
+                          / {{ f.medida.value }}
+                      </span>
+                      <mat-error *ngIf="submitted && f.productMax.errors?.required">
+                          Ingrese Producción Máxima
+                      </mat-error>
                   </mat-form-field>
-              </div>
-              <div class="col-1">
-                <mat-form-field>
-                    <mat-label>Medida</mat-label>
-                    <input matInput formControlName="productMedida" maxlength="50" 
-                    [ngClass]="{ 'is-invalid': submitted && f.productMedida.errors }"
-                    style="text-transform: uppercase;">
-                    <mat-error *ngIf="submitted && f.productMedida.errors">
-                        <mat-error *ngIf="f.productMedida.errors.required">Ingrese la Medida</mat-error>
-                    </mat-error>
-                </mat-form-field>
               </div>
               <div class="col-3">
                   <mat-form-field>
@@ -228,7 +220,7 @@
 
                 <ng-container matColumnDef="prodMaxHoras">
                   <th mat-header-cell *matHeaderCellDef>Prod. Máx/Hora</th>
-                  <td mat-cell *matCellDef="let machine"> {{machine.prodMaxHoras}} {{machine.prodMedida}}</td>
+                  <td mat-cell *matCellDef="let machine"> {{machine.prodMaxHoras}} {{group.medida}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="horasMax">
@@ -262,9 +254,9 @@
               <!-- Resumen de capacidades por grupo -->
               <div class="capacity-summary">
                 <h4>Resumen de Capacidades ({{group.medida}})</h4>
-                <p><strong>Capacidad Instalada:</strong> {{group.capacities.installedCapacity}}{{group.machines[0]?.prodMedida}}</p>
-                <p><strong>Capacidad de Producción:</strong> {{group.capacities.productionCapacity}}{{group.machines[0]?.prodMedida}}</p>
-                <p><strong>Capacidad Ociosa:</strong> {{group.capacities.idleCapacity }}{{group.machines[0]?.prodMedida}}</p>
+                <p><strong>Capacidad Instalada:</strong> {{group.capacities.installedCapacity}} {{group.medida}}</p>
+                <p><strong>Capacidad de Producción:</strong> {{group.capacities.productionCapacity}} {{group.medida}}</p>
+                <p><strong>Capacidad Ociosa:</strong> {{group.capacities.idleCapacity }} {{group.medida}}</p>
                 <p><strong>Utilización:</strong> {{group.capacities.utilizationPercentage }}%</p>
               </div>
             </div>

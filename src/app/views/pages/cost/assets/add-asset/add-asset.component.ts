@@ -45,6 +45,7 @@ export class AddAssetComponent implements OnInit {
         this.f.valorResidual.setValue(data.valorResidual);
         this.f.vidaUtil.setValue(data.vidaUtil);
         this.f.fechaCompra.setValue(data.fechaCompra);
+        this.f.tipo.setValue(data.tipo);
         this.id = data.id;
       }
     });
@@ -54,38 +55,58 @@ export class AddAssetComponent implements OnInit {
     this.form = this.formBuilder.group({
       nombre: ['',Validators.required],
       costoInicial: ['',Validators.required],
-      valorResidual: ['',Validators.required],
-      vidaUtil: ['',Validators.required],
-      fechaCompra: ['',Validators.required],
+      valorResidual: [''],
+      vidaUtil: [''],
+      fechaCompra: [''],
       tipo: ['Fijo', Validators.required],
-    })
+    });
+
+    this.form.get('tipo').valueChanges.subscribe(tipo => {
+      const vRes = this.form.get('valorResidual');
+      const vUtil = this.form.get('vidaUtil');
+
+      if (tipo === 'Fijo') {
+        vRes.setValidators([Validators.required]);
+        vUtil.setValidators([Validators.required]);
+      } else {
+        vRes.clearValidators();
+        vUtil.clearValidators();
+        // Opcional: resetear a 0 si es circulante
+        vRes.setValue(0);
+        vUtil.setValue(0);
+      }
+      vRes.updateValueAndValidity();
+      vUtil.updateValueAndValidity();
+    });
   }
 
   onSubmit() {
-
     this.submitted = true;
 
+    // Validación manual extra solo si es Fijo
+    if (this.f.tipo.value === 'Fijo') {
+      if (!this.f.valorResidual.value || !this.f.vidaUtil.value) {
+        // Opcional: puedes marcar errores manuales aquí
+      }
+    }
     if (this.form.invalid) { return; }
-
     this.loading = true;
-
+    
     const activo: Asset = {
       nombre: this.f.nombre.value,
       costoInicial: this.f.costoInicial.value,
-      valorResidual: this.f.valorResidual.value,
-      vidaUtil: this.f.vidaUtil.value,
-      fechaCompra: this.f.fechaCompra.value,
       tipo: this.f.tipo.value,
-    }
+      // Si es Circulante, enviamos valores por defecto para evitar errores
+      valorResidual: this.f.tipo.value === 'Fijo' ? this.f.valorResidual.value : 0,
+      vidaUtil: this.f.tipo.value === 'Fijo' ? this.f.vidaUtil.value : 0,
+      fechaCompra: this.f.tipo.value === 'Fijo' ? this.f.fechaCompra.value : new Date(),
+    };
 
-    console.log(activo);
-
-    if(this.id == 0 || this.id == undefined){
+    if (this.id == 0 || this.id == undefined) {
       this.assetService.add(activo);
-    }else{
+    } else {
       this.assetService.update(this.id, activo);
     }
-
   }
 
 }

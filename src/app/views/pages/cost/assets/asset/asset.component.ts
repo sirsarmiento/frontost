@@ -16,6 +16,7 @@ export class AssetComponent implements OnInit {
   loading = true;
   selectedRow;
   displayedColumns: string[] = ['nombre', 'costoInicial', 'valorResidual', 'vidaUtil', 'fechaCompra', 'depreciacionMensual', 'depreciacionAnual', 'actions'];
+  displayedColumnsCirculantes: string[] = ['nombre', 'costoInicial', 'actions'];
   dataSource: MatTableDataSource<Asset>;
   totalDepreciacionMensual: number = 0;
 
@@ -63,6 +64,7 @@ export class AssetComponent implements OnInit {
 
   getAssets() {
     this.assetService.getAll().subscribe((resp: any) => {
+      console.log("Datos recibidos del servidor:", resp.data);
       const datosNormalizados = resp.data.map((item: any) => {
         const asset = {
           ...item,
@@ -82,22 +84,33 @@ export class AssetComponent implements OnInit {
   
 
   initTables(data: Asset[]) {
-    // Filtrar y asignar Activos Fijos
-    const fijos = data.filter(item => item.tipo === 'Fijo');
+    // Los que dicen "Fijo" O los que NO tienen tipo pero SÍ tienen vida útil
+    const fijos = data.filter(item => 
+      item.tipo?.toLowerCase().trim() === 'fijo' || 
+      (!item.tipo && item.vidaUtil > 0)
+    );
     this.dataSourceFijos = new MatTableDataSource(fijos);
-    this.totalFijos = fijos.reduce((sum, item) => sum + (item.depMensual || 0), 0);
-
-    // Filtrar y asignar Activos Circulantes
-    const circulantes = data.filter(item => item.tipo === 'Circulante');
+    
+    // Los que dicen "Circulante" O los que NO tienen tipo y su vida útil es 0
+    const circulantes = data.filter(item => 
+      item.tipo?.toLowerCase().trim() === 'circulante' || 
+      (!item.tipo && item.vidaUtil === 0 && item.id > 0) // El caso de 'agua' entraría aquí
+    );
     this.dataSourceCirculantes = new MatTableDataSource(circulantes);
-    this.totalCirculantes = circulantes.reduce((sum, item) => sum + (item.depMensual || 0), 0);
 
+    // Recalcular total de fijos
+    this.totalFijos = fijos.reduce((sum, item) => sum + (this.calcularDepreciacionMensual(item) || 0), 0);
+    this.totalCirculantes = circulantes.reduce((sum, item) => sum + (item.costoInicial || 0), 0);
+    
     setTimeout(() => {
-      this.dataSourceFijos.paginator = this.paginatorFijos;
-      this.dataSourceFijos.sort = this.sortFijos;
-      
-      this.dataSourceCirculantes.paginator = this.paginatorCirculantes;
-      this.dataSourceCirculantes.sort = this.sortCirculantes;
+      if (this.dataSourceFijos) {
+        this.dataSourceFijos.paginator = this.paginatorFijos;
+        this.dataSourceFijos.sort = this.sortFijos;
+      }
+      if (this.dataSourceCirculantes) {
+        this.dataSourceCirculantes.paginator = this.paginatorCirculantes;
+        this.dataSourceCirculantes.sort = this.sortCirculantes;
+      }
     });
     
     this.loading = false;
@@ -121,13 +134,13 @@ export class AssetComponent implements OnInit {
   }
 }
 
-applyFilterCirculantes(event: Event) {
-  const filterValue = (event.target as HTMLInputElement).value;
-  this.dataSourceCirculantes.filter = filterValue.trim().toLowerCase();
-  if (this.dataSourceCirculantes.paginator) {
-    this.dataSourceCirculantes.paginator.firstPage();
+  applyFilterCirculantes(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceCirculantes.filter = filterValue.trim().toLowerCase();
+    if (this.dataSourceCirculantes.paginator) {
+      this.dataSourceCirculantes.paginator.firstPage();
+    }
   }
-}
 
   onEdit(row: Asset){
     this.router.navigate(['/assets/add-asset']);
