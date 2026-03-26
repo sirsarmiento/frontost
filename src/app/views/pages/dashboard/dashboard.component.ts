@@ -35,8 +35,8 @@ export class DashboardComponent extends BaseComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private fixeService: FixeService,
-    private assetService: AssetService,
+    private fixeService: FixeService, //Costo
+    private assetService: AssetService, //Activos
     
   ) {
     super();
@@ -186,7 +186,7 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     }
 
     console.log('Costos filtrados:', this.filteredCostItems);
-
+    
     // Actualizar total después de filtrar
     this.calcularTotal();
 

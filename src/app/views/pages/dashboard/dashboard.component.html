@@ -8,7 +8,6 @@
   <div class="select-group">
   
     <div class="select-field">
-      <label for="perfilSelect">Selecciona un perfil:</label>
       <select id="perfilSelect" [(ngModel)]="selectedPerfilName" (change)="onPerfilNameChange()">
         <option *ngFor="let name of perfilesNames" [value]="name">{{ name }}</option>
       </select>

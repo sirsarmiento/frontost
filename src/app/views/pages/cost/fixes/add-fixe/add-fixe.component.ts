@@ -33,7 +33,7 @@ export class AddFixeComponent implements OnInit {
   opcionesConceptos: any = {
     'Fijo': [
       'Alquiler', 'Salarios base', 'Seguros', 
-      'Suscripciones y licencias', 'Impuestos fijos', 
+      'Suscripciones y licencias', 'Impuestos', 
       'Servicios básicos (parte fija)',
       'Otro'
     ],
