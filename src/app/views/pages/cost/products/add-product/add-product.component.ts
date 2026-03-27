@@ -54,7 +54,12 @@ export class AddProductComponent implements OnInit {
   loadConfigs() {
     this.configService.getAll().subscribe((resp: any) => {
       this.configs = resp.data || []; 
-      console.log('Perfiles cargados:', this.configs);
+
+      // Si hay al menos una empresa y el control existe, selecciona la primera
+      if (this.configs.length > 0 && this.form?.get('perfil')) {
+        // Establece el valor con el id de la primera empresa
+        this.form.get('perfil').setValue(this.configs[0].id);
+      }
     });
   }
 

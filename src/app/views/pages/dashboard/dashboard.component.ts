@@ -63,14 +63,13 @@ export class DashboardComponent extends BaseComponent implements OnInit {
 
   getFixes(): void {
     this.fixeService.getAll().subscribe(( resp => {
-        console.log('RESP.DATA:', resp.data);
         this.costItems = resp.data;
         // Inicialmente muestra todos los costos (sin filtrar)
         this.filteredCostItems = [...this.costItems];
 
         // Filtrar y totalizar los Fijos Indirectos
         const fijosIndirectos = this.costItems.filter(
-          item => item.tipo === 'Fijo' && item.clasificacion === 'Indirecto'
+          item => item.clasificacion === 'Indirecto'
         );
         this.totalFijoIndirecto = fijosIndirectos.reduce(
           (total, item) => total + parseFloat(item.precio),
@@ -133,8 +132,6 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     
     // Cálculo de depreciación anual
     const depreciacionAnual = (costoInicial - valorResidual) / vidaUtil;
-
-    console.log(depreciacionAnual);
     
     return depreciacionAnual;
   }
@@ -155,8 +152,6 @@ export class DashboardComponent extends BaseComponent implements OnInit {
       );
 
        this.totalProducto = this.filteredProducts.length;
-
-       console.log(this.totalProducto);
     } else {
       this.filteredProducts = [];
     }
@@ -179,13 +174,11 @@ export class DashboardComponent extends BaseComponent implements OnInit {
       this.filteredCostItems = [...this.costItems];
     } else {
       // Filtra los costos cuyo campo 'producto' coincida con el ID
-      console.log(productId);
       this.filteredCostItems = this.costItems.filter(
         (costo) => costo.producto === productId && (costo.tipo === 'Variable' || costo.tipo === 'Fijo')
       );
     }
 
-    console.log('Costos filtrados:', this.filteredCostItems);
     
     // Actualizar total después de filtrar
     this.calcularTotal();
@@ -200,8 +193,7 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     }, 0);
 
     let indirecto = (this.totalFijoIndirecto + this.totalDepreciacionMensual) / this.totalProducto;
-    console.log(this.totalFijoIndirecto, this.totalDepreciacionMensual, this.totalProducto);
-    console.log(indirecto);
+
     this.totalPrecio += indirecto;
   }
 

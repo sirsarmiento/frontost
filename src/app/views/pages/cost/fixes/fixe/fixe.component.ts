@@ -29,6 +29,8 @@ export class FixeComponent implements OnInit {
   @ViewChild('paginatorVariables') paginatorVariables: MatPaginator;
   @ViewChild('sortVariables', { static: false }) sortVariables: MatSort;
 
+  allFixes: Fixe[] = [];
+
   constructor(
     private fixeService: FixeService,
     private router: Router,
@@ -38,6 +40,7 @@ export class FixeComponent implements OnInit {
   ngOnInit(): void {
     this.fixeService.getAll().subscribe(( resp => {
          //console.log('RESP.DATA:', resp.data);
+         this.allFixes = resp.data;
          this.initTables(resp.data);
       }
     ));
@@ -93,14 +96,26 @@ export class FixeComponent implements OnInit {
   }
 
   onDelete(id:number, concepto: string){
-        Swal.fire({
-          title:  `¿ Estás seguro que deseas eliminar ${ concepto }?`,
-          showDenyButton: true,
-          confirmButtonText: `Eliminar`,
-        }).then((result) => {
-          if (result.isConfirmed){
-            console.log(id);
-          }
-        })
+    Swal.fire({
+      title:  `¿ Estás seguro que deseas eliminar ${ concepto }?`,
+      showDenyButton: true,
+      confirmButtonText: `Eliminar`,
+    }).then((result) => {
+      if (result.isConfirmed){
+      this.allFixes.forEach((element,index)=>{
+        if(element.id==id) {
+          this.fixeService.deleteFixe(id)
+          .then(() => {
+            // Solo si la eliminación fue exitosa
+            this.allFixes.splice(index, 1);
+            this.initTables(this.allFixes);
+          })
+          .catch(error => {
+            console.error('Error al eliminar:', error);
+            // Opcional: mostrar mensaje de error al usuario
+          });
+        }});
+      }
+    })
   }
 }

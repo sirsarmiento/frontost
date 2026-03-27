@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './../../../core/guard/auth.guard';
 import { BaseComponent } from '../../layout/base/base.component';
+import { RoleGuard } from 'src/app/core/guard/role.guard';
 //import { NotificationResolver } from '../../../core/resolvers/notification.resolver';
 
 const routes: Routes = [
@@ -17,10 +18,14 @@ const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardModule),
+        canActivate: [RoleGuard],
+        data: { roles: ['ROLE_ADMINISTRADOR', 'ROLE_ANALISTA'] }
       },
       {
         path: 'users',
         loadChildren: () => import('../users/users.module').then(m => m.UsersModule),
+        canActivate: [RoleGuard],
+        data: { roles: ['ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'password',
@@ -29,10 +34,14 @@ const routes: Routes = [
       {
         path: 'roles',
         loadChildren: () => import('../roles-permissions/roles-permissions.module').then(m => m.RolesPermissionsModule),
+        canActivate: [RoleGuard],
+        data: { roles: ['ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'configs',
-        loadChildren: () => import('../cost/configs/configs.module').then(m => m.ConfigsModule)
+        loadChildren: () => import('../cost/configs/configs.module').then(m => m.ConfigsModule),
+        canActivate: [RoleGuard],
+        data: { roles: ['ROLE_ADMINISTRADOR'] }
       },
       {
         path: 'products',

@@ -18,10 +18,11 @@ export class ProductComponent implements OnInit {
   selectedRow;
   displayedColumns: string[] = ['nombre', 'sku', 'medida', 'clasificacion', 'perfil','actions'];
   dataSource: MatTableDataSource<Product>;
-
     
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
+
+  allProducts: Product[] = [];
 
   constructor(
     private productService: ProductService, 
@@ -35,6 +36,7 @@ export class ProductComponent implements OnInit {
 
   getProducts(){
     this.productService.getAll().subscribe(( resp => {
+         this.allProducts = resp.data;
          this.initTable(resp.data);
       }
     ));
@@ -69,14 +71,26 @@ export class ProductComponent implements OnInit {
   }
 
   onDelete(id:number, nombre: string){
-        Swal.fire({
-          title:  `¿ Estás seguro que deseas eliminar ${ nombre }?`,
-          showDenyButton: true,
-          confirmButtonText: `Eliminar`,
-        }).then((result) => {
-          if (result.isConfirmed){
-            console.log(id);
-          }
-        })
-  }
+      Swal.fire({
+        title:  `¿ Estás seguro que deseas eliminar ${ nombre }?`,
+        showDenyButton: true,
+        confirmButtonText: `Eliminar`,
+      }).then((result) => {
+        if (result.isConfirmed){
+        this.allProducts.forEach((element,index)=>{
+          if(element.id==id) {
+            this.productService.deleteProduct(id)
+            .then(() => {
+              // Solo si la eliminación fue exitosa
+              this.allProducts.splice(index, 1);
+              this.initTable(this.allProducts);
+            })
+            .catch(error => {
+              console.error('Error al eliminar:', error);
+              // Opcional: mostrar mensaje de error al usuario
+            });
+          }});
+        }
+      })
+    }
 }

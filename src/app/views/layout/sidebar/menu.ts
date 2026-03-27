@@ -45,6 +45,10 @@ export const MENU: MenuItem[] = [
     ]
   },
   {
+    label: 'Usuario',
+    isTitle: true
+  },
+  {
     label: 'Contraseña',
     icon: 'users',
     subItems: [

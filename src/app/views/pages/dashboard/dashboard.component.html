@@ -5,64 +5,66 @@
     <h4>Bienvenido {{ user.firstName + ' ' + user.lastName }}</h4>
   </div>
 
-  <div class="select-group">
-  
-    <div class="select-field">
-      <select id="perfilSelect" [(ngModel)]="selectedPerfilName" (change)="onPerfilNameChange()">
-        <option *ngFor="let name of perfilesNames" [value]="name">{{ name }}</option>
-      </select>
-    </div>
-
-    <div class="select-field">
-      <label for="productoSelect">Productos disponibles:</label>
-      <select id="productoSelect" [(ngModel)]="selectedProductId" (change)="onProductChange($event)">
-        <option [ngValue]="null" disabled selected>-- Selecciona un producto --</option>
-        <option *ngFor="let prod of filteredProducts" [ngValue]="prod.id">
-          {{ prod.nombre }} - {{ prod.sku }}
-        </option>
-      </select>
-    </div>
-
-    <!-- Nuevo div para total -->
-    <div class="total-container">
-      <strong>Total: {{ totalPrecio | currency:'USD':'symbol':'1.2-2' }}  </strong>
-    </div>
-    
-    <div class="table-container mt-4" *ngIf="selectedProductId">
-      <div class="mat-elevation-z2">
-        <table class="table custom-table">
-          <thead>
-            <tr>
-              <th>Tipo</th>
-              <th>Concepto</th>
-              <th>Precio</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of filteredCostItems">
-              <td>{{ item.tipo }}</td>
-              <td>{{ item.concepto }}</td>
-              <td>{{ item.precio | number: '1.2-2' }}</td>
-            </tr>
-            <tr *ngIf="filteredCostItems.length === 0">
-              <td colspan="3" class="text-center">No hay costos directos para este producto</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="secondary-totals mt-4" >
-      <div class="total-container">
-        <strong>Fijo Indirecto: {{ totalFijoIndirecto | currency:'USD':'symbol':'1.2-2' }}  </strong>
-      </div>
-
-      <div class="total-container">
-        <strong>Total Dep. Mensual: {{ totalDepreciacionMensual | currency:'USD':'symbol':'1.2-2' }}  </strong>
-      </div>
-    </div>
-
+  <!-- Selector de perfil a ancho completo -->
+  <div class="select-field mb-4">
+    <select id="perfilSelect" [(ngModel)]="selectedPerfilName" (change)="onPerfilNameChange()">
+      <option *ngFor="let name of perfilesNames" [value]="name">{{ name }}</option>
+    </select>
   </div>
 
-</div>
+  <!-- Dos columnas: izquierda (producto y tabla) | derecha (totales) -->
+  <div class="row">
+    <!-- Columna izquierda: producto y costos directos -->
+    <div class="col-md-7">
+      <div class="select-field mb-3">
+        <label for="productoSelect" class="form-label">Productos disponibles:</label>
+        <select id="productoSelect" class="form-select" [(ngModel)]="selectedProductId" (change)="onProductChange($event)">
+          <option [ngValue]="null" disabled selected>-- Selecciona un producto --</option>
+          <option *ngFor="let prod of filteredProducts" [ngValue]="prod.id">
+            {{ prod.nombre }} - {{ prod.sku }}
+          </option>
+        </select>
+      </div>
 
+      <div class="table-container mt-4" *ngIf="selectedProductId">
+        <div class="mat-elevation-z2">
+          <table class="table custom-table">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Concepto</th>
+                <th>Precio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of filteredCostItems">
+                <td>{{ item.tipo }}</td>
+                <td>{{ item.concepto }}</td>
+                <td>{{ item.precio | number: '1.2-2' }}</td>
+              </tr>
+              <tr *ngIf="filteredCostItems.length === 0">
+                <td colspan="3" class="text-center">No hay costos directos para este producto</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha: totales -->
+    <div class="col-md-5" *ngIf="selectedProductId">
+      <div class="total-container mb-4">
+        <strong>Total: {{ totalPrecio | currency:'USD':'symbol':'1.2-2' }}</strong>
+      </div>
+
+      <div class="secondary-totals" *ngIf="selectedProductId">
+        <div class="total-container mb-2">
+          <strong>Costos Indirectos: {{ totalFijoIndirecto | currency:'USD':'symbol':'1.2-2' }}</strong>
+        </div>
+        <div class="total-container" *ngIf="selectedProductId">
+          <strong>Total Dep. Mensual: {{ totalDepreciacionMensual | currency:'USD':'symbol':'1.2-2' }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

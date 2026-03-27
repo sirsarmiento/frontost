@@ -102,16 +102,4 @@ displayedColumnsActivity: string[] = ['tipo', 'descripcion', 'prodMaxHoras', 'ho
   openAdd(){
     this.router.navigate(['/configs/add-config']);
   }
-
-  onDelete(id:number, nombre: string){
-      Swal.fire({
-        title:  `¿ Estás seguro que deseas eliminar ${ nombre }?`,
-        showDenyButton: true,
-        confirmButtonText: `Eliminar`,
-      }).then((result) => {
-        if (result.isConfirmed){
-          console.log(id);
-        }
-      })
-    }
 }

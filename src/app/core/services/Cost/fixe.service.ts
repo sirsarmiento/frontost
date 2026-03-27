@@ -88,6 +88,6 @@ export class FixeService extends HttpService {
   }
 
   async deleteFixe(id: number) {
-    const resp = await firstValueFrom(this.delete(environment.apiUrl, `/fixe/${id}`));
+    await firstValueFrom(this.delete(environment.apiUrl, `/costo/${id}`));
   }
 }
