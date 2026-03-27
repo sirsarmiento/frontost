@@ -16,7 +16,7 @@ export class AssetComponent implements OnInit {
   loading = true;
   selectedRow;
   displayedColumns: string[] = ['nombre', 'costoInicial', 'valorResidual', 'vidaUtil', 'fechaCompra', 'depreciacionMensual', 'depreciacionAnual', 'actions'];
-  displayedColumnsCirculantes: string[] = ['nombre', 'costoInicial', 'actions'];
+  displayedColumnsCirculantes: string[] = ['nombre', 'descripcion', 'ubicacion', 'cantidad', 'valorUnitario','costoInicial', 'actions'];
   dataSource: MatTableDataSource<Asset>;
   totalDepreciacionMensual: number = 0;
 
@@ -70,7 +70,10 @@ export class AssetComponent implements OnInit {
           ...item,
           costoInicial: this.normalizarNumero(item.costoInicial),
           valorResidual: this.normalizarNumero(item.valorResidual),
-          vidaUtil: this.normalizarNumero(item.vidaUtil)
+          vidaUtil: this.normalizarNumero(item.vidaUtil),
+
+          cantidad: this.normalizarNumero(item.cantidad),
+          valorUnitario: this.normalizarNumero(item.valorUnitario)
         };
         // Inyectamos los cálculos para que el filtrado y ordenamiento funcionen mejor
         asset.depMensual = this.calcularDepreciacionMensual(asset);
@@ -165,7 +168,7 @@ export class AssetComponent implements OnInit {
         return 0;
     }
 
-    // CORRECCIÓN: Solo retornar 0 si valorResidual es MAYOR que costoInicial
+    // Solo retornar 0 si valorResidual es MAYOR que costoInicial
     if (valorResidual > costoInicial) {
         return 0;
     }

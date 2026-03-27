@@ -9,4 +9,11 @@ export class Asset {
     tipo: string;        
     depMensual?: number;        
     depAnual?: number;
+    
+    cantidad: number;      
+    unidadMedida: string;    
+    presentacion: string;    
+    descripcion: string;     
+    ubicacion: string;       
+    valorUnitario: number;
 }

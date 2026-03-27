@@ -23,7 +23,14 @@ export class AssetService extends HttpService {
       valorResidual: 0,
       vidaUtil: 0,
       fechaCompra: new Date(),
-      tipo: ''
+      tipo: '',
+
+      cantidad: 0,
+      valorUnitario: 0,
+      unidadMedida: '',
+      presentacion: '',
+      descripcion: '',
+      ubicacion: ''
     };
 
   }

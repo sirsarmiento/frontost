@@ -29,6 +29,7 @@ export class AddAssetComponent implements OnInit {
 
   ngOnInit() {
     this.setValues();
+    this.setupLogicCalcularTotal();
   }
 
   back() {
@@ -46,6 +47,13 @@ export class AddAssetComponent implements OnInit {
         this.f.vidaUtil.setValue(data.vidaUtil);
         this.f.fechaCompra.setValue(data.fechaCompra);
         this.f.tipo.setValue(data.tipo);
+
+        this.f.cantidad.setValue(data.cantidad);
+        this.f.unidadMedida.setValue(data.unidadMedida);
+        this.f.presentacion.setValue(data.presentacion);
+        this.f.descripcion.setValue(data.descripcion);
+        this.f.ubicacion.setValue(data.ubicacion);
+        this.f.valorUnitario.setValue(data.valorUnitario);
         this.id = data.id;
       }
     });
@@ -54,11 +62,19 @@ export class AddAssetComponent implements OnInit {
   myFormValues() {
     this.form = this.formBuilder.group({
       nombre: ['',Validators.required],
-      costoInicial: ['',Validators.required],
+      costoInicial: [{ value: '', disabled: false }, Validators.required],
+      tipo: ['Fijo', Validators.required],
+      // Campos de Fijos
       valorResidual: [''],
       vidaUtil: [''],
       fechaCompra: [''],
-      tipo: ['Fijo', Validators.required],
+      // Campos de Circulantes
+      cantidad: [''],
+      unidadMedida: [''],
+      presentacion: [''],
+      descripcion: [''],
+      ubicacion: [''],
+      valorUnitario: ['']
     });
 
     this.form.get('tipo').valueChanges.subscribe(tipo => {
@@ -80,29 +96,75 @@ export class AddAssetComponent implements OnInit {
     });
   }
 
+  private actualizarValidaciones(tipo: string) {
+    const camposFijos = ['valorResidual', 'vidaUtil', 'fechaCompra'];
+    const camposCirculantes = ['cantidad', 'valorUnitario', 'ubicacion'];
+
+    if (tipo === 'Fijo') {
+      this.setValidators(camposFijos, [Validators.required]);
+      this.setValidators(camposCirculantes, []);
+      this.form.get('costoInicial').enable(); // En fijos se escribe manual
+    } else {
+      this.setValidators(camposFijos, []);
+      this.setValidators(camposCirculantes, [Validators.required]);
+      this.form.get('costoInicial').disable(); // En circulantes es autocalculado
+    }
+  }
+
+  private setValidators(campos: string[], validators: any[]) {
+    campos.forEach(nombre => {
+      const control = this.form.get(nombre);
+      control.setValidators(validators);
+      control.updateValueAndValidity();
+    });
+  }
+
+  // Lógica para que Valor Total = Cantidad * Valor Unitario
+  setupLogicCalcularTotal() {
+    const calcular = () => {
+      if (this.f.tipo.value === 'Circulante') {
+        const total = (this.f.cantidad.value || 0) * (this.f.valorUnitario.value || 0);
+        this.form.get('costoInicial').setValue(total, { emitEvent: false });
+      }
+    };
+
+    this.form.get('cantidad').valueChanges.subscribe(calcular);
+    this.form.get('valorUnitario').valueChanges.subscribe(calcular);
+  }
+
   onSubmit() {
     this.submitted = true;
 
-    // Validación manual extra solo si es Fijo
-    if (this.f.tipo.value === 'Fijo') {
-      if (!this.f.valorResidual.value || !this.f.vidaUtil.value) {
-        // Opcional: puedes marcar errores manuales aquí
-      }
-    }
+    // Si el formulario es inválido, no continuamos
     if (this.form.invalid) { return; }
-    this.loading = true;
     
+    this.loading = true;
+
+    // Usamos getRawValue() para obtener los valores incluso de campos disabled (como costoInicial en circulantes)
+    const formValues = this.form.getRawValue();
+
     const activo: Asset = {
-      nombre: this.f.nombre.value,
-      costoInicial: this.f.costoInicial.value,
-      tipo: this.f.tipo.value,
-      // Si es Circulante, enviamos valores por defecto para evitar errores
-      valorResidual: this.f.tipo.value === 'Fijo' ? this.f.valorResidual.value : 0,
-      vidaUtil: this.f.tipo.value === 'Fijo' ? this.f.vidaUtil.value : 0,
-      fechaCompra: this.f.tipo.value === 'Fijo' ? this.f.fechaCompra.value : new Date(),
+      nombre: formValues.nombre,
+      tipo: formValues.tipo,
+      costoInicial: formValues.costoInicial,
+      
+      // Campos específicos para FIJOS
+      valorResidual: formValues.tipo === 'Fijo' ? formValues.valorResidual : 0,
+      vidaUtil: formValues.tipo === 'Fijo' ? formValues.vidaUtil : 0,
+      fechaCompra: formValues.tipo === 'Fijo' ? formValues.fechaCompra : new Date(),
+
+      // Campos específicos para CIRCULANTES
+      cantidad: formValues.tipo === 'Circulante' ? formValues.cantidad : 0,
+      valorUnitario: formValues.tipo === 'Circulante' ? formValues.valorUnitario : 0,
+      unidadMedida: formValues.tipo === 'Circulante' ? formValues.unidadMedida : '',
+      presentacion: formValues.tipo === 'Circulante' ? formValues.presentacion : '',
+      descripcion: formValues.tipo === 'Circulante' ? formValues.descripcion : '',
+      ubicacion: formValues.tipo === 'Circulante' ? formValues.ubicacion : '',
     };
 
-    if (this.id == 0 || this.id == undefined) {
+    console.log('Objeto a enviar:', activo);
+
+    if (this.id === 0 || this.id === undefined) {
       this.assetService.add(activo);
     } else {
       this.assetService.update(this.id, activo);
