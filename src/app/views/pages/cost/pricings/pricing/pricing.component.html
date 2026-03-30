@@ -1,0 +1,64 @@
+<div class="main-content">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Precios</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Análisis de Precios</li>
+    </ol>
+  </nav>
+
+  <div class="page-content">
+  <div class="row">
+    
+    <div class="col-md-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title font-weight-bold mb-4">Análisis de Precio de Venta</h5>
+          
+          <div class="form-group mb-3">
+            <label>Seleccionar Producto</label>
+            <select class="form-control" [(ngModel)]="idProdPrecio" (change)="onProductoPrecioChange()">
+              <option *ngFor="let p of productos" [value]="p.id">{{ p.nombre }}</option>
+            </select>
+          </div>
+
+          <div class="form-group mb-4">
+            <label>Margen de Ganancia Deseado (%)</label>
+            <input type="number" class="form-control" [(ngModel)]="margenDeseado" (input)="calcularPrecioSugerido()">
+          </div>
+
+          <div class="p-4 bg-light rounded text-center border">
+            <p class="text-muted small mb-2">Precio de Venta Sugerido</p>
+            <h1 class="text-primary font-weight-bold">{{ precioSugerido | currency:'USD' }}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title font-weight-bold mb-4">Análisis de Punto de Equilibrio</h5>
+          
+          <div class="form-group mb-3">
+            <label>Seleccionar Producto</label>
+            <select class="form-control" [(ngModel)]="idProdEquilibrio" (change)="onProductoEquilibrioChange()">
+              <option *ngFor="let p of productos" [value]="p.id">{{ p.nombre }}</option>
+            </select>
+          </div>
+
+          <div class="form-group mb-4">
+            <label>Precio de Venta por Unidad ($)</label>
+            <input type="number" class="form-control" [(ngModel)]="precioVentaManual" (input)="calcularPuntoEquilibrio()" placeholder="Ej: 150">
+          </div>
+
+          <div class="p-4 bg-light rounded text-center border">
+            <p class="text-muted small mb-2">Unidades para Cubrir Costos </p>
+            <h1 class="text-warning font-weight-bold">{{ unidadesEquilibrio }}</h1>
+            <p class="text-muted mb-0">unidades mensuales</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

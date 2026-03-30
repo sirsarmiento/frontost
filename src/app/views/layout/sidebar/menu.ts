@@ -97,6 +97,16 @@ export const MENU: MenuItem[] = [
     ]
   },
   {
+    label: 'Precios',
+    icon: 'briefcase',
+    subItems: [
+      {
+        label: 'Ver',
+        link: '/pricings/pricing',
+      }
+    ]
+  },
+  {
     label: 'Presupuestos',
     icon: 'briefcase',
     subItems: [

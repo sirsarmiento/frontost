@@ -73,7 +73,13 @@ export class AssetComponent implements OnInit {
           vidaUtil: this.normalizarNumero(item.vidaUtil),
 
           cantidad: this.normalizarNumero(item.cantidad),
-          valorUnitario: this.normalizarNumero(item.valorUnitario)
+          valorUnitario: this.normalizarNumero(item.valorUnitario),
+
+          nombre: item.nombre || '',
+          descripcion: item.descripcion || '',
+          ubicacion: item.ubicacion || '',
+          unidadMedida: item.unidadMedida || '',
+          presentacion: item.presentacion || ''
         };
         // Inyectamos los cálculos para que el filtrado y ordenamiento funcionen mejor
         asset.depMensual = this.calcularDepreciacionMensual(asset);

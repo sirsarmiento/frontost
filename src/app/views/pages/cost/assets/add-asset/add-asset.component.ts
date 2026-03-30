@@ -55,6 +55,7 @@ export class AddAssetComponent implements OnInit {
         this.f.ubicacion.setValue(data.ubicacion);
         this.f.valorUnitario.setValue(data.valorUnitario);
         this.id = data.id;
+        this.actualizarValidaciones(data.tipo);
       }
     });
   }
@@ -77,22 +78,8 @@ export class AddAssetComponent implements OnInit {
       valorUnitario: ['']
     });
 
-    this.form.get('tipo').valueChanges.subscribe(tipo => {
-      const vRes = this.form.get('valorResidual');
-      const vUtil = this.form.get('vidaUtil');
-
-      if (tipo === 'Fijo') {
-        vRes.setValidators([Validators.required]);
-        vUtil.setValidators([Validators.required]);
-      } else {
-        vRes.clearValidators();
-        vUtil.clearValidators();
-        // Opcional: resetear a 0 si es circulante
-        vRes.setValue(0);
-        vUtil.setValue(0);
-      }
-      vRes.updateValueAndValidity();
-      vUtil.updateValueAndValidity();
+      this.form.get('tipo').valueChanges.subscribe(tipo => {
+      this.actualizarValidaciones(tipo);
     });
   }
 
@@ -103,11 +90,12 @@ export class AddAssetComponent implements OnInit {
     if (tipo === 'Fijo') {
       this.setValidators(camposFijos, [Validators.required]);
       this.setValidators(camposCirculantes, []);
-      this.form.get('costoInicial').enable(); // En fijos se escribe manual
+      this.form.get('costoInicial').enable();
     } else {
       this.setValidators(camposFijos, []);
       this.setValidators(camposCirculantes, [Validators.required]);
-      this.form.get('costoInicial').disable(); // En circulantes es autocalculado
+      // En circulantes el total es auto, por eso se deshabilita
+      this.form.get('costoInicial').disable(); 
     }
   }
 

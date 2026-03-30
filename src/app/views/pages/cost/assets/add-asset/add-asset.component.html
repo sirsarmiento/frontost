@@ -72,7 +72,7 @@
           </div>
         </div>
 
-        <div *ngIf="f.tipo.value === 'Circulante'" class="animate__animated animate__fadeIn">
+        <div *ngIf="f.tipo.value === 'Circulante'">
           <div class="row">
             <div class="col-6">
               <mat-form-field>
@@ -84,7 +84,21 @@
             <div class="col-6">
               <mat-form-field>
                 <mat-label>Unidad de Medida</mat-label>
-                <input matInput formControlName="unidadMedida" placeholder="Kg, Lts, Unid...">
+                <mat-select formControlName="unidadMedida">
+                  <mat-option value="Metros">Metros</mat-option>
+                  <mat-option value="kilos">Kilos</mat-option>
+                  <mat-option value="Toneladas">Toneladas</mat-option>
+                  <mat-option value="Gramos">Gramos</mat-option>
+                  <mat-option value="Unidades">Unidades</mat-option>
+                  <mat-option value="Paquetes">Paquetes</mat-option>
+                  <mat-option value="Cajas">Cajas</mat-option>
+                  <mat-option value="Bultos">Bultos</mat-option>
+                  <mat-option value="Horas máquina">Horas máquina</mat-option>
+                  <mat-option value="Horas hombres">Horas hombres</mat-option>
+                  <mat-option value="Turnos">Turnos</mat-option>
+                  <mat-option value="Kilómetros">Kilómetros</mat-option>
+                  <mat-option value="Transacciones">Transacciones - Operaciones</mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
           </div>

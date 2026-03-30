@@ -60,6 +60,10 @@ const routes: Routes = [
         loadChildren: () => import('../cost/assets/assets.module').then(m => m.AssetsModule)
       },
       {
+        path: 'pricings',
+        loadChildren: () => import('../cost/pricings/pricings.module').then(m => m.PricingsModule)
+      },
+      {
         path: 'budgets',
         loadChildren: () => import('../cost/budget/budgets.module').then(m => m.BudgetsModule)
       },
