@@ -155,16 +155,19 @@ export class DashboardComponent extends BaseComponent implements OnInit {
     } else {
       this.filteredProducts = [];
     }
-    this.selectedProductId = null; // 🔁 Limpia la selección anterior
+    this.selectedProductId = null; // Limpia la selección anterior
   }
 
 
     // Opcional: método que se ejecuta al cambiar la selección del dropdown
   onProductChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const productId = select.value ? parseInt(select.value, 10) : null;
-    this.selectedProductId = productId;
-    this.filterCostsByProduct(productId);
+    //const select = event.target as HTMLSelectElement;
+    //const productId = select.value ? parseInt(select.value, 10) : null;
+    //this.selectedProductId = productId;
+    //this.filterCostsByProduct(productId);
+
+    const id = Number(this.selectedProductId);
+    this.filterCostsByProduct(id);
   }
 
   // Método que filtra los costos por el ID del producto seleccionado
@@ -187,7 +190,7 @@ export class DashboardComponent extends BaseComponent implements OnInit {
 
   calcularTotal() {
     this.totalPrecio = this.filteredCostItems.reduce((sum, item) => {
-      // Convierte el precio a número (si es string)
+       // Convierte el precio a número (si es string)
       const precioNum = parseFloat(item.precio);
       return sum + (isNaN(precioNum) ? 0 : precioNum);
     }, 0);
