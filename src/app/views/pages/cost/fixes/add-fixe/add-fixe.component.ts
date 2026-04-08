@@ -17,6 +17,7 @@ export class AddFixeComponent implements OnInit {
   loading = false;
   submitted = false;
   products: any[] = [];
+  filteredProducts: any[] = [];
 
   constructor(
     private productService: ProductService,
@@ -86,6 +87,7 @@ export class AddFixeComponent implements OnInit {
   loadProducts() {
     this.productService.getAll().subscribe((resp: any) => {
       this.products = resp.data || []; 
+      this.filteredProducts = [...this.products];
       console.log('Productos cargados:', this.products);
     });
   }
@@ -152,6 +154,23 @@ export class AddFixeComponent implements OnInit {
     } else {
       this.fixeService.update(this.id, costo);
     }
+  }
+
+  // La función del buscador
+  filterProducts(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const query = input.value.toLowerCase().trim(); // .trim() quita espacios extras
+
+    if (!query) {
+      // Si el buscador está vacío, mostramos todos de nuevo
+      this.filteredProducts = [...this.products];
+      return;
+    }
+
+    // Filtra por cualquier coincidencia en el nombre
+    this.filteredProducts = this.products.filter(p => 
+      p.nombre.toLowerCase().includes(query)
+    );
   }
 
 }

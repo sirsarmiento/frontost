@@ -78,8 +78,22 @@
             <mat-form-field>
               <mat-label>Producto</mat-label>
               <mat-select formControlName="producto">
-                <mat-option *ngFor="let p of products" [value]="p.id"> 
+                <div class="p-2">
+                  <mat-form-field appearance="standard" style="width: 100%;">
+                   <input 
+                      matInput 
+                      placeholder="Buscar producto..." 
+                      (keyup)="filterProducts($event)"
+                      (keydown)="$event.stopPropagation()">
+                  </mat-form-field>
+                </div>
+
+                <mat-option *ngFor="let p of filteredProducts" [value]="p.id"> 
                   {{ p.nombre }} 
+                </mat-option>
+                
+                <mat-option *ngIf="filteredProducts.length === 0" disabled>
+                  No se encontraron resultados
                 </mat-option>
               </mat-select>
             </mat-form-field>

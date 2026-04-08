@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { Routes, RouterModule } from '@angular/router';
 import { CodePreviewModule } from '../../../partials/code-preview/code-preview.module';
@@ -55,6 +56,7 @@ const routes: Routes = [
     PerfectScrollbarModule,
     FormsModule,
     FeatherIconModule,
+    MatDividerModule,
     SharedModule
   ],
   providers: [
