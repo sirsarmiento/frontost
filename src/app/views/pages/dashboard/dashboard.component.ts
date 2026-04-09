@@ -181,7 +181,6 @@ export class DashboardComponent extends BaseComponent implements OnInit {
         (costo) => costo.producto === productId && (costo.tipo === 'Variable' || costo.tipo === 'Fijo')
       );
     }
-
     
     // Actualizar total después de filtrar
     this.calcularTotal();
