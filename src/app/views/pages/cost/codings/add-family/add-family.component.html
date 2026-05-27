@@ -1,0 +1,148 @@
+<div class="main-content">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/codings/coding">Códigos</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ id > 0 ? 'Editar' : 'Crear' }}</li>
+    </ol>
+  </nav>
+
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="form">
+
+        <div class="row padding-top-input">
+          <div class="col-md-4">
+            <mat-form-field>
+              <mat-label>Código de Familia (1 a 3 caracteres)</mat-label>
+              <input matInput formControlName="codigo" placeholder="Ej: LUD" maxlength="3"
+                class="text-uppercase font-monospace fw-bold">
+              <mat-error *ngIf="submitted && f.codigo.errors">
+                <span *ngIf="f.codigo.errors.required">El código es obligatorio.</span>
+                <span *ngIf="f.codigo.errors.maxlength || f.codigo.errors.pattern">Debe tener máximo 3 letras.</span>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-8">
+            <mat-form-field>
+              <mat-label>Nombre / Descripción de la Familia</mat-label>
+              <input matInput formControlName="nombre" placeholder="Ej: Lúdica Educativo">
+              <mat-error *ngIf="submitted && f.nombre.errors">
+                <span *ngIf="f.nombre.errors.required">La descripción es obligatoria.</span>
+                <span *ngIf="f.nombre.errors.minlength">Debe tener al menos 3 letras.</span>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Sección de Subcategorías -->
+        <br>
+        <h6 class="text-muted border-bottom pb-2 mb-3 fw-semibold">Subcategorías de la Familia</h6>
+
+        <!-- Formulario para agregar subcategoría -->
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <mat-form-field appearance="standard" class="w-100">
+              <mat-label>Código Subcategoría</mat-label>
+              <input matInput [(ngModel)]="subCode" [ngModelOptions]="{standalone: true}" placeholder="Ej: JUE"
+                maxlength="3" class="text-uppercase font-monospace fw-bold">
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="standard" class="w-100">
+              <mat-label>Nombre de la Subcategoría</mat-label>
+              <input matInput [(ngModel)]="subDesc" [ngModelOptions]="{standalone: true}"
+                placeholder="Ej: Juegos de Mesa">
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3 text-start">
+            <button mat-icon-button color="primary" type="button" (click)="addSubcategory()"
+              matTooltip="Agregar Subcategoría">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Alerta de Error de Subcategoría -->
+        <div class="alert alert-danger p-2 mt-2 d-flex align-items-center" *ngIf="subError" style="font-size: 0.85rem;">
+          <mat-icon class="me-2" style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem;">error_outline</mat-icon>
+          <span>{{ subError }}</span>
+        </div>
+
+        <!-- Listado de Subcategorías Agregadas -->
+        <div class="mt-4" *ngIf="subcategoriesList && subcategoriesList.length > 0">
+          <h6 class="text-muted fw-semibold mb-2">Listado de Subcategorías ({{ subcategoriesList.length }})</h6>
+            <div class="table-responsive mat-elevation-z2">
+              <table mat-table [dataSource]="subcategoriesList" class="w-100">
+
+                <!-- Columna Código -->
+                <ng-container matColumnDef="codigo">
+                  <th mat-header-cell *matHeaderCellDef> Código </th>
+                  <td mat-cell *matCellDef="let sub" class="font-monospace fw-semibold"> {{ sub.codigo }} </td>
+                </ng-container>
+
+                <!-- Columna Nombre -->
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                  <td mat-cell *matCellDef="let sub"> {{ sub.nombre }} </td>
+                </ng-container>
+
+                <!-- Columna Acción -->
+                <ng-container matColumnDef="acciones">
+                  <th mat-header-cell *matHeaderCellDef class="text-end"> Acción </th>
+                  <td mat-cell *matCellDef="let sub; let i = index" class="text-end">
+                    <button mat-icon-button type="button" class="delete-color" matTooltip="Eliminar"
+                      (click)="removeSubcategory(i)">
+                      <mat-icon class="font-weight-boldest">delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell msg-no-found text-center py-4" colspan="3">
+                    No hay subcategorías agregadas.
+                  </td>
+                </tr>
+              </table>
+            </div>
+        </div>
+
+        <div class="text-muted small mt-2 mb-4" *ngIf="!subcategoriesList || subcategoriesList.length === 0">
+          * No hay subcategorías registradas para esta familia aún.
+        </div>
+
+        <div class="row padding-top-input">
+          <div class="col-12">
+            <div class="btn-flex-end">
+              <div class="margin-button">
+                <button mat-raised-button class="button-add-color" (click)="back()">
+                  <div class="btn-content">
+                    <div class="button-txt">Regresar</div>
+                    <div class="icon">
+                      <mat-icon>undo</mat-icon>
+                    </div>
+                  </div>
+                </button>
+              </div>
+
+              <button mat-raised-button [disabled]="loading" class="button-add-color" (click)="onSubmit()">
+                <div class="btn-content">
+                  <div class="button-txt">Guardar</div>
+                  <div class="icon">
+                    <mat-icon>save</mat-icon>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

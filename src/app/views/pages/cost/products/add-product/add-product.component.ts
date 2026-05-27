@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Product } from 'src/app/core/models/Cost/product';
@@ -24,9 +24,9 @@ export class AddProductComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
   ) {
-      this.myFormValues();
-      this.data$ = productService.sharingProject;
-   }
+    this.myFormValues();
+    this.data$ = productService.sharingProject;
+  }
 
   get f() { return this.form.controls; }
 
@@ -44,16 +44,16 @@ export class AddProductComponent implements OnInit {
     return this.form.get('medida')?.value === 'Horas hombres' || this.form.get('medida')?.value === 'Horas máquina';
   }
 
- // Manejar cambio de clasificación
+  // Manejar cambio de clasificación
   onMedidaChange(medida: string) {
-    if (medida !== 'Horas hombres' && 'Horas máquina') {
+    if (medida !== 'Horas hombres' && medida !== 'Horas máquina') {
       this.form.get('periodo')?.setValue(''); // Limpiar producto si no es directo
     }
   }
 
   loadConfigs() {
     this.configService.getAll().subscribe((resp: any) => {
-      this.configs = resp.data || []; 
+      this.configs = resp.data || [];
 
       // Si hay al menos una empresa y el control existe, selecciona la primera
       if (this.configs.length > 0 && this.form?.get('perfil')) {
@@ -68,9 +68,9 @@ export class AddProductComponent implements OnInit {
     this.productService.resetData();
   }
 
-  setValues(){
-    this.data$.subscribe( data => {
-      if(data.id > 0){
+  setValues() {
+    this.data$.subscribe(data => {
+      if (data.id > 0) {
         this.f.nombre.setValue(data.nombre);
         this.f.medida.setValue(data.medida);
         this.f.sku.setValue(data.sku);
@@ -85,13 +85,13 @@ export class AddProductComponent implements OnInit {
 
   myFormValues() {
     this.form = this.formBuilder.group({
-      nombre: ['',Validators.required],
-      medida: ['',Validators.required],
+      nombre: ['', Validators.required],
+      medida: ['', Validators.required],
       sku: [''],
-      descripcion: ['',Validators.required],
-      clasificacion: ['',Validators.required],
+      descripcion: ['', Validators.required],
+      clasificacion: ['', Validators.required],
       perfil: [''],
-      periodo:  [''],
+      periodo: [''],
     })
   }
 
@@ -115,9 +115,9 @@ export class AddProductComponent implements OnInit {
 
     console.log(product);
 
-    if(this.id == 0 || this.id == undefined){
+    if (this.id == 0 || this.id == undefined) {
       this.productService.add(product);
-    }else{
+    } else {
       this.productService.update(this.id, product);
     }
 

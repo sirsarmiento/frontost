@@ -15,24 +15,26 @@
     <mat-tab-group animationDuration="0ms">
       <mat-tab label="Fijos">
 
-        <div class="col-8">
-          <div class="filter-class p-top">
-            <mat-form-field appearance="standard">
-              <mat-label>Buscar</mat-label>
-              <!-- Para Fijos -->
-              <input 
-               matInput
-              (keyup)="applyFilterFijos($event)" 
-              placeholder="Filtrar fijos...">
-            </mat-form-field>
+        <div class="row align-items-center">
+          <div class="col-8">
+            <div class="filter-class p-top">
+              <mat-form-field appearance="standard" class="w-100">
+                <mat-label>Buscar</mat-label>
+                <input matInput (keyup)="applyFilterFijos($event)" placeholder="Filtrar fijos...">
+              </mat-form-field>
+            </div>
           </div>
-        </div>
-
-        <div style="position: relative;">
-          <div class="btn-flex-end" style="position: absolute; top: -80px; right: 0;">
-            <button mat-raised-button class="button-add-color" (click)="openAdd()">
-              Agregar
-            </button>
+          <div class="col-4">
+            <div class="btn-flex-end p-top">
+              <button mat-raised-button class="button-add-color" (click)="openAdd()">
+                <div class="btn-content">
+                  <div class="button-txt">Agregar</div>
+                  <div class="icon">
+                    <mat-icon>add_circle_outline</mat-icon>
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -95,25 +97,26 @@
       </mat-tab>
       <mat-tab label="Variables">
 
-        <div class="col-8">
-          <div class="filter-class p-top">
-            <mat-form-field appearance="standard">
-              <mat-label>Buscar</mat-label>
-              <!-- Para Fijos -->
-              <input 
-               matInput
-              (keyup)="applyFilterVariables($event)" 
-              placeholder="Filtrar variables...">
-            </mat-form-field>
+        <div class="row align-items-center">
+          <div class="col-8">
+            <div class="filter-class p-top">
+              <mat-form-field appearance="standard" class="w-100">
+                <mat-label>Buscar</mat-label>
+                <input matInput (keyup)="applyFilterVariables($event)" placeholder="Filtrar variables...">
+              </mat-form-field>
+            </div>
           </div>
-        </div>
-
-        
-        <div style="position: relative;">
-          <div class="btn-flex-end" style="position: absolute; top: -80px; right: 0;">
-            <button mat-raised-button class="button-add-color" (click)="openAdd()">
-              Agregar
-            </button>
+          <div class="col-4">
+            <div class="btn-flex-end p-top">
+              <button mat-raised-button class="button-add-color" (click)="openAdd()">
+                <div class="btn-content">
+                  <div class="button-txt">Agregar</div>
+                  <div class="icon">
+                    <mat-icon>add_circle_outline</mat-icon>
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
 

@@ -48,6 +48,12 @@ const routes: Routes = [
         loadChildren: () => import('../cost/products/products.module').then(m => m.ProductsModule)
       },
       {
+        path: 'codings',
+        loadChildren: () => import('../cost/codings/codings.module').then(m => m.CodingsModule),
+        canActivate: [RoleGuard],
+        data: { roles: ['ROLE_ADMINISTRADOR', 'ROLE_ANALISTA'] }
+      },
+      {
         path: 'fixes',
         loadChildren: () => import('../cost/fixes/fixes.module').then(m => m.FixesModule)
       },

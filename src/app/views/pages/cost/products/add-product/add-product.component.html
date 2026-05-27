@@ -25,10 +25,7 @@
                 <div class="col-4">
                   <mat-form-field>
                       <mat-label>Código / SKU</mat-label>
-                      <input matInput formControlName="sku" maxlength="25" [ngClass]="{ 'is-invalid': submitted && f.sku.errors }" >
-                      <mat-error *ngIf="submitted && f.sku.errors">
-                          <mat-error *ngIf="f.sku.errors.required">Ingrese el código del producto</mat-error>
-                      </mat-error>
+                      <input matInput formControlName="sku" readonly="true" placeholder="Asignado por Administrador" maxlength="25">
                   </mat-form-field>
               </div>
             </div>
