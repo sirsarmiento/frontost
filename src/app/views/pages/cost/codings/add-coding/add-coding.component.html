@@ -1,0 +1,255 @@
+<div class="main-content">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/codings/coding">Códigos</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Crear</li>
+    </ol>
+  </nav>
+
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="form">
+        <div class="row">
+
+          <!-- Lado Izquierdo: Formulario -->
+          <div class="col-lg-7">
+            <div class="row padding-top-input">
+              <div class="col-12">
+                <mat-form-field>
+                  <mat-label>Categoría (CAT)</mat-label>
+                  <mat-select formControlName="categoria" (selectionChange)="onCategoryChange()">
+                    <mat-option *ngFor="let cat of opcionesCategorias" [value]="cat.value">
+                      {{cat.label}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="submitted && f.categoria.errors">
+                    Seleccione una categoría.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row padding-top-input" *ngIf="form.get('categoria')?.value === 'PF'">
+              <div class="col-12">
+                <mat-form-field>
+                  <mat-label>Seleccionar Producto Existente</mat-label>
+                  <mat-select formControlName="productoId">
+                    <div class="p-2">
+                      <mat-form-field appearance="standard" style="width: 100%;">
+                        <input matInput placeholder="Buscar producto..." (keyup)="filterProducts($event)"
+                          (keydown)="$event.stopPropagation()">
+                      </mat-form-field>
+                    </div>
+                    <mat-option *ngIf="productosFiltrados.length === 0" disabled>No hay productos sin código
+                      registrados</mat-option>
+                    <mat-option *ngFor="let p of productosFiltrados" [value]="p.id">
+                      {{p.nombre}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-hint *ngIf="productos.length > 0">Se muestran los productos cargados que no tienen SKU asignado
+                    aún</mat-hint>
+                  <mat-error *ngIf="submitted && f.productoId.errors">
+                    Debe seleccionar un producto.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row padding-top-input" *ngIf="form.get('categoria')?.value === 'SR'">
+              <div class="col-12">
+                <mat-form-field>
+                  <mat-label>Nombre del Servicio</mat-label>
+                  <input matInput formControlName="nombreServicio" placeholder="Ej: Servicio de Escaneo 3D">
+                  <mat-error *ngIf="submitted && f.nombreServicio.errors">
+                    Ingrese el nombre del servicio.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row padding-top-input" *ngIf="form.get('categoria')?.value === 'PP'">
+              <div class="col-12">
+                <mat-form-field>
+                  <mat-label>Nombre del Proyecto Personalizado</mat-label>
+                  <input matInput formControlName="nombreServicio"
+                    placeholder="Ej: Proyecto Brazo Robótico Personalizado">
+                  <mat-error *ngIf="submitted && f.nombreServicio.errors">
+                    Ingrese el nombre del proyecto.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row padding-top-input">
+              <div class="col-md-6">
+                <mat-form-field>
+                  <mat-label>Tecnología (TEC)</mat-label>
+                  <mat-select formControlName="tecnologia">
+                    <mat-option *ngFor="let tec of opcionesTecnologias" [value]="tec.value">
+                      {{tec.label}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="submitted && f.tecnologia.errors">
+                    Seleccione la tecnología.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6">
+                <mat-form-field>
+                  <mat-label>Familia de Productos (FAM)</mat-label>
+                  <mat-select formControlName="familia">
+                    <mat-option *ngFor="let fam of familias" [value]="fam.codigo">
+                      {{fam.nombre}} ({{fam.codigo}})
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="submitted && f.familia.errors">
+                    Seleccione la familia de productos.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row padding-top-input" *ngIf="subcategorias && subcategorias.length > 0">
+              <div class="col-12">
+                <mat-form-field>
+                  <mat-label>Subcategoría (SUB)</mat-label>
+                  <mat-select formControlName="subcategoria">
+                    <mat-option *ngFor="let sub of subcategorias" [value]="sub.codigo">
+                      {{sub.nombre}} ({{sub.codigo}})
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="submitted && f.subcategoria.errors">
+                    Seleccione una subcategoría de la familia.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row padding-top-input" *ngIf="form.get('familia')?.value !== 'MLD'">
+              <div class="col-12">
+                <mat-form-field>
+                  <mat-label>Material (MAT)</mat-label>
+                  <mat-select formControlName="material">
+                    <mat-option *ngFor="let mat of opcionesMateriales" [value]="mat.value">
+                      {{mat.label}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="submitted && f.material.errors">
+                    Seleccione el material.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row padding-top-input" *ngIf="form.get('familia')?.value === 'MLD'">
+              <div class="col-12">
+                <h6 class="text-muted border-bottom pb-2 mb-3 fw-semibold">Materiales del Molde</h6>
+
+                <div formArrayName="materialesMolde">
+                  <div *ngFor="let m of materialesMolde.controls; let i = index" [formGroupName]="i" class="row mb-2">
+                    <div class="col-md-4">
+                      <mat-form-field class="w-100">
+                        <mat-label>Material {{i+1}}</mat-label>
+                        <mat-select formControlName="material">
+                          <mat-option *ngFor="let mat of opcionesMateriales"
+                            [value]="mat.value">{{mat.label}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="submitted && m.get('material')?.errors">Requerido</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field class="w-100">
+                        <mat-label>Cantidad</mat-label>
+                        <input matInput type="number" min="0" formControlName="cantidad" placeholder="Ej: 200">
+                        <mat-error *ngIf="submitted && m.get('cantidad')?.errors">Requerido</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field class="w-100">
+                        <mat-label>Unidad</mat-label>
+                        <mat-select formControlName="unidad">
+                          <mat-option *ngFor="let u of opcionesUnidades" [value]="u.value">{{u.label}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="submitted && m.get('unidad')?.errors">Requerido</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                      <button *ngIf="materialesMolde.length > 1" mat-icon-button color="warn"
+                        (click)="removeMaterialMolde(i)" type="button" matTooltip="Eliminar Material">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                      <button *ngIf="i === materialesMolde.length - 1" mat-icon-button color="primary"
+                        (click)="addMaterialMolde()" type="button" matTooltip="Agregar Material">
+                        <mat-icon>add_circle</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lado Derecho: Previsualización del Código -->
+          <div class="col-lg-5 mt-4 mt-lg-0">
+            <div class="padding-top-input">
+              <h6 class="text-muted border-bottom pb-2 mb-3 fw-semibold d-flex align-items-center">
+                <mat-icon class="me-2 text-muted">visibility</mat-icon>
+                Previsualización
+              </h6>
+            </div>
+
+            <div class="preview-badge-container p-3 mb-4 rounded border border-light shadow-sm w-100"
+              style="margin-top: 60px;">
+              <div class="row text-center">
+                <div class="col-6">
+                  <small class="text-muted d-block mb-1 fw-bold">Código Asignado</small>
+                  <div class="preview-code-text font-monospace text-primary fw-bold fs-5">
+                    {{ previewCat }}-{{ previewTec }}-{{ previewMat }}-{{ previewFam }}-{{ previewSub ? previewSub : ''
+                    }}{{ previewCat === 'SR' ? 'SXX' : (previewCat === 'PP' ? 'PXX' : 'XXX') }}
+                  </div>
+                </div>
+                <div class="col-6 border-start">
+                  <small class="text-muted d-block mb-1 fw-bold">Código Cátalogo</small>
+                  <div class="preview-code-text font-monospace text-success fw-bold fs-5">
+                    {{ previewFam }}-{{ previewSub ? previewSub : '' }}{{ previewCat === 'SR' ? 'SXX' : (previewCat ===
+                    'PP' ? 'PXX' : 'XXX') }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="row padding-top-input">
+          <div class="col-12">
+            <div class="btn-flex-end">
+              <div class="margin-button">
+                <button mat-raised-button class="button-add-color" (click)="back()">
+                  <div class="btn-content">
+                    <div class="button-txt">Regresar</div>
+                    <div class="icon">
+                      <mat-icon>undo</mat-icon>
+                    </div>
+                  </div>
+                </button>
+              </div>
+
+              <button mat-raised-button [disabled]="loading" class="button-add-color" (click)="onSubmit()">
+                <div class="btn-content">
+                  <div class="button-txt">Guardar</div>
+                  <div class="icon">
+                    <mat-icon>save</mat-icon>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

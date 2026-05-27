@@ -1,0 +1,38 @@
+/* Add Codification Form Styles */
+.btn-back {
+  background-color: transparent !important;
+  color: #6c757d !important;
+  border: 1px solid #dee2e6 !important;
+  box-shadow: none !important;
+  font-weight: 500;
+}
+
+.btn-back:hover {
+  background-color: #f8f9fa !important;
+}
+
+/* Preview Card Styles */
+.preview-card {
+  border: 1px solid hsla(211, 100%, 90%, 0.5) !important;
+}
+
+.bg-light-gradient {
+  background: linear-gradient(135deg, hsla(211, 100%, 98%, 1) 0%, hsla(211, 100%, 95%, 1) 100%);
+}
+
+.preview-badge-container {
+  background-color: #ffffff;
+  border: 2px dashed hsla(211, 100%, 75%, 0.5) !important;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.preview-badge-container:hover {
+  transform: translateY(-2px);
+  border-color: hsla(211, 100%, 50%, 0.8) !important;
+  box-shadow: 0 4px 12px rgba(11, 94, 215, 0.08) !important;
+}
+
+.preview-code-text {
+  letter-spacing: 0.5px;
+}

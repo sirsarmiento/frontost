@@ -45,6 +45,16 @@ export const MENU: MenuItem[] = [
     ]
   },
   {
+    label: 'Códigos',
+    icon: 'briefcase',
+    subItems: [
+      {
+        label: 'Ver',
+        link: '/codings/coding',
+      }
+    ]
+  },
+  {
     label: 'Usuario',
     isTitle: true
   },
@@ -72,6 +82,7 @@ export const MENU: MenuItem[] = [
       }
     ]
   },
+
   {
     label: 'Costos',
     icon: 'briefcase',

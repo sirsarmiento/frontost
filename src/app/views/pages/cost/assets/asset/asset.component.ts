@@ -120,6 +120,12 @@ export class AssetComponent implements OnInit {
         this.dataSourceCirculantes.paginator = this.paginatorCirculantes;
         this.dataSourceCirculantes.sort = this.sortCirculantes;
       }
+      if (this.paginatorFijos) {
+        this.paginatorFijos._intl.itemsPerPageLabel = 'Filas';
+      }
+      if (this.paginatorCirculantes) {
+        this.paginatorCirculantes._intl.itemsPerPageLabel = 'Filas';
+      }
     });
     
     this.loading = false;
