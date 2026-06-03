@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { FamilyService } from 'src/app/core/services/Cost/family.service';
 import { ProductService } from 'src/app/core/services/Cost/product.service';
 import { CodingService } from 'src/app/core/services/Cost/coding.service';
+import { BudgetService } from 'src/app/core/services/Cost/budget.service';
 import { Family, Subcategory } from 'src/app/core/models/Cost/family';
 import { Product } from 'src/app/core/models/Cost/product';
 import Swal from 'sweetalert2';
@@ -24,6 +25,8 @@ export class AddCodingComponent implements OnInit {
   subcategorias: Subcategory[] = [];
   productos: any[] = [];
   productosFiltrados: any[] = [];
+  presupuestosServicios: any[] = [];
+  presupuestosProyectos: any[] = [];
 
   // Options
   opcionesCategorias = [
@@ -67,7 +70,8 @@ export class AddCodingComponent implements OnInit {
     private router: Router,
     private familyService: FamilyService,
     private productService: ProductService,
-    private codingService: CodingService
+    private codingService: CodingService,
+    private budgetService: BudgetService
   ) {
     this.myFormValues();
     this.data$ = codingService.sharingProject;
@@ -76,6 +80,7 @@ export class AddCodingComponent implements OnInit {
   ngOnInit(): void {
     this.cargarFamilias();
     this.cargarProductos();
+    this.cargarPresupuestos();
     this.setupPreviewListeners();
     this.setValues();
   }
@@ -128,6 +133,14 @@ export class AddCodingComponent implements OnInit {
       });
       
       this.productosFiltrados = [...this.productos];
+    });
+  }
+
+  cargarPresupuestos() {
+    this.budgetService.getAll().subscribe((resp: any) => {
+      const allBudgets = resp.data || [];
+      this.presupuestosServicios = allBudgets.filter((b: any) => b.clasificacion === 'Servicio');
+      this.presupuestosProyectos = allBudgets.filter((b: any) => b.clasificacion === 'Proyecto');
     });
   }
 

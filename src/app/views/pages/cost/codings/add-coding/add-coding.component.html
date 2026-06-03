@@ -58,10 +58,15 @@
             <div class="row padding-top-input" *ngIf="form.get('categoria')?.value === 'SR'">
               <div class="col-12">
                 <mat-form-field>
-                  <mat-label>Nombre del Servicio</mat-label>
-                  <input matInput formControlName="nombreServicio" placeholder="Ej: Servicio de Escaneo 3D">
+                  <mat-label>Seleccionar Servicio</mat-label>
+                  <mat-select formControlName="nombreServicio">
+                    <mat-option *ngIf="presupuestosServicios.length === 0" disabled>No hay servicios registrados en presupuesto</mat-option>
+                    <mat-option *ngFor="let s of presupuestosServicios" [value]="s.descripcion">
+                      {{s.numero}} - {{s.descripcion}}
+                    </mat-option>
+                  </mat-select>
                   <mat-error *ngIf="submitted && f.nombreServicio.errors">
-                    Ingrese el nombre del servicio.
+                    Debe seleccionar un servicio.
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -70,11 +75,15 @@
             <div class="row padding-top-input" *ngIf="form.get('categoria')?.value === 'PP'">
               <div class="col-12">
                 <mat-form-field>
-                  <mat-label>Nombre del Proyecto Personalizado</mat-label>
-                  <input matInput formControlName="nombreServicio"
-                    placeholder="Ej: Proyecto Brazo Robótico Personalizado">
+                  <mat-label>Seleccionar Proyecto Personalizado</mat-label>
+                  <mat-select formControlName="nombreServicio">
+                    <mat-option *ngIf="presupuestosProyectos.length === 0" disabled>No hay proyectos registrados en presupuesto</mat-option>
+                    <mat-option *ngFor="let p of presupuestosProyectos" [value]="p.descripcion">
+                      {{p.numero}} - {{p.descripcion}}
+                    </mat-option>
+                  </mat-select>
                   <mat-error *ngIf="submitted && f.nombreServicio.errors">
-                    Ingrese el nombre del proyecto.
+                    Debe seleccionar un proyecto.
                   </mat-error>
                 </mat-form-field>
               </div>

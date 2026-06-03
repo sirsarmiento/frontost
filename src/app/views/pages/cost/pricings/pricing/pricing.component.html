@@ -7,58 +7,121 @@
   </nav>
 
   <div class="page-content">
-  <div class="row">
-    
-    <div class="col-md-6 grid-margin stretch-card">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title font-weight-bold mb-4">Análisis de Precio de Venta</h5>
-          
-          <div class="form-group mb-3">
-            <label>Seleccionar Producto</label>
-            <select class="form-control" [(ngModel)]="idProdPrecio" (change)="onProductoPrecioChange()">
-              <option *ngFor="let p of productos" [value]="p.id">{{ p.nombre }}</option>
-            </select>
-          </div>
+    <div class="row">
+      
+      <!-- CALCULADORA DE PRECIOS -->
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title font-weight-bold mb-4 text-dark">Análisis de Precio de Venta</h5>
+            
+            <div class="form-group mb-3">
+              <label class="font-weight-medium">Seleccionar Producto</label>
+              <select class="form-control" [(ngModel)]="idProdPrecio" (change)="onProductoPrecioChange()">
+                <option *ngFor="let p of productos" [value]="p.id">{{ p.nombre }}</option>
+              </select>
+            </div>
 
-          <div class="form-group mb-4">
-            <label>Margen de Ganancia Deseado (%)</label>
-            <input type="number" class="form-control" [(ngModel)]="margenDeseado" (input)="calcularPrecioSugerido()">
-          </div>
+            <div class="form-group mb-4">
+              <label class="font-weight-medium">Margen de Ganancia Deseado (%)</label>
+              <input type="number" class="form-control" [(ngModel)]="margenDeseado" (input)="calcularPrecioSugerido()">
+            </div>
 
-          <div class="p-4 bg-light rounded text-center border">
-            <p class="text-muted small mb-2">Precio de Venta Sugerido</p>
-            <h1 class="text-primary font-weight-bold">{{ precioSugerido | currency:'USD' }}</h1>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div class="p-4 bg-light rounded text-center border mb-3">
+              <p class="text-muted small mb-2 text-uppercase font-weight-bold" style="letter-spacing: 0.5px;">Precio de Venta Sugerido ({{ margenDeseado }}% Margen)</p>
+              <h1 class="text-primary font-weight-bold mb-0">{{ precioSugerido | currency:'USD' }}</h1>
+            </div>
 
-    <div class="col-md-6 grid-margin stretch-card">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title font-weight-bold mb-4">Análisis de Punto de Equilibrio</h5>
-          
-          <div class="form-group mb-3">
-            <label>Seleccionar Producto</label>
-            <select class="form-control" [(ngModel)]="idProdEquilibrio" (change)="onProductoEquilibrioChange()">
-              <option *ngFor="let p of productos" [value]="p.id">{{ p.nombre }}</option>
-            </select>
-          </div>
+            <!-- Desglose de Costos de Venta -->
+            <div *ngIf="idProdPrecio" class="mt-4 p-3 bg-white rounded border">
+              <h6 class="mb-3 font-weight-bold text-muted text-uppercase" style="font-size: 0.8rem; letter-spacing: 0.5px;">Desglose de Costos por Unidad</h6>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary">Costo Directo (Fijo + Variable):</span>
+                <span class="font-weight-bold text-dark">{{ totalDirectoPrecio | currency:'USD' }}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary">Costo Indirecto Prorrateado:</span>
+                <span class="font-weight-bold text-dark">{{ indirectoProrrateadoPrecio | currency:'USD' }}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-3 pt-2 border-top">
+                <span class="font-weight-bold text-dark">Costo Unitario Total:</span>
+                <span class="font-weight-bold text-dark">{{ costoUnitarioPrecio | currency:'USD' }}</span>
+              </div>
+              <div class="d-flex justify-content-between pt-2 border-top text-success" style="font-size: 0.95rem;">
+                <span class="font-weight-medium">Utilidad Estimada:</span>
+                <span class="font-weight-bold">+ {{ (precioSugerido - costoUnitarioPrecio) | currency:'USD' }}</span>
+              </div>
+            </div>
 
-          <div class="form-group mb-4">
-            <label>Precio de Venta por Unidad ($)</label>
-            <input type="number" class="form-control" [(ngModel)]="precioVentaManual" (input)="calcularPuntoEquilibrio()" placeholder="Ej: 150">
-          </div>
-
-          <div class="p-4 bg-light rounded text-center border">
-            <p class="text-muted small mb-2">Unidades para Cubrir Costos </p>
-            <h1 class="text-warning font-weight-bold">{{ unidadesEquilibrio }}</h1>
-            <p class="text-muted mb-0">unidades mensuales</p>
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- PUNTO DE EQUILIBRIO -->
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title font-weight-bold mb-4 text-dark">Análisis de Punto de Equilibrio</h5>
+            
+            <div class="form-group mb-3">
+              <label class="font-weight-medium">Seleccionar Producto</label>
+              <select class="form-control" [(ngModel)]="idProdEquilibrio" (change)="onProductoEquilibrioChange()">
+                <option *ngFor="let p of productos" [value]="p.id">{{ p.nombre }}</option>
+              </select>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="font-weight-medium">Precio de Venta por Unidad ($)</label>
+              <input type="number" class="form-control" [(ngModel)]="precioVentaManual" (input)="calcularPuntoEquilibrio()" placeholder="Ej: 150">
+            </div>
+
+            <div class="p-4 bg-light rounded text-center border mb-3">
+              <p class="text-muted small mb-2 text-uppercase font-weight-bold" style="letter-spacing: 0.5px;">Unidades para Cubrir Costos</p>
+              <h1 class="text-warning font-weight-bold mb-0">
+                <ng-container *ngIf="precioVentaManual > costoVariableProd; else noAlcanzable">
+                  {{ unidadesEquilibrio }}
+                </ng-container>
+                <ng-template #noAlcanzable>
+                  <span class="text-danger" style="font-size: 1.6rem; display: block; margin: 5px 0;">No alcanzable</span>
+                </ng-template>
+              </h1>
+              <p class="text-muted mb-0 small">
+                <span *ngIf="precioVentaManual > costoVariableProd; else errorPrecio">unidades mensuales</span>
+                <ng-template #errorPrecio>
+                  <span class="text-danger font-weight-medium">El precio debe ser mayor al costo variable ({{ costoVariableProd | currency:'USD' }})</span>
+                </ng-template>
+              </p>
+            </div>
+
+            <!-- Desglose de Punto de Equilibrio -->
+            <div *ngIf="idProdEquilibrio" class="mt-4 p-3 bg-white rounded border">
+              <h6 class="mb-3 font-weight-bold text-muted text-uppercase" style="font-size: 0.8rem; letter-spacing: 0.5px;">Desglose de Equilibrio Mensual</h6>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary">Costo Variable Unitario (Materiales/Directo):</span>
+                <span class="font-weight-bold text-danger">{{ costoVariableProd | currency:'USD' }}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary">Costo Fijo Directo del Producto:</span>
+                <span class="font-weight-bold text-dark">{{ costoFijoDirectoProd | currency:'USD' }}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary">Costos Fijos Indirectos Prorrateados (1/{{ productos.length }}):</span>
+                <span class="font-weight-bold text-dark">{{ fijosIndirectosProrrateados | currency:'USD' }}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-3 pt-2 border-top">
+                <span class="font-weight-bold text-dark">Total Fijo Mensual a Cubrir:</span>
+                <span class="font-weight-bold text-dark">{{ costosFijosTotalesParaProd | currency:'USD' }}</span>
+              </div>
+              <div class="d-flex justify-content-between pt-2 border-top text-info" style="font-size: 0.95rem;">
+                <span class="font-weight-medium">Margen de Contribución Unitario:</span>
+                <span class="font-weight-bold">{{ (precioVentaManual - costoVariableProd) | currency:'USD' }}</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>

@@ -1,14 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';          
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';          
 import { AssetService } from 'src/app/core/services/Cost/asset.service';
 import { ProductService } from 'src/app/core/services/Cost/product.service';
 import { FixeService } from 'src/app/core/services/Cost/fixe.service';
 import { Fixe } from 'src/app/core/models/Cost/fixe';
-import { AnalisisPrecios } from 'src/app/core/models/Cost/pricing';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-pricing',
@@ -25,6 +20,10 @@ export class PricingComponent implements OnInit {
   costoUnitarioPrecio: number = 0;
   margenDeseado: number = 30; // 30% por defecto
   precioSugerido: number = 0;
+  
+  // Variables para desglose en UI (Izquierda)
+  totalDirectoPrecio: number = 0;
+  indirectoProrrateadoPrecio: number = 0;
 
   // Variables para Punto de Equilibrio (Derecha)
   idProdEquilibrio: number;
@@ -34,6 +33,11 @@ export class PricingComponent implements OnInit {
   totalFijoIndirecto: number = 0;
   totalDepreciacionMensual: number = 0;
 
+  // Variables para desglose en UI (Derecha)
+  costoFijoDirectoProd: number = 0;
+  fijosIndirectosProrrateados: number = 0;
+  costosFijosTotalesParaProd: number = 0;
+
   constructor(
     private assetService: AssetService,
     private productService: ProductService,
@@ -41,23 +45,50 @@ export class PricingComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.cargarProductos();
-    this.calcularCargaFijaTotal();
-    this.cargarCostos();
-    this.fixeService.getAll().subscribe(resp => {
-    this.allFixes = resp.data || [];
-  });
+    this.cargarDatosIniciales();
   }
 
-  cargarProductos() {
-    this.productService.getAll().subscribe((resp: any) => {
-      this.productos = resp.data || [];
-    });
-  }
+  cargarDatosIniciales() {
+    forkJoin({
+      productos: this.productService.getAll(),
+      activos: this.assetService.getAll(),
+      costos: this.fixeService.getAll()
+    }).subscribe({
+      next: (res: any) => {
+        this.productos = res.productos?.data || [];
+        this.allFixes = res.costos?.data || [];
+        
+        // 1. Calcular Depreciación Mensual de Activos
+        const activos = res.activos?.data || [];
+        this.totalDepreciacionMensual = activos.reduce((sum: number, asset: any) => {
+          const costo = parseFloat(asset.costoInicial) || 0;
+          const residual = parseFloat(asset.valorResidual) || 0;
+          const vida = parseInt(asset.vidaUtil) || 0;
+          return vida > 0 ? sum + ((costo - residual) / vida / 12) : sum;
+        }, 0);
 
-  cargarCostos() {
-    this.fixeService.getAll().subscribe((resp: any) => {
-      this.allFixes = resp.data || [];
+        // 2. Calcular Costos Fijos Indirectos
+        const indirectos = this.allFixes.filter(item => item.clasificacion === 'Indirecto');
+        this.totalFijoIndirecto = indirectos.reduce((total, item) => total + (Number(item.precio) || 0), 0);
+
+        // 3. Costos Fijos Totales Operativos (Generales)
+        this.costosFijosTotales = this.totalFijoIndirecto + this.totalDepreciacionMensual;
+        
+        const numProductos = this.productos.length || 1;
+        this.fijosIndirectosProrrateados = this.costosFijosTotales / numProductos;
+        this.costosFijosTotalesParaProd = this.fijosIndirectosProrrateados;
+
+        // Recalcular si ya hay valores seleccionados
+        if (this.idProdPrecio) {
+          this.onProductoPrecioChange();
+        }
+        if (this.idProdEquilibrio) {
+          this.onProductoEquilibrioChange();
+        }
+      },
+      error: (err) => {
+        console.error('Error al cargar datos iniciales de precios:', err);
+      }
     });
   }
 
@@ -66,27 +97,39 @@ export class PricingComponent implements OnInit {
     const prod = this.productos.find(p => p.id == this.idProdPrecio);
     
     if (prod) {
+      // Costos directos (pueden ser Fijos o Variables, pero asignados al producto)
       const costosDirectos = this.allFixes.filter(f => 
         f.producto == prod.id && (f.tipo === 'Variable' || f.tipo === 'Fijo')
       );
-      const totalDirecto = costosDirectos.reduce((sum, f) => sum + (Number(f.precio) || 0), 0);
+      this.totalDirectoPrecio = costosDirectos.reduce((sum, f) => sum + (Number(f.precio) || 0), 0);
       const numProductos = this.productos.length || 1; 
 
-      // (Indirectos + Depreciación) / Cantidad de Productos
-      let indirectoProrrateado = (this.totalFijoIndirecto + this.totalDepreciacionMensual) / numProductos;
+      // (Indirectos + Depreciación) / Cantidad total de Productos
+      this.indirectoProrrateadoPrecio = (this.totalFijoIndirecto + this.totalDepreciacionMensual) / numProductos;
 
-      this.costoUnitarioPrecio = totalDirecto + indirectoProrrateado;
+      this.costoUnitarioPrecio = this.totalDirectoPrecio + this.indirectoProrrateadoPrecio;
 
       this.calcularPrecioSugerido();
+    } else {
+      this.totalDirectoPrecio = 0;
+      this.indirectoProrrateadoPrecio = 0;
+      this.costoUnitarioPrecio = 0;
+      this.precioSugerido = 0;
     }
   }
 
   calcularPrecioSugerido() {
     const costo = Number(this.costoUnitarioPrecio) || 0;
-    let margen = Number(this.margenDeseado) || 0;
+    const margen = Number(this.margenDeseado) || 0;
     const factorGanancia = margen < 1 ? margen : margen / 100;
 
-    this.precioSugerido = costo * (1 + factorGanancia);
+    if (factorGanancia >= 1) {
+      // Evitar división por cero si el margen es 100% o mayor
+      this.precioSugerido = costo / 0.0001;
+    } else {
+      // Fórmula estándar de margen de ganancia sobre precio de venta (Profit Margin)
+      this.precioSugerido = costo / (1 - factorGanancia);
+    }
   }
 
   // --- LÓGICA PUNTO DE EQUILIBRIO (DERECHA) ---
@@ -94,59 +137,44 @@ export class PricingComponent implements OnInit {
     const prod = this.productos.find(p => p.id == this.idProdEquilibrio);
     
     if (prod && this.allFixes.length > 0) {
-      const costosDirectos = this.allFixes.filter(f => 
-        f.producto == prod.id && (f.tipo === 'Variable' || f.tipo === 'Fijo')
+      // Solo variables directos del producto
+      const variablesDirectos = this.allFixes.filter(f => 
+        f.producto == prod.id && f.tipo === 'Variable'
       );
+      this.costoVariableProd = variablesDirectos.reduce((sum, f) => sum + (Number(f.precio) || 0), 0);
       
-      this.costoVariableProd = costosDirectos.reduce((sum, f) => sum + (Number(f.precio) || 0), 0);
-      
-      console.log('Costo Variable para Equilibrio:', this.costoVariableProd);
+      // Costos fijos directos del producto
+      const fijosDirectos = this.allFixes.filter(f => 
+        f.producto == prod.id && f.tipo === 'Fijo'
+      );
+      this.costoFijoDirectoProd = fijosDirectos.reduce((sum, f) => sum + (Number(f.precio) || 0), 0);
+
+      const numProductos = this.productos.length || 1;
+      this.fijosIndirectosProrrateados = this.costosFijosTotales / numProductos;
+
+      // Costos fijos totales para el producto = Indirectos Prorrateados + Directos Fijos
+      this.costosFijosTotalesParaProd = this.fijosIndirectosProrrateados + this.costoFijoDirectoProd;
+
       this.calcularPuntoEquilibrio();
     } else {
-      // Si no hay producto o costos, reseteamos a 0
       this.costoVariableProd = 0;
+      this.costoFijoDirectoProd = 0;
+      this.fijosIndirectosProrrateados = 0;
+      this.costosFijosTotalesParaProd = 0;
       this.unidadesEquilibrio = 0;
     }
   }
 
   calcularPuntoEquilibrio() {
-    // El Margen de Contribución es: Precio de Venta - Costo de Materiales
+    // El Margen de Contribución es: Precio de Venta - Costo Variable Unitario
     const margenContribucion = this.precioVentaManual - this.costoVariableProd;
 
-    // Solo calculamos si el precio de venta es mayor al costo de los materiales
-    if (margenContribucion > 0 && this.costosFijosTotales > 0) {
-      // Costos Fijos Totales / (Precio Venta - Costo Variable)
-      this.unidadesEquilibrio = Math.ceil(this.costosFijosTotales / margenContribucion);
+    // Solo calculamos si el precio de venta es mayor al costo variable
+    if (margenContribucion > 0 && this.costosFijosTotalesParaProd > 0) {
+      // Costos Fijos Totales / Margen de Contribución
+      this.unidadesEquilibrio = Math.ceil(this.costosFijosTotalesParaProd / margenContribucion);
     } else {
       this.unidadesEquilibrio = 0;
     }
-    
-    console.log('Costos Fijos Totales:', this.costosFijosTotales);
-    console.log('Margen Contribución:', margenContribucion);
-  }
-
-  // --- CARGA FIJA ---
-  calcularCargaFijaTotal() {
-    // Cargar Activos para la Depreciación
-    this.assetService.getAll().subscribe((resp: any) => {
-      const activos = resp.data || [];
-      this.totalDepreciacionMensual = activos.reduce((sum: number, asset: any) => {
-        const costo = parseFloat(asset.costoInicial) || 0;
-        const residual = parseFloat(asset.valorResidual) || 0;
-        const vida = parseInt(asset.vidaUtil) || 0;
-        return vida > 0 ? sum + ((costo - residual) / vida / 12) : sum;
-      }, 0);
-    });
-
-    // Cargar Costos Fijos Indirectos
-    this.fixeService.getAll().subscribe(resp => {
-      const todosLosCostos = resp.data || [];
-      // Filtramos solo los que son "Indirecto" tal cual lo haces en el Dashboard
-      const indirectos = todosLosCostos.filter(item => item.clasificacion === 'Indirecto');
-      this.totalFijoIndirecto = indirectos.reduce((total, item) => total + parseFloat(item.precio), 0);
-      
-      // El total de costos fijos operativos para el Punto de Equilibrio
-      this.costosFijosTotales = this.totalFijoIndirecto + this.totalDepreciacionMensual;
-    });
   }
 }
