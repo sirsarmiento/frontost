@@ -19,11 +19,11 @@ export class CodingComponent implements OnInit {
   activeTab = 0;
 
   // Columnas de SKUs
-  displayedColumnsSKU: string[] = ['sku', 'productName', 'categoria', 'tecnologia', 'material', 'familia', 'subcategoria', 'actions'];
+  displayedColumnsSKU: string[] = ['sku', 'productName', 'categoria', 'tecnologia', 'material', 'familia', 'subfamilia', 'actions'];
   dataSourceSKU: MatTableDataSource<any>;
 
   // Columnas de familias
-  displayedColumnsFamily: string[] = ['codigo', 'nombre', 'subcategories', 'actions'];
+  displayedColumnsFamily: string[] = ['codigo', 'nombre', 'subfamilias', 'actions'];
   dataSourceFamily: MatTableDataSource<Family>;
 
   @ViewChild('paginatorSKU') paginatorSKU: MatPaginator;
@@ -52,8 +52,9 @@ export class CodingComponent implements OnInit {
 
   getFamilies() {
     this.loading = true;
-    this.familyService.getAll().subscribe(resp => {
-      this.initTableFamily(resp.data);
+    this.familyService.getAll().subscribe((resp: any) => {
+      const families = resp.data ? resp.data : resp;
+      this.initTableFamily(families);
     });
   }
 
@@ -152,12 +153,13 @@ export class CodingComponent implements OnInit {
     return family ? `${family.nombre} (${code})` : code;
   }
 
-  getSubcategoriaName(famCode: string, subCode: string): string {
+  getSubfamiliaName(famCode: string, subCode: string): string {
     if (!subCode) return 'N/A';
     if (!this.dataSourceFamily || !this.dataSourceFamily.data) return subCode;
     const family = this.dataSourceFamily.data.find(f => f.codigo === famCode);
-    if (!family || !family.subcategories) return subCode;
-    const sub = family.subcategories.find(s => s.codigo === subCode);
+    if (!family || !family.subFamilias) return subCode;
+    const subs = family.subFamilias;
+    const sub = subs.find((s: any) => s.codigo === subCode);
     return sub ? `${sub.nombre} (${subCode})` : subCode;
   }
 }

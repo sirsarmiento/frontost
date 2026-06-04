@@ -35,15 +35,15 @@
           </div>
         </div>
 
-        <!-- Sección de Subcategorías -->
+        <!-- Sección de Subfamilias -->
         <br>
-        <h6 class="text-muted border-bottom pb-2 mb-3 fw-semibold">Subcategorías de la Familia</h6>
+        <h6 class="text-muted border-bottom pb-2 mb-3 fw-semibold">Subfamilias de la Familia</h6>
 
-        <!-- Formulario para agregar subcategoría -->
+        <!-- Formulario para agregar subfamilia -->
         <div class="row mb-3">
           <div class="col-md-3">
             <mat-form-field appearance="standard" class="w-100">
-              <mat-label>Código Subcategoría</mat-label>
+              <mat-label>Código Subfamilia</mat-label>
               <input matInput [(ngModel)]="subCode" [ngModelOptions]="{standalone: true}" placeholder="Ej: JUE"
                 maxlength="3" class="text-uppercase font-monospace fw-bold">
             </mat-form-field>
@@ -51,31 +51,31 @@
 
           <div class="col-md-6">
             <mat-form-field appearance="standard" class="w-100">
-              <mat-label>Nombre de la Subcategoría</mat-label>
+              <mat-label>Nombre de la Subfamilia</mat-label>
               <input matInput [(ngModel)]="subDesc" [ngModelOptions]="{standalone: true}"
                 placeholder="Ej: Juegos de Mesa">
             </mat-form-field>
           </div>
 
           <div class="col-md-3 text-start">
-            <button mat-icon-button color="primary" type="button" (click)="addSubcategory()"
-              matTooltip="Agregar Subcategoría">
+            <button mat-icon-button color="primary" type="button" (click)="addSubfamily()"
+              matTooltip="Agregar Subfamilia">
               <mat-icon>add_circle</mat-icon>
             </button>
           </div>
         </div>
 
-        <!-- Alerta de Error de Subcategoría -->
+        <!-- Alerta de Error de Subfamilia -->
         <div class="alert alert-danger p-2 mt-2 d-flex align-items-center" *ngIf="subError" style="font-size: 0.85rem;">
           <mat-icon class="me-2" style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem;">error_outline</mat-icon>
           <span>{{ subError }}</span>
         </div>
 
-        <!-- Listado de Subcategorías Agregadas -->
-        <div class="mt-4" *ngIf="subcategoriesList && subcategoriesList.length > 0">
-          <h6 class="text-muted fw-semibold mb-2">Listado de Subcategorías ({{ subcategoriesList.length }})</h6>
+        <!-- Listado de Subfamilias Agregadas -->
+        <div class="mt-4" *ngIf="subfamiliesList && subfamiliesList.length > 0">
+          <h6 class="text-muted fw-semibold mb-2">Listado de Subfamilias ({{ subfamiliesList.length }})</h6>
             <div class="table-responsive mat-elevation-z2">
-              <table mat-table [dataSource]="subcategoriesList" class="w-100">
+              <table mat-table [dataSource]="subfamiliesList" class="w-100">
 
                 <!-- Columna Código -->
                 <ng-container matColumnDef="codigo">
@@ -94,7 +94,7 @@
                   <th mat-header-cell *matHeaderCellDef class="text-end"> Acción </th>
                   <td mat-cell *matCellDef="let sub; let i = index" class="text-end">
                     <button mat-icon-button type="button" class="delete-color" matTooltip="Eliminar"
-                      (click)="removeSubcategory(i)">
+                      (click)="removeSubfamily(i)">
                       <mat-icon class="font-weight-boldest">delete</mat-icon>
                     </button>
                   </td>
@@ -105,15 +105,15 @@
                 
                 <tr class="mat-row" *matNoDataRow>
                   <td class="mat-cell msg-no-found text-center py-4" colspan="3">
-                    No hay subcategorías agregadas.
+                    No hay subfamilias agregadas.
                   </td>
                 </tr>
               </table>
             </div>
         </div>
 
-        <div class="text-muted small mt-2 mb-4" *ngIf="!subcategoriesList || subcategoriesList.length === 0">
-          * No hay subcategorías registradas para esta familia aún.
+        <div class="text-muted small mt-2 mb-4" *ngIf="!subfamiliesList || subfamiliesList.length === 0">
+          * No hay subfamilias registradas para esta familia aún.
         </div>
 
         <div class="row padding-top-input">

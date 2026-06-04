@@ -6,7 +6,7 @@ import { FamilyService } from 'src/app/core/services/Cost/family.service';
 import { ProductService } from 'src/app/core/services/Cost/product.service';
 import { CodingService } from 'src/app/core/services/Cost/coding.service';
 import { BudgetService } from 'src/app/core/services/Cost/budget.service';
-import { Family, Subcategory } from 'src/app/core/models/Cost/family';
+import { Family, Subfamily } from 'src/app/core/models/Cost/family';
 import { Product } from 'src/app/core/models/Cost/product';
 import Swal from 'sweetalert2';
 
@@ -22,7 +22,7 @@ export class AddCodingComponent implements OnInit {
   loading = false;
   submitted = false;
   familias: Family[] = [];
-  subcategorias: Subcategory[] = [];
+  subfamilias: Subfamily[] = [];
   productos: any[] = [];
   productosFiltrados: any[] = [];
   presupuestosServicios: any[] = [];
@@ -93,7 +93,7 @@ export class AddCodingComponent implements OnInit {
       tecnologia: ['', Validators.required],
       material: ['', Validators.required],
       familia: ['', Validators.required],
-      subcategoria: [''],
+      subfamilia: [''],
       materialesMolde: this.formBuilder.array([])
     });
   }
@@ -117,8 +117,8 @@ export class AddCodingComponent implements OnInit {
   }
 
   cargarFamilias() {
-    this.familyService.getAll().subscribe(resp => {
-      this.familias = resp.data || [];
+    this.familyService.getAll().subscribe((resp: any) => {
+      this.familias = resp.data ? resp.data : resp;
     });
   }
 
@@ -167,10 +167,10 @@ export class AddCodingComponent implements OnInit {
   setupPreviewListeners() {
     this.form.get('familia')?.valueChanges.subscribe(famCode => {
       const chosenFamily = this.familias.find(f => f.codigo === famCode);
-      this.subcategorias = chosenFamily?.subcategories || [];
+      this.subfamilias = chosenFamily?.subFamilias || [];
 
-      const subControl = this.form.get('subcategoria');
-      if (this.subcategorias.length > 0) {
+      const subControl = this.form.get('subfamilia');
+      if (this.subfamilias.length > 0) {
         subControl?.setValidators(Validators.required);
       } else {
         subControl?.clearValidators();
@@ -209,7 +209,7 @@ export class AddCodingComponent implements OnInit {
 
       const chosenFamily = this.familias.find(f => f.codigo === val.familia);
       this.previewFam = chosenFamily ? chosenFamily.codigo : '???';
-      this.previewSub = val.subcategoria || '';
+      this.previewSub = val.subfamilia || '';
       this.previewCorr = val.categoria === 'SR' ? 'SXX' : (val.categoria === 'PP' ? 'PXX' : 'XXX');
 
       this.updatePreviewFull();
@@ -240,7 +240,7 @@ export class AddCodingComponent implements OnInit {
         this.f.tecnologia.setValue(data.tecnologia);
         this.f.material.setValue(data.material);
         this.f.familia.setValue(data.familia);
-        this.f.subcategoria.setValue(data.subcategoria);
+        this.f.subfamilia.setValue(data.subfamilia);
         
         if (data.categoria !== 'PF') {
            this.f.nombreServicio.setValue(data.productName);
@@ -276,15 +276,25 @@ export class AddCodingComponent implements OnInit {
       payloadMats = this.form.value.materialesMolde;
     }
 
+    let presupuestoId = null;
+    if (cat !== 'PF') {
+      const list = cat === 'SR' ? this.presupuestosServicios : this.presupuestosProyectos;
+      const selectedBudget = list.find(b => b.descripcion === pName);
+      if (selectedBudget) {
+        presupuestoId = selectedBudget.id;
+      }
+    }
+
     const payload = {
-      productId: this.form.value.productoId,
+      productId: this.form.value.productoId || null,
+      presupuestoId: presupuestoId,
       productName: pName,
       categoria: cat,
       tecnologia: this.form.value.tecnologia,
       material: matValue,
       materialesMolde: payloadMats,
       familia: this.form.value.familia,
-      subcategoria: this.form.value.subcategoria
+      subfamilia: this.form.value.subfamilia
     };
 
     try {

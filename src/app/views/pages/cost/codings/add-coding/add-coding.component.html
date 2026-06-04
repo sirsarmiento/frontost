@@ -119,17 +119,17 @@
               </div>
             </div>
 
-            <div class="row padding-top-input" *ngIf="subcategorias && subcategorias.length > 0">
+            <div class="row padding-top-input" *ngIf="subfamilias && subfamilias.length > 0">
               <div class="col-12">
                 <mat-form-field>
-                  <mat-label>Subcategoría (SUB)</mat-label>
-                  <mat-select formControlName="subcategoria">
-                    <mat-option *ngFor="let sub of subcategorias" [value]="sub.codigo">
+                  <mat-label>Subfamilia (SUB)</mat-label>
+                  <mat-select formControlName="subfamilia">
+                    <mat-option *ngFor="let sub of subfamilias" [value]="sub.codigo">
                       {{sub.nombre}} ({{sub.codigo}})
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="submitted && f.subcategoria.errors">
-                    Seleccione una subcategoría de la familia.
+                  <mat-error *ngIf="submitted && f.subfamilia.errors">
+                    Seleccione una subfamilia de la familia.
                   </mat-error>
                 </mat-form-field>
               </div>

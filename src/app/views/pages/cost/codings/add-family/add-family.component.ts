@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { FamilyService } from 'src/app/core/services/Cost/family.service';
 import { Family } from 'src/app/core/models/Cost/family';
 import Swal from 'sweetalert2';
-import { Subcategory } from 'src/app/core/models/Cost/family';
+import { Subfamily } from 'src/app/core/models/Cost/family';
 
 @Component({
   selector: 'app-add-family',
@@ -18,9 +18,9 @@ export class AddFamilyComponent implements OnInit {
   loading = false;
   submitted = false;
 
-  // Subcategory management fields
+  // Subfamily management fields
   displayedColumns: string[] = ['codigo', 'nombre', 'acciones'];
-  subcategoriesList: any[] = [];
+  subfamiliesList: any[] = [];
   subCode = '';
   subDesc = '';
   subSubmitted = false;
@@ -56,12 +56,12 @@ export class AddFamilyComponent implements OnInit {
           nombre: data.nombre
         });
         this.id = data.id!;
-        this.subcategoriesList = data.subcategories ? [...data.subcategories] : [];
+        this.subfamiliesList = data.subFamilias ? [...data.subFamilias] : [];
       }
     });
   }
 
-  addSubcategory() {
+  addSubfamily() {
     this.subSubmitted = true;
     this.subError = '';
 
@@ -78,25 +78,25 @@ export class AddFamilyComponent implements OnInit {
       return;
     }
 
-    if (this.subcategoriesList.some(s => s.codigo === code)) {
-      this.subError = 'Ya existe una subcategoría con este código.';
+    if (this.subfamiliesList.some(s => s.codigo === code)) {
+      this.subError = 'Ya existe una subfamilia con este código.';
       return;
     }
 
-    this.subcategoriesList.push({
+    this.subfamiliesList.push({
       codigo: code,
       nombre: desc
     });
-    this.subcategoriesList = [...this.subcategoriesList];
+    this.subfamiliesList = [...this.subfamiliesList];
 
     this.subCode = '';
     this.subDesc = '';
     this.subSubmitted = false;
   }
 
-  removeSubcategory(index: number) {
-    this.subcategoriesList.splice(index, 1);
-    this.subcategoriesList = [...this.subcategoriesList];
+  removeSubfamily(index: number) {
+    this.subfamiliesList.splice(index, 1);
+    this.subfamiliesList = [...this.subfamiliesList];
   }
 
   back() {
@@ -114,7 +114,7 @@ export class AddFamilyComponent implements OnInit {
     const familyData: Family = {
       codigo: this.form.value.codigo.toUpperCase(),
       nombre: this.form.value.nombre,
-      subcategories: this.subcategoriesList
+      subFamilias: this.subfamiliesList
     };
 
     try {

@@ -1,39 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../http.service';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, firstValueFrom } from 'rxjs';
 import { Family } from '../../models/Cost/family';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FamilyService extends HttpService {
-  private mockFamilies: Family[] = [
-    {
-      id: 1,
-      codigo: 'LUD',
-      nombre: 'Lúdica Educativo',
-      subcategories: [
-        { id: 1, codigo: 'JUE', nombre: 'Juegos de Mesa' },
-        { id: 2, codigo: 'DID', nombre: 'Material Didáctico' }
-      ]
-    },
-    { id: 2, codigo: 'POP', nombre: 'Productos POP', subcategories: [] },
-    {
-      id: 3,
-      codigo: 'ROB',
-      nombre: 'Robótica',
-      subcategories: [
-        { id: 3, codigo: 'KIT', nombre: 'Kits de Robótica' },
-        { id: 4, codigo: 'COM', nombre: 'Componentes' }
-      ]
-    },
-    { id: 4, codigo: 'MLD', nombre: 'Molde', subcategories: [] },
-    { id: 5, codigo: 'MED', nombre: 'Médico', subcategories: [] },
-    { id: 6, codigo: 'ODO', nombre: 'Odontológico', subcategories: [] },
-    { id: 7, codigo: 'AUT', nombre: 'Automotriz', subcategories: [] },
-    { id: 8, codigo: 'IND', nombre: 'Industrial', subcategories: [] }
-  ];
+
 
   private sharingObservable: BehaviorSubject<Family> =
     new BehaviorSubject<Family>(this.getEmptyConfig());
@@ -43,7 +19,7 @@ export class FamilyService extends HttpService {
       id: 0,
       codigo: '',
       nombre: '',
-      subcategories: []
+      subFamilias: []
     };
   }
 
@@ -64,28 +40,35 @@ export class FamilyService extends HttpService {
   }
 
   getAll(): Observable<any> {
-    // Simular respuesta del backend envolviendo la lista en un objeto con "data"
-    return of({ data: [...this.mockFamilies] });
+    return this.get(environment.apiUrl, '/familia');
   }
 
-  async add(data: Family): Promise<any> {
-    const newId = this.mockFamilies.length > 0 ? Math.max(...this.mockFamilies.map(f => f.id || 0)) + 1 : 1;
-    const newFamily = { ...data, id: newId, codigo: data.codigo.toUpperCase() };
-    this.mockFamilies.push(newFamily);
-    return of({ success: true }).toPromise();
+  async add(data: any): Promise<any> {
+    // Asegurar estructura esperada por el backend
+    const payload = {
+      codigo: data.codigo,
+      nombre: data.nombre,
+      empresaId: 1,
+      createBy: 'admin',
+      subFamilias: data.subFamilias || []
+    };
+    return firstValueFrom(this.post(environment.apiUrl, '/familia', payload));
   }
 
-  async update(id: number, data: Family): Promise<any> {
-    const index = this.mockFamilies.findIndex(f => f.id === id);
-    if (index !== -1) {
-      this.mockFamilies[index] = { ...data, id, codigo: data.codigo.toUpperCase() };
-    }
+  async update(id: number, data: any): Promise<any> {
+    const payload = {
+      codigo: data.codigo,
+      nombre: data.nombre,
+      empresaId: 1,
+      createBy: 'admin',
+      subFamilias: data.subFamilias || []
+    };
+    const response = await firstValueFrom(this.put(environment.apiUrl, `/familia/${id}`, payload));
     this.resetData();
-    return of({ success: true }).toPromise();
+    return response;
   }
 
   async deleteFamily(id: number): Promise<any> {
-    this.mockFamilies = this.mockFamilies.filter(f => f.id !== id);
-    return of({ success: true }).toPromise();
+    return firstValueFrom(this.delete(environment.apiUrl, `/familia/${id}`));
   }
 }

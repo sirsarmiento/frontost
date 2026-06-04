@@ -1,4 +1,4 @@
-export class Subcategory {
+export class Subfamily {
     id?: number;
     codigo: string;
     nombre: string;
@@ -8,5 +8,5 @@ export class Family {
     id?: number;
     codigo: string;
     nombre: string;
-    subcategories?: Subcategory[];
+    subFamilias?: Subfamily[];
 }
