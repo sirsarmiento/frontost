@@ -54,6 +54,12 @@ export class AddAssetComponent implements OnInit {
         this.f.descripcion.setValue(data.descripcion);
         this.f.ubicacion.setValue(data.ubicacion);
         this.f.valorUnitario.setValue(data.valorUnitario);
+
+        this.f.categoria.setValue(data.categoria || (data.tipo === 'Fijo' ? 'Mobiliario' : ''));
+        this.f.consumoMaquina.setValue(data.consumoMaquina);
+        this.f.tarifa.setValue(data.tarifa);
+        this.f.costoMantenimiento.setValue(data.costoMantenimiento);
+
         this.id = data.id;
         this.actualizarValidaciones(data.tipo);
       }
@@ -65,10 +71,14 @@ export class AddAssetComponent implements OnInit {
       nombre: ['',Validators.required],
       costoInicial: [{ value: '', disabled: false }, Validators.required],
       tipo: ['Fijo', Validators.required],
+      categoria: ['Mobiliario', Validators.required],
       // Campos de Fijos
       valorResidual: [''],
       vidaUtil: [''],
       fechaCompra: [''],
+      consumoMaquina: [''],
+      tarifa: [''],
+      costoMantenimiento: [''],
       // Campos de Circulantes
       cantidad: [''],
       unidadMedida: [''],
@@ -78,22 +88,40 @@ export class AddAssetComponent implements OnInit {
       valorUnitario: ['']
     });
 
-      this.form.get('tipo').valueChanges.subscribe(tipo => {
+    this.form.get('tipo').valueChanges.subscribe(tipo => {
+      if (tipo === 'Circulante' && this.form.get('categoria').value === 'Mobiliario') {
+        this.form.get('categoria').setValue('');
+      } else if (tipo === 'Fijo' && !this.form.get('categoria').value) {
+        this.form.get('categoria').setValue('Mobiliario');
+      }
       this.actualizarValidaciones(tipo);
+    });
+
+    this.form.get('categoria').valueChanges.subscribe(() => {
+      this.actualizarValidaciones(this.form.get('tipo').value);
     });
   }
 
   private actualizarValidaciones(tipo: string) {
     const camposFijos = ['valorResidual', 'vidaUtil', 'fechaCompra'];
     const camposCirculantes = ['cantidad', 'valorUnitario', 'ubicacion'];
+    const camposEquipo = ['consumoMaquina', 'tarifa', 'costoMantenimiento'];
 
     if (tipo === 'Fijo') {
       this.setValidators(camposFijos, [Validators.required]);
       this.setValidators(camposCirculantes, []);
       this.form.get('costoInicial').enable();
+
+      const categoria = this.form.get('categoria').value;
+      if (categoria === 'Equipo') {
+        this.setValidators(camposEquipo, [Validators.required]);
+      } else {
+        this.setValidators(camposEquipo, []);
+      }
     } else {
       this.setValidators(camposFijos, []);
       this.setValidators(camposCirculantes, [Validators.required]);
+      this.setValidators(camposEquipo, []);
       // En circulantes el total es auto, por eso se deshabilita
       this.form.get('costoInicial').disable(); 
     }
@@ -135,11 +163,16 @@ export class AddAssetComponent implements OnInit {
       nombre: formValues.nombre,
       tipo: formValues.tipo,
       costoInicial: formValues.costoInicial,
+      categoria: formValues.categoria,
       
       // Campos específicos para FIJOS
       valorResidual: formValues.tipo === 'Fijo' ? formValues.valorResidual : 0,
       vidaUtil: formValues.tipo === 'Fijo' ? formValues.vidaUtil : 0,
       fechaCompra: formValues.tipo === 'Fijo' ? formValues.fechaCompra : new Date(),
+
+      consumoMaquina: (formValues.tipo === 'Fijo' && formValues.categoria === 'Equipo') ? formValues.consumoMaquina : null,
+      tarifa: (formValues.tipo === 'Fijo' && formValues.categoria === 'Equipo') ? formValues.tarifa : null,
+      costoMantenimiento: (formValues.tipo === 'Fijo' && formValues.categoria === 'Equipo') ? formValues.costoMantenimiento : null,
 
       // Campos específicos para CIRCULANTES
       cantidad: formValues.tipo === 'Circulante' ? formValues.cantidad : 0,

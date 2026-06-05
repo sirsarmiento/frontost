@@ -25,7 +25,7 @@ export class ConfigService extends HttpService {
       rif: '',
       periodo: '',
       direccion: '',
-      moneda: '',
+      moneda: ''
     };
 
   }

@@ -16,4 +16,9 @@ export class Asset {
     descripcion: string;     
     ubicacion: string;       
     valorUnitario: number;
+    
+    categoria?: string;
+    consumoMaquina?: number;
+    tarifa?: number;
+    costoMantenimiento?: number;
 }

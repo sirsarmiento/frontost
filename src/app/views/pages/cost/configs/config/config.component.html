@@ -125,6 +125,11 @@
                   <td mat-cell *matCellDef="let m">{{m.horasUso}}h</td>
                 </ng-container>
 
+                <ng-container matColumnDef="minMargenGanancia">
+                  <th mat-header-cell *matHeaderCellDef>Min. Margen (%)</th>
+                  <td mat-cell *matCellDef="let m">{{m.minMargenGanancia}}%</td>
+                </ng-container>
+
                 <tr mat-header-row *matHeaderRowDef="displayedColumnsActivity"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumnsActivity;"></tr>
               </table>

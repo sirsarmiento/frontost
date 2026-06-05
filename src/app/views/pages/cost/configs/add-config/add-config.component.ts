@@ -274,7 +274,8 @@ export class AddConfigComponent implements OnInit {
         this.f.periodo.setValue(data.periodo);
         this.f.direccion.setValue(data.direccion);
         this.f.moneda.setValue(data.moneda);
-        this.machines = data.parametros;
+        this.f.minMargenGanancia.setValue(data.minMargenGanancia || 0);
+        this.machines = data.parametros || [];
         this.id = data.id;
 
         this.calculateGroupedCapacities();
@@ -301,6 +302,7 @@ export class AddConfigComponent implements OnInit {
       hoursMax: [],
       hoursUse: [],
       medida: [],
+      minMargenGanancia: [0, [Validators.min(0), Validators.max(100)]]
     })
   }
 
@@ -321,6 +323,7 @@ export class AddConfigComponent implements OnInit {
       periodo: this.f.periodo.value,
       direccion: this.f.direccion.value,
       moneda: this.f.moneda.value,
+      minMargenGanancia: Number(this.f.minMargenGanancia.value) || 0,
       parametros: this.machines
     }
 

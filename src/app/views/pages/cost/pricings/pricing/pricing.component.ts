@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AssetService } from 'src/app/core/services/Cost/asset.service';
 import { ProductService } from 'src/app/core/services/Cost/product.service';
 import { FixeService } from 'src/app/core/services/Cost/fixe.service';
+import { ConfigService } from 'src/app/core/services/Cost/config.service';
 import { Fixe } from 'src/app/core/models/Cost/fixe';
 import { forkJoin } from 'rxjs';
 
@@ -18,6 +19,7 @@ export class PricingComponent implements OnInit {
   // Variables para Calculadora de Precio (Izquierda)
   idProdPrecio: number;
   costoUnitarioPrecio: number = 0;
+  minMargenGanancia: number = 0;
   margenDeseado: number = 30; // 30% por defecto
   precioSugerido: number = 0;
   
@@ -41,11 +43,29 @@ export class PricingComponent implements OnInit {
   constructor(
     private assetService: AssetService,
     private productService: ProductService,
-    private fixeService: FixeService
+    private fixeService: FixeService,
+    private configService: ConfigService
   ) { }
 
   ngOnInit(): void {
+    this.cargarConfiguracionGlobal();
     this.cargarDatosIniciales();
+  }
+
+  cargarConfiguracionGlobal() {
+    this.configService.getAll().subscribe((resp: any) => {
+      const configs = resp.data || [];
+      if (configs.length > 0) {
+        const config = configs[0];
+        const params = config.parametros || [];
+        this.minMargenGanancia = params.length > 0 
+          ? Math.max(...params.map((p: any) => p.minMargenGanancia || 0)) 
+          : 0;
+        // set default to minimum margin
+        this.margenDeseado = this.minMargenGanancia;
+        this.calcularPrecioSugerido();
+      }
+    });
   }
 
   cargarDatosIniciales() {
@@ -120,7 +140,13 @@ export class PricingComponent implements OnInit {
 
   calcularPrecioSugerido() {
     const costo = Number(this.costoUnitarioPrecio) || 0;
-    const margen = Number(this.margenDeseado) || 0;
+    let margen = Number(this.margenDeseado) || 0;
+
+    if (margen < this.minMargenGanancia) {
+      this.margenDeseado = this.minMargenGanancia;
+      margen = this.minMargenGanancia;
+    }
+
     const factorGanancia = margen < 1 ? margen : margen / 100;
 
     if (factorGanancia >= 1) {

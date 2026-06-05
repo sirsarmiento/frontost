@@ -18,7 +18,7 @@ export class ConfigComponent implements OnInit {
   selectedRow;
   displayedColumns: string[] = ['nombre', 'rif', 'tipo','sector', 'empleados','actions'];
   groupedCapacities: any[] = [];
-displayedColumnsActivity: string[] = ['tipo', 'descripcion', 'prodMaxHoras', 'horasMax', 'horasUso'];
+displayedColumnsActivity: string[] = ['tipo', 'descripcion', 'prodMaxHoras', 'horasMax', 'horasUso', 'minMargenGanancia'];
   dataSource: MatTableDataSource<Config>;
 
     

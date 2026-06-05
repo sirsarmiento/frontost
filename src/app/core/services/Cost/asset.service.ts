@@ -30,7 +30,12 @@ export class AssetService extends HttpService {
       unidadMedida: '',
       presentacion: '',
       descripcion: '',
-      ubicacion: ''
+      ubicacion: '',
+      
+      categoria: 'Mobiliario',
+      consumoMaquina: 0,
+      tarifa: 0,
+      costoMantenimiento: 0
     };
 
   }
