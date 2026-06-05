@@ -7,6 +7,13 @@ export class Budget { //Presupuesto
     fecha: Date;
     piezas?: Parts[];
     productoId?: number | null;
+    costoOperador?: number;
+    costoMaquina?: number;
+    tasaFalloGlobal?: number;
+    tiempoSetup?: number;
+    margenGanancia?: number;
+    tiempoPostProcesado?: number;
+    activoId?: number;
 }
 
 export class Parts{ //Piezas
@@ -17,5 +24,8 @@ export class Parts{ //Piezas
     metros: number;
     horas: number;
     minutos: number;
+    precioMaterial?: number;
+    tiempoPostProcesado?: number;
 }
+
 

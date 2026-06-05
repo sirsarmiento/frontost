@@ -5,13 +5,14 @@
       <li class="breadcrumb-item active" aria-current="page">Crear</li>
     </ol>
   </nav>
- 
-<div class="card">
+
+  <div class="card">
     <div class="card-body">
       <form [formGroup]="form">
+        <!-- DATOS BÁSICOS -->
         <div class="row padding-top-input">
-          <div class="col-3">
-            <mat-form-field>
+          <div [ngClass]="f.clasificacion.value === 'Producto' ? 'col-3' : 'col-6'">
+            <mat-form-field class="w-100">
               <mat-label>Clasificación</mat-label>
               <mat-select formControlName="clasificacion">
                 <mat-option value="Proyecto">Proyecto</mat-option>
@@ -25,7 +26,7 @@
           </div>
 
           <div class="col-3" *ngIf="f.clasificacion.value === 'Producto'">
-            <mat-form-field>
+            <mat-form-field class="w-100">
               <mat-label>Seleccione el Producto</mat-label>
               <mat-select formControlName="productoId">
                 <mat-option *ngFor="let prod of productosList" [value]="prod.id">
@@ -39,92 +40,161 @@
           </div>
 
           <div class="col-3">
-              <mat-form-field>
-                  <mat-label>Número de Orden</mat-label>
-                  <input matInput formControlName="numero" maxlength="25" placeholder="Ticket" [ngClass]="{ 'is-invalid': submitted && f.numero.errors }">
-                  <mat-error *ngIf="submitted && f.numero.errors">
-                      <mat-error *ngIf="f.numero.errors.required">Ingrese el número de la orden</mat-error>
-                  </mat-error>
-              </mat-form-field>
+            <mat-form-field class="w-100">
+              <mat-label>Número de Orden</mat-label>
+              <input matInput formControlName="numero" maxlength="25" placeholder="Ticket"
+                [ngClass]="{ 'is-invalid': submitted && f.numero.errors }">
+              <mat-error *ngIf="submitted && f.numero.errors">
+                <mat-error *ngIf="f.numero.errors.required">Ingrese el número de la orden</mat-error>
+              </mat-error>
+            </mat-form-field>
           </div>
 
           <div class="col-3">
-              <mat-form-field>
-                <mat-label>Fecha</mat-label>
-                <input formControlName="fecha" matInput [matDatepicker]="fecha" readonly>
-                <mat-datepicker-toggle matSuffix [for]="fecha"></mat-datepicker-toggle>
-                <mat-datepicker #fecha></mat-datepicker>
-              </mat-form-field>
+            <mat-form-field class="w-100">
+              <mat-label>Fecha</mat-label>
+              <input formControlName="fecha" matInput [matDatepicker]="fecha" readonly>
+              <mat-datepicker-toggle matSuffix [for]="fecha"></mat-datepicker-toggle>
+              <mat-datepicker #fecha></mat-datepicker>
+            </mat-form-field>
           </div>
-          
         </div>
 
         <div class="row">
-          <div class="col-12">
-              <mat-form-field>
-                  <mat-label>Descripción</mat-label>
-                  <textarea matInput formControlName="descripcion" maxlength="1000" placeholder="Descripción" [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }"></textarea>
-                  <mat-error *ngIf="submitted && f.descripcion.errors">
-                      <mat-error *ngIf="f.descripcion.errors.required">Ingrese la descripción</mat-error>
-                  </mat-error>
-              </mat-form-field>
+          <div class="col-9">
+            <mat-form-field class="w-100">
+              <mat-label>Descripción</mat-label>
+              <input matInput formControlName="descripcion" maxlength="1000" placeholder="Descripción"
+                [ngClass]="{ 'is-invalid': submitted && f.descripcion.errors }">
+              <mat-error *ngIf="submitted && f.descripcion.errors">
+                <mat-error *ngIf="f.descripcion.errors.required">Ingrese la descripción</mat-error>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field class="w-100">
+              <mat-label>Seleccionar Máquina</mat-label>
+              <mat-select formControlName="activoId">
+                <mat-option [value]="null">-- Sin máquina --</mat-option>
+                <mat-option *ngFor="let maq of maquinasList" [value]="maq.id">
+                  {{ maq.nombre }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- COSTOS GENERALES Y CONFIGURACIÓN GLOBAL -->
+        <div class="row padding-top-input"
+          style="padding: 15px 0; margin-bottom: 15px;">
+          <div class="col-3">
+            <mat-form-field class="w-100">
+              <mat-label>Tasa de Fallo (%)</mat-label>
+              <input type="number" matInput formControlName="tasaFalloGlobal" min="0" max="100">
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field class="w-100">
+              <mat-label>Prep/Slicing (min)</mat-label>
+              <input type="number" matInput formControlName="tiempoSetup" min="0">
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field class="w-100">
+              <mat-label>Post-procesado (min)</mat-label>
+              <input type="number" matInput formControlName="tiempoPostProcesado" min="0">
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field class="w-100">
+              <mat-label>Margen Ganancia (%)</mat-label>
+              <input type="number" matInput formControlName="margenGanancia" min="0" max="100" [ngClass]="{ 'is-invalid': submitted && f.margenGanancia.errors }">
+              <mat-error *ngIf="submitted && f.margenGanancia.errors">
+                <mat-error *ngIf="f.margenGanancia.errors.required">Ingrese el margen de ganancia</mat-error>
+                <mat-error *ngIf="f.margenGanancia.errors.min">El margen mínimo es {{ minMargenGanancia }}%</mat-error>
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
 
         <div class="row padding-top-input">
-          <div class="col-4">
-              <mat-form-field>
-                <mat-label>Nombre</mat-label>
-                <input matInput formControlName="nombre" maxlength="50">
-              </mat-form-field>
+          <div class="col-2">
+            <mat-form-field class="w-100">
+              <mat-label>Nombre Pieza</mat-label>
+              <input matInput formControlName="nombre" maxlength="50">
+            </mat-form-field>
           </div>
 
-          <div class="col-3">
-            <mat-form-field>
-              <mat-label>Tipo de Material</mat-label>
+          <div class="col-2">
+            <mat-form-field class="w-100">
+              <mat-label>Categoría Material</mat-label>
               <mat-select formControlName="materialTipo">
-                <mat-option value="Resina">Resina</mat-option>
-                <mat-option value="Chocolate">Chocolate</mat-option>
-                <mat-option value="Filamento">Filamento</mat-option>
+                <mat-option *ngFor="let cat of categoriasMaterial" [value]="cat">
+                  {{ cat }}
+                </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
 
+          <div class="col-3">
+            <mat-form-field class="w-100">
+              <mat-label>Material (Activo Circulante)</mat-label>
+              <mat-select formControlName="materialId">
+                <div class="p-2">
+                  <mat-form-field appearance="standard" style="width: 100%;">
+                    <input matInput placeholder="Buscar material..." (keyup)="filterMaterials($event)"
+                      (keydown)="$event.stopPropagation()">
+                  </mat-form-field>
+                </div>
+                <mat-option *ngIf="materialesFiltrados.length === 0" disabled>
+                  No hay materiales registrados para esta categoría
+                </mat-option>
+                <mat-option *ngFor="let m of materialesFiltrados" [value]="m.id">
+                  {{ m.nombre }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="submitted && f.materialId.errors?.required">
+                Debe seleccionar un material.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
           <div class="col-1">
-            <mat-form-field>
+            <mat-form-field class="w-100">
               <mat-label>Gramos</mat-label>
               <input currencyMask matInput formControlName="gramos" maxlength="10">
             </mat-form-field>
           </div>
 
           <div class="col-1">
-            <mat-form-field>
+            <mat-form-field class="w-100">
               <mat-label>Metros</mat-label>
               <input currencyMask matInput formControlName="metros" maxlength="10">
             </mat-form-field>
           </div>
 
           <div class="col-1">
-            <mat-form-field>
+            <mat-form-field class="w-100">
               <mat-label>Horas</mat-label>
               <input type="number" matInput formControlName="horas" maxlength="10">
             </mat-form-field>
           </div>
 
           <div class="col-1">
-            <mat-form-field>
+            <mat-form-field class="w-100">
               <mat-label>Minutos</mat-label>
-              <input type="number"  matInput formControlName="minutos" maxlength="10">
+              <input type="number" matInput formControlName="minutos" maxlength="10">
             </mat-form-field>
           </div>
 
-          <div class="col-1">
-            <button mat-icon-button color="primary" (click)="addPart()">
+          <div class="col-1 d-flex align-items-center justify-content-center">
+            <button mat-icon-button color="primary" (click)="addPart()" style="margin-bottom: 15px; transform: scale(1.2);">
               <mat-icon>add_circle</mat-icon>
             </button>
           </div>
         </div>
 
+        <!-- TABLA DE DETALLE -->
         <div class="mat-elevation-z8 ">
           <div class="table-responsive">
             <table mat-table [dataSource]="dataSource" matSort>
@@ -139,11 +209,16 @@
                 <td mat-cell *matCellDef="let row"> {{row.materialTipo}} </td>
               </ng-container>
 
+              <ng-container matColumnDef="precioMaterial">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Mat./g</th>
+                <td mat-cell *matCellDef="let row"> {{ row.precioMaterial | currency:'USD' }} </td>
+              </ng-container>
+
               <ng-container matColumnDef="gramos">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Gramos</th>
                 <td mat-cell *matCellDef="let row"> {{ row.gramos | number:'1.2-2' }} </td>
               </ng-container>
-            
+
               <ng-container matColumnDef="metros">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Metros</th>
                 <td mat-cell *matCellDef="let row"> {{ row.metros | number:'1.2-2' }} </td>
@@ -153,61 +228,98 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Horas</th>
                 <td mat-cell *matCellDef="let row"> {{row.horas }} </td>
               </ng-container>
-    
+
               <ng-container matColumnDef="minutos">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Minutos</th>
                 <td mat-cell *matCellDef="let row"> {{ row.minutos }} </td>
               </ng-container>
 
+
+
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Acciones </th>
                 <td mat-cell *matCellDef="let row">
-                  <button mat-icon-button class="delete-color" matTooltip="Eliminar"     
-                  (click)="onDelete(row)">
-                      <mat-icon class="font-weight-boldest">delete</mat-icon>
+                  <button mat-icon-button class="delete-color" matTooltip="Eliminar" (click)="onDelete(row)">
+                    <mat-icon class="font-weight-boldest">delete</mat-icon>
                   </button>
                 </td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns" 
-                (click)="selectedRow = selectedRow === row ? null : row" [ngClass]="{ 'selected': row === selectedRow }"
-              > 
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"
+                (click)="selectedRow = selectedRow === row ? null : row"
+                [ngClass]="{ 'selected': row === selectedRow }">
               </tr>
-      
+
               <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell msg-no-found" colspan="8">No hay datos que coincidan"</td>
+                <td class="mat-cell msg-no-found" colspan="8">No hay datos que coincidan</td>
               </tr>
             </table>
           </div>
           <mat-paginator [pageSizeOptions]="[5, 10]" aria-label="Piezas por página"></mat-paginator>
         </div>
 
-        <!-- SECCIÓN DE TOTALES -->
+        <!-- TOTALES Y DESGLOSE DE COSTOS MEJORADO -->
+        <h6 class="text-muted border-bottom pb-2 mb-3 fw-semibold mt-4" style="font-size: 0.85rem;">
+          Resumen de Costos
+          <span class="text-muted font-weight-normal ms-2" style="font-size: 0.75rem;">
+            ({{ getTotales().totalGramos | number:'1.2-2' }}g total • {{ getTotales().totalHoras }}h {{ getTotales().totalMinutos }}m imp.)
+          </span>
+        </h6>
 
-        <div class="row top title">
-          <div class="col-3">
-            <mat-label>Totales</mat-label>
+        <div class="row mb-4">
+          <!-- Columna Izquierda: Datos y Costos -->
+          <div class="col-lg-8" style="font-size: 0.85rem;">
+            <div class="d-flex justify-content-between py-2">
+              <span class="text-muted">Costo de Materiales (con merma):</span>
+              <span class="font-weight-bold text-dark">${{ getTotales().totalCostoMaterial | number:'1.2-2' }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+              <span class="text-muted">Costo Operativo Máquina:</span>
+              <span class="font-weight-bold text-dark">${{ getTotales().totalCostoMaquina | number:'1.2-2' }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+              <span class="text-muted">Costo Indirecto Prorrateado:</span>
+              <span class="font-weight-bold text-dark">${{ getTotales().costoIndirectoAsignado | number:'1.2-2' }}</span>
+            </div>
+
+            <div class="d-flex justify-content-between pt-3">
+              <span class="font-weight-bold text-dark" style="font-size: 0.95rem;">Costo Total Base:</span>
+              <span class="font-weight-bold text-primary" style="font-size: 1.1rem;">${{ getTotales().costoTotalBase | number:'1.2-2' }}</span>
+            </div>
           </div>
 
-          <div class="col-2">
-            <mat-label>Gramos: {{ getTotales().totalGramos | number:'1.2-2'  }}</mat-label>
+          <!-- Columna Derecha: Tarjeta de Precio de Venta Sugerido -->
+          <div class="col-lg-4 d-flex align-items-stretch">
+            <div class="card w-100 border-0 text-white p-4 shadow-sm d-flex flex-column justify-content-between" 
+                 style="background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%); border-radius: 12px; min-height: 250px;">
+              <div>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <span class="text-uppercase font-weight-bold text-white-50" style="font-size: 0.75rem; letter-spacing: 1px;">Precio Sugerido</span>
+                  <mat-icon style="opacity: 0.7;">monetization_on</mat-icon>
+                </div>
+                <h2 class="font-weight-bold text-white mb-2" style="font-size: 2.3rem; word-break: break-all;">
+                  ${{ getTotales().precioSugerido | number:'1.2-2' }}
+                </h2>
+                <p class="text-white-50 small mb-0">
+                  Calculado aplicando un <strong>{{ form.get('margenGanancia')?.value }}%</strong> de margen sobre el costo total base.
+                </p>
+              </div>
+              
+              <div class="mt-4 pt-3 text-white-50 small" style="border-top: 1px solid rgba(255, 255, 255, 0.15) !important;">
+                <div class="d-flex justify-content-between mb-1">
+                  <span>Costo Base:</span>
+                  <span class="text-white">${{ getTotales().costoTotalBase | number:'1.2-2' }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Ganancia ({{ form.get('margenGanancia')?.value }}%):</span>
+                  <span class="text-white">${{ (getTotales().precioSugerido - getTotales().costoTotalBase) | number:'1.2-2' }}</span>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div class="col-2">
-            <mat-label>Metros: {{ getTotales().totalMetros | number:'1.2-2' }}</mat-label>
-          </div>
-
-          <div class="col-2">
-            <mat-label>Horas: {{ getTotales().totalHoras }}</mat-label>
-          </div>
-
-          <div class="col-2">
-            <mat-label >Minutos: {{ getTotales().totalMinutos }} </mat-label>
-          </div>
+          
         </div>
-
-
 
         <div class="row">
           <div class="col-12">
@@ -223,16 +335,16 @@
                     </div>
                   </div>
                 </button>
-              </div>  
-        
-              <button  mat-raised-button [disabled]="loading" class="button-add-color" (click)="onSubmit()">
+              </div>
+
+              <button mat-raised-button [disabled]="loading" class="button-add-color" (click)="onSubmit()">
                 <div class="btn-content">
-                    <div class="button-txt">
-                      Guardar
-                    </div>
-                    <div class="icon">
-                      <mat-icon>save</mat-icon>
-                    </div>
+                  <div class="button-txt">
+                    Guardar
+                  </div>
+                  <div class="icon">
+                    <mat-icon>save</mat-icon>
+                  </div>
                 </div>
               </button>
             </div>
@@ -242,7 +354,3 @@
     </div>
   </div>
 </div>
-
-
-
-

@@ -1,271 +1,222 @@
 <div class="main-content">
-    <div class="row">
-      <div class="col-11 msg-no-found">
-          <h4>{{title}}</h4>
-      </div>
-      <div class="col-1 align-right">
-          <button mat-icon-button class="delete-color" matTooltip="Cerrar"
-          (click)="closeModal()"> 
-              <mat-icon class="font-weight-boldest">close</mat-icon>
-          </button>
-      </div>
-    </div> 
+  <!-- Cabecera del Modal -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="text-primary font-weight-bold mb-0">Estudio de Presupuesto</h4>
+    <button mat-icon-button class="delete-color" matTooltip="Cerrar" (click)="closeModal()"> 
+      <mat-icon class="font-weight-boldest">close</mat-icon>
+    </button>
+  </div> 
 
-    <div class="card">
-        <div class="card-body">
-            <form [formGroup]="form">
-                <div class="row">
-                    <div class="col-2">
-                        <mat-form-field>
-                            <mat-label>Costo</mat-label>
-                            <input currencyMask matInput formControlName="costo"  [ngClass]="{ 'is-invalid': submitted && f.costo.errors }">
-                            <mat-error *ngIf="submitted && f.costo.errors">
-                                <mat-error *ngIf="f.costo.errors.required">Ingrese el costo</mat-error>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <div class="col-2">
-                        <mat-form-field>
-                            <mat-label>Gramos</mat-label>
-                            <input currencyMask matInput formControlName="gramos"  [ngClass]="{ 'is-invalid': submitted && f.gramos.errors }">
-                            <mat-error *ngIf="submitted && f.gramos.errors">
-                                <mat-error *ngIf="f.gramos.errors.required">Ingrese los gramos</mat-error>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <div class="col-2">
-                        <mat-form-field>
-                            <mat-label>Metros</mat-label>
-                            <input currencyMask matInput formControlName="metros"  [ngClass]="{ 'is-invalid': submitted && f.metros.errors }">
-                            <mat-error *ngIf="submitted && f.metros.errors">
-                                <mat-error *ngIf="f.metros.errors.required">Ingrese los metros</mat-error>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <div class="col-2">
-                        <mat-form-field>
-                            <mat-label>Hora de uso 1h 1$</mat-label>
-                            <input currencyMask matInput formControlName="horas" [ngClass]="{ 'is-invalid': submitted && f.horas.errors }">
-                            <mat-error *ngIf="submitted && f.horas.errors">
-                                <mat-error *ngIf="f.horas.errors.required">Ingrese las horas</mat-error>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <div class="col-2">
-                        <mat-form-field>
-                            <mat-label>Valor Agregado %</mat-label>
-                            <input type="number" matInput formControlName="valor" [ngClass]="{ 'is-invalid': submitted && f.valor.errors }">
-                            <mat-error *ngIf="submitted && f.valor.errors">
-                                <mat-error *ngIf="f.valor.errors.required">Ingrese % de valor agregado</mat-error>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div class="mat-elevation-z8 ">
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="dataSource" matSort>
-
-                        <ng-container matColumnDef="nombre">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-                            <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="gramos">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Gramos</th>
-                            <td mat-cell *matCellDef="let row"> {{ row.gramos | number:'1.2-2' }} </td>
-                        </ng-container>
-                        
-                        <ng-container matColumnDef="metros">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Metros</th>
-                            <td mat-cell *matCellDef="let row"> {{ row.metros | number:'1.2-2' }} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="horas">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Horas</th>
-                            <td mat-cell *matCellDef="let row"> {{row.horas }} </td>
-                        </ng-container>
-                
-                        <ng-container matColumnDef="minutos">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Minutos</th>
-                            <td mat-cell *matCellDef="let row"> {{ row.minutos }} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="material">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Material</th>
-                            <td mat-cell *matCellDef="let row"> {{ getMaterial(row) | number:'1.2-2' }} </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="horaEquipo">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora Equipo</th>
-                            <td mat-cell *matCellDef="let row"> {{ getHoraEquipo(row) | number:'1.2-2' }} </td>
-                        </ng-container>
-
-                    <ng-container matColumnDef="valor">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor Agregado</th>
-                            <td mat-cell *matCellDef="let row"> {{ getValorAgregado(row) | number:'1.2-2' }} </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns" 
-                            (click)="selectedRow = selectedRow === row ? null : row" [ngClass]="{ 'selected': row === selectedRow }"
-                        > 
-                        </tr>
-                
-                        <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell msg-no-found" colspan="8">No hay datos que coincidan"</td>
-                        </tr>
-                        </table>
-                    </div>
-                    <mat-paginator [pageSizeOptions]="[5, 10]" aria-label="Piezas por página"></mat-paginator>
-                </div>
-
-                <!-- SECCIÓN DE TOTALES MEJORADA -->
-                <div class="totals-container">
-                <div class="totals-header">
-                    <h3 class="totals-title">
-                    <mat-icon class="title-icon">summarize</mat-icon>
-                    Resumen de Piezas
-                    </h3>
-                </div>
-                
-                <div class="totals-grid">
-                    <div class="total-item">
-                    <div class="total-icon-container">
-                        <mat-icon class="total-icon">scale</mat-icon>
-                    </div>
-                    <div class="total-content">
-                        <div class="total-label">Gramos Totales</div>
-                        <div class="total-value">{{ getTotales().totalGramos | number:'1.2-2' }}</div>
-                    </div>
-                    </div>
-                    
-                    <div class="total-item">
-                    <div class="total-icon-container">
-                        <mat-icon class="total-icon">straighten</mat-icon>
-                    </div>
-                    <div class="total-content">
-                        <div class="total-label">Metros Totales</div>
-                        <div class="total-value">{{ getTotales().totalMetros | number:'1.2-2' }}</div>
-                    </div>
-                    </div>
-                    
-                    <div class="total-item">
-                    <div class="total-icon-container">
-                        <mat-icon class="total-icon">schedule</mat-icon>
-                    </div>
-                    <div class="total-content">
-                        <div class="total-label">Horas Totales</div>
-                        <div class="total-value">{{ getTotales().totalHoras }}</div>
-                    </div>
-                    </div>
-                    
-                    <div class="total-item">
-                    <div class="total-icon-container">
-                        <mat-icon class="total-icon">timer</mat-icon>
-                    </div>
-                    <div class="total-content">
-                        <div class="total-label">Minutos Totales</div>
-                        <div class="total-value">{{ getTotales().totalMinutos }}</div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-
-                <!-- SECCIÓN DE TOTALES - TABLA ELEGANTE -->
-                <div class="cost-summary-container">
-                    <div class="cost-summary-card">
-                        <h3 class="cost-summary-title">Estudio de Costo</h3>
-                        
-                        <div class="cost-table">
-                            <!-- Encabezados -->
-                            <div class="cost-row header">
-                                <div class="cost-col description">Concepto</div>
-                                <div class="cost-col value">Metros</div>
-                                <div class="cost-col value">Gramos</div>
-                            </div>
-                            
-                            <!-- Fila Material -->
-                            <div class="cost-row">
-                                <div class="cost-col description">
-                                    <mat-icon class="cost-icon">inventory_2</mat-icon>
-                                    Material
-                                </div>
-                                <div class="cost-col value highlight">
-                                    {{ getMetros() | number:'1.2-2' }}
-                                </div>
-                                <div class="cost-col value highlight">
-                                    {{ getGramos() | number:'1.2-2' }}
-                                </div>
-                            </div>
-                            
-                            <!-- Fila Horas de Uso -->
-                            <div class="cost-row">
-                                <div class="cost-col description">
-                                    <mat-icon class="cost-icon">access_time</mat-icon>
-                                    Horas de Uso (1h = $1)
-                                </div>
-                                <div class="cost-col value">
-                                    {{ getHoras() | number:'1.2-2' }}
-                                </div>
-                                <div class="cost-col value">
-                                    {{ getHoras() | number:'1.2-2' }}
-                                </div>
-                            </div>
-                            
-                            <!-- Fila Material + Horas -->
-                            <div class="cost-row">
-                                <div class="cost-col description">
-                                    <mat-icon class="cost-icon">calculate</mat-icon>
-                                    Material + Horas de Uso
-                                </div>
-                                <div class="cost-col value highlight">
-                                    {{ getMaterialHorasMetros() | number:'1.2-2' }}
-                                </div>
-                                <div class="cost-col value highlight">
-                                    {{ getMaterialHorasGramos() | number:'1.2-2' }}
-                                </div>
-                            </div>
-                            
-                            <!-- Fila Valor Agregado -->
-                            <div class="cost-row total">
-                                <div class="cost-col description">
-                                    <mat-icon class="cost-icon">trending_up</mat-icon>
-                                    Valor Agregado %
-                                </div>
-                                <div class="cost-col value total-highlight">
-                                    {{ getValorAgregadoMetros() | number:'1.2-2' }}
-                                </div>
-                                <div class="cost-col value total-highlight">
-                                    {{ getValorAgregadoGramos() | number:'1.2-2' }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- <div class="row">
-                    <div class="col-12">
-                        <div class="btn-flex-end">
-                            <button  mat-raised-button [disabled]="loading" class="button-add-color" (click)="onSubmit()">
-                                <div class="btn-content">
-                                    <div class="button-txt">
-                                        Guardar
-                                    </div>
-                                    <div class="icon">
-                                        <mat-icon>save</mat-icon>
-                                    </div>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
-                </div> -->
-            </form>
+  <div class="modal-body-scroll">
+    <!-- Fila de Resúmenes (Metadatos + Costos) -->
+    <div class="row mb-4">
+    <!-- Columna Izquierda: Resumen de Campos Rellenados -->
+    <div class="col-lg-6 mb-3">
+      <div class="card border-0 shadow-sm h-100" style="background: #f8f9fc; border-radius: 12px;">
+        <div class="card-body p-4">
+          <h6 class="text-blue border-bottom pb-2 mb-3 fw-semibold" style="font-size: 0.9rem;">
+            <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem; vertical-align: middle; margin-right: 5px;">assignment</mat-icon>
+            Datos del Presupuesto
+          </h6>
+          <div class="d-flex flex-column gap-2" style="font-size: 0.85rem;">
+            <div class="d-flex justify-content-between py-1">
+              <span class="text-muted">Clasificación:</span>
+              <span class="font-weight-bold text-dark">{{ data.item.clasificacion }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-1" *ngIf="data.item.numero">
+              <span class="text-muted">Nro. de Orden:</span>
+              <span class="font-weight-bold text-dark">{{ data.item.numero }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-1" *ngIf="data.item.fecha">
+              <span class="text-muted">Fecha:</span>
+              <span class="font-weight-bold text-dark">{{ data.item.fecha | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-1" *ngIf="data.item.descripcion">
+              <span class="text-muted">Descripción:</span>
+              <span class="text-dark text-right" style="max-width: 60%; word-break: break-word;">{{ data.item.descripcion }}</span>
+            </div>
+            <hr class="my-2" style="border-color: rgba(0,0,0,0.05);">
+            <div class="d-flex justify-content-between py-1">
+              <span class="text-muted">Equipo de Impresión:</span>
+              <span class="font-weight-bold text-dark">{{ nombreMaquinaSelected }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-1" *ngIf="data.item.costoMaquina">
+              <span class="text-muted">Tasa Máquina Calculada:</span>
+              <span class="font-weight-bold text-primary">${{ data.item.costoMaquina | number:'1.2-2' }}/h</span>
+            </div>
+            <div class="d-flex justify-content-between py-1">
+              <span class="text-muted">Tasa de Fallo (Merma):</span>
+              <span class="font-weight-bold text-danger">{{ data.item.tasaFalloGlobal || 0 }}%</span>
+            </div>
+            <div class="d-flex justify-content-between py-1">
+              <span class="text-muted">Prep/Slicing:</span>
+              <span class="font-weight-bold text-dark">{{ data.item.tiempoSetup || 0 }} min</span>
+            </div>
+            <div class="d-flex justify-content-between py-1">
+              <span class="text-muted">Post-procesado:</span>
+              <span class="font-weight-bold text-dark">{{ data.item.tiempoPostProcesado || 0 }} min</span>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+
+    <!-- Columna Derecha: Resumen de Costos y Precio de Venta Sugerido -->
+    <div class="col-lg-6 mb-3">
+      <div class="card border-0 shadow-sm h-100 text-white p-4" 
+           style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 12px; min-height: 250px;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-uppercase font-weight-bold text-white-50" style="font-size: 0.75rem; letter-spacing: 1px;">Análisis de Costos</span>
+          <mat-icon style="opacity: 0.7;">monetization_on</mat-icon>
+        </div>
+        
+        <div class="d-flex flex-column gap-2 mb-3" style="font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 12px;">
+          <div class="d-flex justify-content-between">
+            <span class="text-white-50">Costo de Materiales (con merma):</span>
+            <span class="font-weight-bold">${{ getTotalesCalculados().totalCostoMaterial | number:'1.2-2' }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-white-50">Costo Operativo Máquina:</span>
+            <span class="font-weight-bold">${{ getTotalesCalculados().totalCostoMaquina | number:'1.2-2' }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-white-50">Costo Indirecto Prorrateado:</span>
+            <span class="font-weight-bold">${{ getTotalesCalculados().costoIndirectoAsignado | number:'1.2-2' }}</span>
+          </div>
+          <div class="d-flex justify-content-between mt-1 pt-1" style="border-top: 1px dashed rgba(255,255,255,0.15);">
+            <span class="text-white-50 font-weight-bold">Costo Total Base:</span>
+            <span class="font-weight-bold">${{ getTotalesCalculados().costoTotalBase | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <div class="mt-auto">
+          <span class="text-white-50 d-block mb-1" style="font-size: 0.75rem; text-uppercase: uppercase; letter-spacing: 0.5px;">Precio Sugerido (Margen {{ data.item.margenGanancia }}%)</span>
+          <h2 class="font-weight-bold text-white mb-0" style="font-size: 2.2rem; word-break: break-all;">
+            ${{ getTotalesCalculados().precioSugerido | number:'1.2-2' }}
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen de Totales Físicos (Gramos, Metros, etc.) -->
+  <div class="totals-container mt-0 mb-4 p-4 border-0 shadow-sm" style="background: #ffffff; border-radius: 12px;">
+    <div class="totals-header border-0 mb-3 pb-0">
+      <h6 class="text-blue fw-semibold" style="font-size: 0.9rem;">
+        <mat-icon class="title-icon" style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem; margin-right: 5px;">layers</mat-icon>
+        Especificaciones Físicas Totales
+      </h6>
+    </div>
+    
+    <div class="totals-grid">
+      <div class="total-item border" style="border-radius: 8px;">
+        <div class="total-icon-container" style="background: #eff6ff;">
+          <mat-icon class="total-icon text-primary">scale</mat-icon>
+        </div>
+        <div class="total-content">
+          <div class="total-label">Gramos Totales</div>
+          <div class="total-value text-dark">{{ getTotales().totalGramos | number:'1.2-2' }}g</div>
+        </div>
+      </div>
+      
+      <div class="total-item border" style="border-radius: 8px;">
+        <div class="total-icon-container" style="background: #ecfdf5;">
+          <mat-icon class="total-icon text-success">straighten</mat-icon>
+        </div>
+        <div class="total-content">
+          <div class="total-label">Metros Totales</div>
+          <div class="total-value text-dark">{{ getTotales().totalMetros | number:'1.2-2' }}m</div>
+        </div>
+      </div>
+      
+      <div class="total-item border" style="border-radius: 8px;">
+        <div class="total-icon-container" style="background: #fffbeb;">
+          <mat-icon class="total-icon text-warning">schedule</mat-icon>
+        </div>
+        <div class="total-content">
+          <div class="total-label">Horas Totales</div>
+          <div class="total-value text-dark">{{ getTotales().totalHoras }}h</div>
+        </div>
+      </div>
+      
+      <div class="total-item border" style="border-radius: 8px;">
+        <div class="total-icon-container" style="background: #fdf2f8;">
+          <mat-icon class="total-icon text-danger">timer</mat-icon>
+        </div>
+        <div class="total-content">
+          <div class="total-label">Minutos Totales</div>
+          <div class="total-value text-dark">{{ getTotales().totalMinutos }}m</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Detalle de Piezas -->
+  <div class="card border-0 shadow-sm mb-3" style="border-radius: 12px;">
+    <div class="card-body p-0">
+      <div class="p-4 border-bottom">
+        <h6 class="text-blue fw-semibold mb-0" style="font-size: 0.9rem;">
+          <mat-icon style="font-size: 1.1rem; width: 1.1rem; height: 1.1rem; vertical-align: middle; margin-right: 5px;">list</mat-icon>
+          Desglose por Pieza
+        </h6>
+      </div>
+
+      <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="w-100">
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+            <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="gramos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Gramos</th>
+            <td mat-cell *matCellDef="let row"> {{ row.gramos | number:'1.2-2' }} </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="metros">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Metros</th>
+            <td mat-cell *matCellDef="let row"> {{ row.metros | number:'1.2-2' }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="horas">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Horas</th>
+            <td mat-cell *matCellDef="let row"> {{row.horas }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="minutos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Minutos</th>
+            <td mat-cell *matCellDef="let row"> {{ row.minutos }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="material">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Material</th>
+            <td mat-cell *matCellDef="let row"> {{ getMaterial(row) | currency:'USD' }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="horaEquipo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Máquina</th>
+            <td mat-cell *matCellDef="let row"> {{ getHoraEquipo(row) | currency:'USD' }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="valor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio Sugerido</th>
+            <td mat-cell *matCellDef="let row"> {{ getValorAgregado(row) | currency:'USD' }} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" 
+              (click)="selectedRow = selectedRow === row ? null : row" [ngClass]="{ 'selected': row === selectedRow }"
+          > 
+          </tr>
+  
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell msg-no-found" colspan="8">No hay datos que coincidan</td>
+          </tr>
+        </table>
+      </div>
+      <mat-paginator [pageSizeOptions]="[5, 10]" aria-label="Piezas por página"></mat-paginator>
+    </div>
+  </div>
+  </div>
 </div>

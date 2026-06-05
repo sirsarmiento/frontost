@@ -9,10 +9,10 @@ import { environment } from '../../../../environments/environment';
 })
 export class CodingService extends HttpService {
   private mockCodifications: any[] = [
-    { id: 1, sku: 'PF-FDM-PLA-LUD-JUE001', productName: 'Tetris Balance', categoria: 'PF', tecnologia: 'FDM', material: 'PLA', familia: 'LUD', subcategoria: 'JUE', fecha: new Date('2026-05-10') },
-    { id: 2, sku: 'PF-FDM-PLA-LUD-DID002', productName: 'Isla de Pascua', categoria: 'PF', tecnologia: 'FDM', material: 'PLA', familia: 'LUD', subcategoria: 'DID', fecha: new Date('2026-05-12') },
-    { id: 3, sku: 'SR-SLA-RES-LUD-JUES01', productName: 'Servicio de Escaneo 3D', categoria: 'SR', tecnologia: 'SLA', material: 'RES', familia: 'LUD', subcategoria: 'JUE', fecha: new Date('2026-05-15') },
-    { id: 4, sku: 'PP-FDM-ABS-LUD-P01', productName: 'Proyecto Robot Didáctico', categoria: 'PP', tecnologia: 'FDM', material: 'ABS', familia: 'LUD', subcategoria: '', fecha: new Date('2026-05-18') }
+    { id: 1, sku: 'PF-FDM-PLA-LUD-JUE001', productName: 'Tetris Balance', categoria: 'PF', tecnologia: 'FDM', material: 'PLA', familia: 'LUD', subfamilia: 'JUE', fecha: new Date('2026-05-10') },
+    { id: 2, sku: 'PF-FDM-PLA-LUD-DID002', productName: 'Isla de Pascua', categoria: 'PF', tecnologia: 'FDM', material: 'PLA', familia: 'LUD', subfamilia: 'DID', fecha: new Date('2026-05-12') },
+    { id: 3, sku: 'SR-SLA-RES-LUD-JUES01', productName: 'Servicio de Escaneo 3D', categoria: 'SR', tecnologia: 'SLA', material: 'RES', familia: 'LUD', subfamilia: 'JUE', fecha: new Date('2026-05-15') },
+    { id: 4, sku: 'PP-FDM-ABS-LUD-P01', productName: 'Proyecto Robot Didáctico', categoria: 'PP', tecnologia: 'FDM', material: 'ABS', familia: 'LUD', subfamilia: '', fecha: new Date('2026-05-18') }
   ];
 
   private sharingObservable: BehaviorSubject<any> = new BehaviorSubject<any>(this.getEmptyConfig());
@@ -26,7 +26,7 @@ export class CodingService extends HttpService {
       tecnologia: '',
       material: '',
       familia: '',
-      subcategoria: ''
+      subfamilia: ''
     };
   }
 
@@ -51,10 +51,10 @@ export class CodingService extends HttpService {
   }
 
   async add(data: any): Promise<any> {
-    const { productName, categoria, tecnologia, material, familia, subcategoria } = data;
+    const { productName, categoria, tecnologia, material, familia, subfamilia } = data;
 
     const basePrefix = `${categoria}-${tecnologia}-${material}-${familia}`;
-    const subStr = subcategoria ? subcategoria.toUpperCase() : '';
+    const subStr = subfamilia ? subfamilia.toUpperCase() : '';
 
     // El prefijo para buscar correlativos incluye la subcategoría si existe
     const searchStr = subStr ? `${basePrefix}-${subStr}` : `${basePrefix}-`;
@@ -98,7 +98,7 @@ export class CodingService extends HttpService {
       tecnologia,
       material,
       familia,
-      subcategoria: subcategoria || '',
+      subfamilia: subfamilia || '',
       fecha: new Date()
     };
     this.mockCodifications.push(newCod);
@@ -110,9 +110,9 @@ export class CodingService extends HttpService {
     const index = this.mockCodifications.findIndex(c => c.id === id);
     if (index !== -1) {
       // Recalcular el SKU en base a los nuevos datos
-      const { categoria, tecnologia, material, familia, subcategoria } = data;
+      const { categoria, tecnologia, material, familia, subfamilia } = data;
       const basePrefix = `${categoria}-${tecnologia}-${material}-${familia}`;
-      const subStr = subcategoria ? subcategoria.toUpperCase() : '';
+      const subStr = subfamilia ? subfamilia.toUpperCase() : '';
       const searchStr = subStr ? `${basePrefix}-${subStr}` : `${basePrefix}-`;
 
       const matches = this.mockCodifications.filter(c => {
