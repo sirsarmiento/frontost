@@ -109,11 +109,17 @@
 
         <div *ngIf="f.tipo.value === 'Circulante'">
           <div class="row">
-            <div class="col-12">
+            <div class="col-6">
               <mat-form-field>
                 <mat-label>Categoría</mat-label>
                 <input matInput formControlName="categoria" placeholder="Ej: Consumibles, Repuestos, Materiales...">
                 <mat-error *ngIf="submitted && f.categoria.errors?.required">Ingrese la categoría</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-6">
+              <mat-form-field>
+                <mat-label>Subcategoría</mat-label>
+                <input matInput formControlName="subcategoria" placeholder="Ej: Tornillos, Tintas...">
               </mat-form-field>
             </div>
           </div>

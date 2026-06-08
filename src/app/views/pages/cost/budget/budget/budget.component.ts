@@ -17,7 +17,7 @@ export class BudgetComponent implements OnInit {
 
   loading = true;
   selectedRow;
-  displayedColumns: string[] = ['clasificacion', 'descripcion', 'numero','fecha', 'actions'];
+  displayedColumns: string[] = ['sku', 'clasificacion', 'descripcion', 'numero','fecha', 'actions'];
   dataSource: MatTableDataSource<Budget>;
 
     

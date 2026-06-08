@@ -94,6 +94,8 @@ export class CodingService extends HttpService {
       id: this.mockCodifications.length + 1,
       sku: finalSku,
       productName: productName,
+      productId: data.productId,
+      presupuestoId: data.presupuestoId,
       categoria,
       tecnologia,
       material,
@@ -146,7 +148,9 @@ export class CodingService extends HttpService {
       this.mockCodifications[index] = {
         ...this.mockCodifications[index],
         ...data,
-        sku: finalSku
+        sku: finalSku,
+        productId: data.productId,
+        presupuestoId: data.presupuestoId
       };
       return of({ success: true, data: this.mockCodifications[index] }).toPromise();
     }

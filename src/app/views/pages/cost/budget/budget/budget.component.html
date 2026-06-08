@@ -38,6 +38,11 @@
       <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort>
 
+          <ng-container matColumnDef="sku">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>SKU</th>
+            <td mat-cell *matCellDef="let row"> {{row.sku || 'N/A'}} </td>
+          </ng-container>
+
           <ng-container matColumnDef="clasificacion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Clasificación</th>
             <td mat-cell *matCellDef="let row"> {{row.clasificacion}} </td>

@@ -18,6 +18,7 @@ export class Asset {
     valorUnitario: number;
     
     categoria?: string;
+    subcategoria?: string;
     consumoMaquina?: number;
     tarifa?: number;
     costoMantenimiento?: number;

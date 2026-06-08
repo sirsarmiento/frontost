@@ -56,6 +56,7 @@ export class AddAssetComponent implements OnInit {
         this.f.valorUnitario.setValue(data.valorUnitario);
 
         this.f.categoria.setValue(data.categoria || (data.tipo === 'Fijo' ? 'Mobiliario' : ''));
+        this.f.subcategoria.setValue(data.subcategoria);
         this.f.consumoMaquina.setValue(data.consumoMaquina);
         this.f.tarifa.setValue(data.tarifa);
         this.f.costoMantenimiento.setValue(data.costoMantenimiento);
@@ -72,6 +73,7 @@ export class AddAssetComponent implements OnInit {
       costoInicial: [{ value: '', disabled: false }, Validators.required],
       tipo: ['Fijo', Validators.required],
       categoria: ['Mobiliario', Validators.required],
+      subcategoria: [''],
       // Campos de Fijos
       valorResidual: [''],
       vidaUtil: [''],
@@ -164,6 +166,7 @@ export class AddAssetComponent implements OnInit {
       tipo: formValues.tipo,
       costoInicial: formValues.costoInicial,
       categoria: formValues.categoria,
+      subcategoria: formValues.subcategoria,
       
       // Campos específicos para FIJOS
       valorResidual: formValues.tipo === 'Fijo' ? formValues.valorResidual : 0,

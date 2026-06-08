@@ -1,6 +1,7 @@
 
 export class Budget { //Presupuesto
     id?: number;
+    sku?: string;
     clasificacion: string;
     descripcion: string;
     numero: string;
