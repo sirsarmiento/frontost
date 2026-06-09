@@ -117,17 +117,17 @@
           </div>
         </div>
 
-        <div class="row padding-top-input">
-          <div class="col-2">
+        <div class="row padding-top-input d-flex align-items-start">
+          <div class="col">
             <mat-form-field class="w-100">
               <mat-label>Nombre Pieza</mat-label>
               <input matInput formControlName="nombre" maxlength="50">
             </mat-form-field>
           </div>
 
-          <div class="col-2">
+          <div class="col">
             <mat-form-field class="w-100">
-              <mat-label>Categoría Material</mat-label>
+              <mat-label>Categoría</mat-label>
               <mat-select formControlName="materialTipo">
                 <mat-option *ngFor="let cat of categoriasMaterial" [value]="cat">
                   {{ cat }}
@@ -136,9 +136,21 @@
             </mat-form-field>
           </div>
 
-          <div class="col-3">
+          <div class="col" *ngIf="f.materialTipo.value">
             <mat-form-field class="w-100">
-              <mat-label>Material (Activo Circulante)</mat-label>
+              <mat-label>Subcategoría</mat-label>
+              <mat-select formControlName="subcategoria">
+                <mat-option [value]="''">-- Todas --</mat-option>
+                <mat-option *ngFor="let sub of subcategoriasMaterial" [value]="sub">
+                  {{ sub }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col" *ngIf="f.materialTipo.value">
+            <mat-form-field class="w-100">
+              <mat-label>Material</mat-label>
               <mat-select formControlName="materialId">
                 <div class="p-2">
                   <mat-form-field appearance="standard" style="width: 100%;">
@@ -147,15 +159,12 @@
                   </mat-form-field>
                 </div>
                 <mat-option *ngIf="materialesFiltrados.length === 0" disabled>
-                  No hay materiales registrados para esta categoría
+                  Sin materiales
                 </mat-option>
                 <mat-option *ngFor="let m of materialesFiltrados" [value]="m.id">
                   {{ m.nombre }}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="submitted && f.materialId.errors?.required">
-                Debe seleccionar un material.
-              </mat-error>
             </mat-form-field>
           </div>
 
@@ -187,8 +196,8 @@
             </mat-form-field>
           </div>
 
-          <div class="col-1 d-flex align-items-center justify-content-center">
-            <button mat-icon-button color="primary" (click)="addPart()" style="margin-bottom: 15px; transform: scale(1.2);">
+          <div class="col-auto d-flex pt-2">
+            <button mat-icon-button color="primary" (click)="addPart()" style="transform: scale(1.2);">
               <mat-icon>add_circle</mat-icon>
             </button>
           </div>
@@ -281,6 +290,10 @@
             <div class="d-flex justify-content-between py-2">
               <span class="text-muted">Costo Indirecto Prorrateado:</span>
               <span class="font-weight-bold text-dark">${{ getTotales().costoIndirectoAsignado | number:'1.2-2' }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+              <span class="text-muted">Depreciación Prorrateada:</span>
+              <span class="font-weight-bold text-dark">${{ getTotales().depreciacionAsignada | number:'1.2-2' }}</span>
             </div>
 
             <div class="d-flex justify-content-between pt-3">

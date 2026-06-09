@@ -8,13 +8,6 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root'
 })
 export class CodingService extends HttpService {
-  private mockCodifications: any[] = [
-    { id: 1, sku: 'PF-FDM-PLA-LUD-JUE001', productName: 'Tetris Balance', categoria: 'PF', tecnologia: 'FDM', material: 'PLA', familia: 'LUD', subfamilia: 'JUE', fecha: new Date('2026-05-10') },
-    { id: 2, sku: 'PF-FDM-PLA-LUD-DID002', productName: 'Isla de Pascua', categoria: 'PF', tecnologia: 'FDM', material: 'PLA', familia: 'LUD', subfamilia: 'DID', fecha: new Date('2026-05-12') },
-    { id: 3, sku: 'SR-SLA-RES-LUD-JUES01', productName: 'Servicio de Escaneo 3D', categoria: 'SR', tecnologia: 'SLA', material: 'RES', familia: 'LUD', subfamilia: 'JUE', fecha: new Date('2026-05-15') },
-    { id: 4, sku: 'PP-FDM-ABS-LUD-P01', productName: 'Proyecto Robot Didáctico', categoria: 'PP', tecnologia: 'FDM', material: 'ABS', familia: 'LUD', subfamilia: '', fecha: new Date('2026-05-18') }
-  ];
-
   private sharingObservable: BehaviorSubject<any> = new BehaviorSubject<any>(this.getEmptyConfig());
 
   getEmptyConfig(): any {
@@ -47,36 +40,37 @@ export class CodingService extends HttpService {
   }
 
   getAll(): Observable<any> {
-    return of({ data: [...this.mockCodifications] });
+    return this.get(environment.apiUrl, '/codigos');
   }
 
   async add(data: any): Promise<any> {
-    const { productName, categoria, tecnologia, material, familia, subfamilia } = data;
+    const { productName, categoria, tecnologia, material, familia, subfamilia, productId, presupuestoId, familiaId, subfamiliaId } = data;
 
     const basePrefix = `${categoria}-${tecnologia}-${material}-${familia}`;
-    const subStr = subfamilia ? subfamilia.toUpperCase() : '';
-
-    // El prefijo para buscar correlativos incluye la subcategoría si existe
+    const subStr = subfamilia ? subfamilia.toString().toUpperCase() : '';
     const searchStr = subStr ? `${basePrefix}-${subStr}` : `${basePrefix}-`;
 
-    const matches = this.mockCodifications.filter(c => {
+    const allResp = await this.getAll().toPromise().catch(() => ({ data: [] }));
+    const allCodings = allResp.data || [];
+
+    const matches = allCodings.filter((c: any) => {
+      const cSku = c.sku || c.codigo || '';
       if (subStr) {
-        // Asegurarnos que no tenga guión después de la subcategoría
-        return c.sku.startsWith(searchStr) && !c.sku.startsWith(searchStr + '-');
+        return cSku.startsWith(searchStr) && !cSku.startsWith(searchStr + '-');
       }
-      return c.sku.startsWith(searchStr);
+      return cSku.startsWith(searchStr);
     });
 
     let nextNum = 1;
     if (matches.length > 0) {
-      const lastCodes = matches.map(c => {
-        const match = c.sku.match(/\d+$/);
+      const lastCodes = matches.map((c: any) => {
+        const cSku = c.sku || c.codigo || '';
+        const match = cSku.match(/\d+$/);
         return match ? parseInt(match[0], 10) : 0;
       });
       nextNum = Math.max(...lastCodes) + 1;
     }
 
-    // Formatea el correlativo
     let correlativo = '';
     if (categoria === 'SR') {
       correlativo = `S${nextNum.toString().padStart(2, '0')}`;
@@ -86,83 +80,95 @@ export class CodingService extends HttpService {
       correlativo = nextNum.toString().padStart(3, '0');
     }
 
-    // Crea el código completo
     const finalSku = subStr ? `${basePrefix}-${subStr}${correlativo}` : `${basePrefix}-${correlativo}`;
 
-    // Agregar a la lista mock
-    const newCod = {
-      id: this.mockCodifications.length + 1,
-      sku: finalSku,
+    const payload = {
+      categoria: categoria,
+      producto: productId || null,
+      tecnologia: tecnologia,
+      familia: familiaId || null,
+      subfamilia: subfamiliaId || null,
+      material: material,
+      codigo: finalSku,
+      catalogo: "CAT-2024",
       productName: productName,
-      productId: data.productId,
-      presupuestoId: data.presupuestoId,
-      categoria,
-      tecnologia,
-      material,
-      familia,
-      subfamilia: subfamilia || '',
-      fecha: new Date()
+      presupuestoId: presupuestoId,
+      familia_codigo: familia,
+      subfamilia_codigo: subfamilia
     };
-    this.mockCodifications.push(newCod);
 
-    return of({ success: true, data: newCod }).toPromise();
+    const resp: any = await this.post(environment.apiUrl, '/codigo', payload).toPromise();
+    if (resp && resp.data) {
+      resp.data.sku = resp.data.codigo || finalSku;
+      return resp;
+    }
+    return { data: { ...payload, sku: finalSku } };
   }
 
   async update(id: number, data: any): Promise<any> {
-    const index = this.mockCodifications.findIndex(c => c.id === id);
-    if (index !== -1) {
-      // Recalcular el SKU en base a los nuevos datos
-      const { categoria, tecnologia, material, familia, subfamilia } = data;
-      const basePrefix = `${categoria}-${tecnologia}-${material}-${familia}`;
-      const subStr = subfamilia ? subfamilia.toUpperCase() : '';
-      const searchStr = subStr ? `${basePrefix}-${subStr}` : `${basePrefix}-`;
+    const { productName, categoria, tecnologia, material, familia, subfamilia, productId, presupuestoId, familiaId, subfamiliaId } = data;
 
-      const matches = this.mockCodifications.filter(c => {
-        if (c.id === id) return false;
-        if (subStr) {
-          return c.sku.startsWith(searchStr) && !c.sku.startsWith(searchStr + '-');
-        }
-        return c.sku.startsWith(searchStr);
+    const basePrefix = `${categoria}-${tecnologia}-${material}-${familia}`;
+    const subStr = subfamilia ? subfamilia.toString().toUpperCase() : '';
+    const searchStr = subStr ? `${basePrefix}-${subStr}` : `${basePrefix}-`;
+
+    const allResp = await this.getAll().toPromise().catch(() => ({ data: [] }));
+    const allCodings = allResp.data || [];
+
+    const matches = allCodings.filter((c: any) => {
+      if (c.id === id) return false;
+      const cSku = c.sku || c.codigo || '';
+      if (subStr) {
+        return cSku.startsWith(searchStr) && !cSku.startsWith(searchStr + '-');
+      }
+      return cSku.startsWith(searchStr);
+    });
+
+    let nextNum = 1;
+    if (matches.length > 0) {
+      const lastCodes = matches.map((c: any) => {
+        const cSku = c.sku || c.codigo || '';
+        const match = cSku.match(/\d+$/);
+        return match ? parseInt(match[0], 10) : 0;
       });
-
-      let nextNum = 1;
-      if (matches.length > 0) {
-        const lastCodes = matches.map(c => {
-          const match = c.sku.match(/\d+$/);
-          return match ? parseInt(match[0], 10) : 0;
-        });
-        nextNum = Math.max(...lastCodes) + 1;
-      }
-
-      let correlativo = '';
-      if (categoria === 'SR') {
-        correlativo = `S${nextNum.toString().padStart(2, '0')}`;
-      } else if (categoria === 'PP') {
-        correlativo = `P${nextNum.toString().padStart(2, '0')}`;
-      } else {
-        correlativo = nextNum.toString().padStart(3, '0');
-      }
-
-      const finalSku = subStr ? `${basePrefix}-${subStr}${correlativo}` : `${basePrefix}-${correlativo}`;
-
-      this.mockCodifications[index] = {
-        ...this.mockCodifications[index],
-        ...data,
-        sku: finalSku,
-        productId: data.productId,
-        presupuestoId: data.presupuestoId
-      };
-      return of({ success: true, data: this.mockCodifications[index] }).toPromise();
+      nextNum = Math.max(...lastCodes) + 1;
     }
-    throw new Error('Código no encontrado');
+
+    let correlativo = '';
+    if (categoria === 'SR') {
+      correlativo = `S${nextNum.toString().padStart(2, '0')}`;
+    } else if (categoria === 'PP') {
+      correlativo = `P${nextNum.toString().padStart(2, '0')}`;
+    } else {
+      correlativo = nextNum.toString().padStart(3, '0');
+    }
+
+    const finalSku = subStr ? `${basePrefix}-${subStr}${correlativo}` : `${basePrefix}-${correlativo}`;
+
+    const payload = {
+      categoria: categoria,
+      producto: productId || null,
+      tecnologia: tecnologia,
+      familia: familiaId || null,
+      subfamilia: subfamiliaId || null,
+      material: material,
+      codigo: finalSku,
+      catalogo: "CAT-2024",
+      productName: productName,
+      presupuestoId: presupuestoId,
+      familia_codigo: familia,
+      subfamilia_codigo: subfamilia
+    };
+
+    const resp: any = await this.put(environment.apiUrl, `/codigo/${id}`, payload).toPromise();
+    if (resp && resp.data) {
+      resp.data.sku = resp.data.codigo || finalSku;
+      return resp;
+    }
+    return { data: { ...payload, sku: finalSku } };
   }
 
   async deleteCoding(id: number): Promise<any> {
-    const index = this.mockCodifications.findIndex(c => c.id === id);
-    if (index !== -1) {
-      this.mockCodifications.splice(index, 1);
-      return of({ success: true }).toPromise();
-    }
-    throw new Error('Código no encontrado');
+    return this.delete(environment.apiUrl, `/codigo/${id}`).toPromise();
   }
 }

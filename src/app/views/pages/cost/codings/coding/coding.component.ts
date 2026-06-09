@@ -147,19 +147,43 @@ export class CodingComponent implements OnInit {
     return map[code] ? `${map[code]} (${code})` : code;
   }
 
-  getFamiliaName(code: string): string {
-    if (!this.dataSourceFamily || !this.dataSourceFamily.data) return code;
-    const family = this.dataSourceFamily.data.find(f => f.codigo === code);
-    return family ? `${family.nombre} (${code})` : code;
+  getFamiliaName(familiaObjOrCode: any): string {
+    if (!familiaObjOrCode) return '';
+    if (typeof familiaObjOrCode === 'string') {
+      const code = familiaObjOrCode;
+      if (!this.dataSourceFamily || !this.dataSourceFamily.data) return code;
+      const family = this.dataSourceFamily.data.find(f => f.codigo === code);
+      return family ? `${family.nombre} (${code})` : code;
+    } else {
+      if (!this.dataSourceFamily || !this.dataSourceFamily.data) return familiaObjOrCode.nombre || 'N/A';
+      const family = this.dataSourceFamily.data.find(f => f.id === familiaObjOrCode.id || f.codigo === familiaObjOrCode.codigo);
+      return family ? `${family.nombre} (${family.codigo})` : (familiaObjOrCode.nombre || '');
+    }
   }
 
-  getSubfamiliaName(famCode: string, subCode: string): string {
-    if (!subCode) return 'N/A';
-    if (!this.dataSourceFamily || !this.dataSourceFamily.data) return subCode;
-    const family = this.dataSourceFamily.data.find(f => f.codigo === famCode);
-    if (!family || !family.subFamilias) return subCode;
-    const subs = family.subFamilias;
-    const sub = subs.find((s: any) => s.codigo === subCode);
-    return sub ? `${sub.nombre} (${subCode})` : subCode;
+  getSubfamiliaName(familiaObjOrCode: any, subfamiliaObjOrCode: any): string {
+    if (!subfamiliaObjOrCode) return 'N/A';
+    
+    let family: any = null;
+    if (this.dataSourceFamily && this.dataSourceFamily.data) {
+       if (typeof familiaObjOrCode === 'string') {
+         family = this.dataSourceFamily.data.find(f => f.codigo === familiaObjOrCode);
+       } else if (familiaObjOrCode) {
+         family = this.dataSourceFamily.data.find(f => f.id === familiaObjOrCode.id || f.codigo === familiaObjOrCode.codigo);
+       }
+    }
+    
+    if (typeof subfamiliaObjOrCode === 'string') {
+      const subCode = subfamiliaObjOrCode;
+      if (!family || (!family.subFamilias && !family.subfamilias)) return subCode;
+      const subs = family.subFamilias || family.subfamilias;
+      const sub = subs.find((s: any) => s.codigo === subCode);
+      return sub ? `${sub.nombre} (${subCode})` : subCode;
+    } else {
+      if (!family || (!family.subFamilias && !family.subfamilias)) return subfamiliaObjOrCode.nombre || 'N/A';
+      const subs = family.subFamilias || family.subfamilias;
+      const sub = subs.find((s: any) => s.id === subfamiliaObjOrCode.id || s.codigo === subfamiliaObjOrCode.codigo);
+      return sub ? `${sub.nombre} (${sub.codigo})` : (subfamiliaObjOrCode.nombre || '');
+    }
   }
 }

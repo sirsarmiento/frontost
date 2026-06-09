@@ -33,6 +33,7 @@ export class AddBudgetComponent implements OnInit {
   maquinasList: Asset[] = [];
   activosCirculantes: Asset[] = [];
   categoriasMaterial: string[] = [];
+  subcategoriasMaterial: string[] = [];
   materialesPorCategoria: Asset[] = [];
   materialesFiltrados: Asset[] = [];
 
@@ -40,10 +41,11 @@ export class AddBudgetComponent implements OnInit {
   minMargenGanancia: number = 0;
   configParametros: any[] = [];
 
-  // Cost calculation variables
+  // Variables para el cálculo de costos
   totalFijoIndirecto: number = 0;
   totalDepreciacionMensual: number = 0;
   costoIndirectoProrrateado: number = 0;
+  depreciacionProrrateada: number = 0;
 
   displayedColumns: string[] = ['nombre', 'materialTipo', 'precioMaterial', 'gramos', 'metros', 'horas', 'minutos', 'actions'];
   dataSource: MatTableDataSource<Parts>;
@@ -183,7 +185,8 @@ export class AddBudgetComponent implements OnInit {
 
   actualizarIndirectoProrrateado() {
     const numProductos = this.productosList.length || 1;
-    this.costoIndirectoProrrateado = (this.totalFijoIndirecto + this.totalDepreciacionMensual) / numProductos;
+    this.costoIndirectoProrrateado = this.totalFijoIndirecto / numProductos;
+    this.depreciacionProrrateada = this.totalDepreciacionMensual / numProductos;
   }
 
   addPart(){
@@ -265,7 +268,8 @@ export class AddBudgetComponent implements OnInit {
     const totalCostoMaquina = costoMaquinaRate * totalTiempoHoras;
 
     const costoIndirectoAsignado = this.costoIndirectoProrrateado;
-    const costoTotalBase = totalCostoMaterial + totalCostoMaquina + costoIndirectoAsignado;
+    const depreciacionAsignada = this.depreciacionProrrateada;
+    const costoTotalBase = totalCostoMaterial + totalCostoMaquina + costoIndirectoAsignado + depreciacionAsignada;
 
     const margen = Number(this.form?.get('margenGanancia')?.value) || 0;
     const factorGanancia = margen < 1 ? margen : margen / 100;
@@ -284,6 +288,7 @@ export class AddBudgetComponent implements OnInit {
       totalCostoMaterial,
       totalCostoMaquina,
       costoIndirectoAsignado,
+      depreciacionAsignada,
       costoTotalBase,
       precioSugerido
     };
@@ -298,6 +303,7 @@ export class AddBudgetComponent implements OnInit {
   clearForm() {
     this.f.nombre.setValue(`PIEZA ${this.piezaCounter}`);
     this.f.materialTipo.setValue('');
+    this.form.get('subcategoria')?.setValue('');
     this.form.get('materialId')?.setValue(null);
     this.form.get('materialId')?.disable();
     this.f.precioMaterial.setValue('');
@@ -377,6 +383,7 @@ export class AddBudgetComponent implements OnInit {
 
       nombre: [`PIEZA ${this.piezaCounter}`],
       materialTipo: [''],
+      subcategoria: [''],
       materialId: [{ value: null, disabled: true }],
       precioMaterial: [''],
       gramos: [],
@@ -399,6 +406,10 @@ export class AddBudgetComponent implements OnInit {
 
     this.form.get('materialTipo')?.valueChanges.subscribe((categoria) => {
       this.onCategoriaChange(categoria);
+    });
+
+    this.form.get('subcategoria')?.valueChanges.subscribe((subcategoria) => {
+      this.onSubcategoriaChange(subcategoria);
     });
 
     this.form.get('materialId')?.valueChanges.subscribe((materialId) => {
@@ -426,13 +437,32 @@ export class AddBudgetComponent implements OnInit {
         a => a.categoria === categoria
       );
       this.materialesFiltrados = [...this.materialesPorCategoria];
+      
+      this.subcategoriasMaterial = [...new Set(
+        this.materialesPorCategoria.map(a => a.subcategoria).filter(Boolean)
+      )] as string[];
+
       this.form.get('materialId')?.enable();
     } else {
       this.materialesPorCategoria = [];
       this.materialesFiltrados = [];
+      this.subcategoriasMaterial = [];
       this.form.get('materialId')?.disable();
     }
-    // Reset selected material and price when category changes
+    // Reiniciar material y precio seleccionados cuando cambia la categoría
+    this.form.get('materialId')?.setValue(null, { emitEvent: false });
+    this.form.get('precioMaterial')?.setValue('');
+    this.form.get('subcategoria')?.setValue('', { emitEvent: false });
+  }
+
+  onSubcategoriaChange(subcategoria: string) {
+    if (subcategoria) {
+      this.materialesFiltrados = this.materialesPorCategoria.filter(
+        a => a.subcategoria === subcategoria
+      );
+    } else {
+      this.materialesFiltrados = [...this.materialesPorCategoria];
+    }
     this.form.get('materialId')?.setValue(null, { emitEvent: false });
     this.form.get('precioMaterial')?.setValue('');
   }
@@ -441,7 +471,7 @@ export class AddBudgetComponent implements OnInit {
     if (materialId) {
       const selectedAsset = this.activosCirculantes.find(a => a.id == materialId);
       if (selectedAsset) {
-        // Calculate price per gram:
+        // Calcular precio por gramo:
         const valUnit = Number(selectedAsset.valorUnitario) || 0;
         const uMedida = selectedAsset.unidadMedida?.toLowerCase().trim() || '';
         
@@ -452,7 +482,7 @@ export class AddBudgetComponent implements OnInit {
           precioPorGramo = valUnit;
         }
         
-        // Fill the price per gram field
+        // Asignar el valor al campo del precio por gramo
         this.form.get('precioMaterial')?.setValue(precioPorGramo);
       }
     } else {

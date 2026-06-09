@@ -45,13 +45,13 @@
               <ng-container matColumnDef="sku">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Código (SKU)</th>
                 <td mat-cell *matCellDef="let row" class="font-monospace">
-                  {{row.sku}}
+                  {{row.sku || row.codigo}}
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="productName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-                <td mat-cell *matCellDef="let row"> {{row.productName}} </td>
+                <td mat-cell *matCellDef="let row"> {{row.productName || (row.producto ? row.producto.nombre : '') || row.nombreServicio || 'No especificado'}} </td>
               </ng-container>
 
               <ng-container matColumnDef="categoria">

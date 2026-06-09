@@ -37,14 +37,16 @@ export class AddCodingComponent implements OnInit {
 
   opcionesTecnologias = [
     { value: 'FDM', label: 'FDM (Filamento)' },
-    { value: 'SLA', label: 'SLA (Resina)' }
+    { value: 'SLA', label: 'SLA (Resina)' },
+    { value: 'PLS', label: 'PLS (Plástico)' }
   ];
 
   opcionesMateriales = [
     { value: 'PLA', label: 'PLA (Ácido Poliláctico)' },
     { value: 'ABS', label: 'ABS (Acrilonitrilo Butadieno Estireno)' },
     { value: 'PET', label: 'PET (Polietileno Tereftalato)' },
-    { value: 'RES', label: 'RES (Resina)' }
+    { value: 'RES', label: 'RES (Resina)' },
+    { value: 'CHO', label: 'CHO (Chocolate)' }
   ];
 
   opcionesUnidades = [
@@ -56,7 +58,7 @@ export class AddCodingComponent implements OnInit {
     { value: 'u', label: 'Unidades (u)' }
   ];
 
-  // Live preview properties
+  // Preview propiedades
   previewCat = '??';
   previewTec = '???';
   previewMat = '???';
@@ -125,13 +127,13 @@ export class AddCodingComponent implements OnInit {
   cargarProductos() {
     this.productService.getAll().subscribe((resp: any) => {
       const allProducts = resp.data || [];
-      
+
       this.productos = allProducts.filter((p: Product) => {
         if (!p.sku) return true;
         const s = p.sku.trim().toLowerCase();
         return s === '' || s === 'null' || s === 'sin asignar' || s === 'n/a';
       });
-      
+
       this.productosFiltrados = [...this.productos];
     });
   }
@@ -239,13 +241,31 @@ export class AddCodingComponent implements OnInit {
         this.f.categoria.setValue(data.categoria);
         this.f.tecnologia.setValue(data.tecnologia);
         this.f.material.setValue(data.material);
-        this.f.familia.setValue(data.familia);
-        this.f.subfamilia.setValue(data.subfamilia);
+        let famCode = typeof data.familia === 'string' ? data.familia : '';
+        if (typeof data.familia === 'object' && data.familia) {
+          const foundFam = this.familias.find(f => f.id === data.familia.id || f.codigo === data.familia.codigo);
+          if (foundFam) famCode = foundFam.codigo;
+        }
+
+        let subCode = typeof data.subfamilia === 'string' ? data.subfamilia : '';
+        if (typeof data.subfamilia === 'object' && data.subfamilia) {
+          const foundFam = this.familias.find(f => f.codigo === famCode);
+          if (foundFam) {
+             const subs = foundFam.subFamilias || (foundFam as any).subfamilias || [];
+             const foundSub = subs.find((s: any) => s.id === data.subfamilia.id || s.codigo === data.subfamilia.codigo);
+             if (foundSub) subCode = foundSub.codigo;
+          }
+        }
         
+        this.f.familia.setValue(famCode);
+        this.f.subfamilia.setValue(subCode);
+
         if (data.categoria !== 'PF') {
-           this.f.nombreServicio.setValue(data.productName);
-        } else if (data.productId) {
-           this.f.productoId.setValue(data.productId);
+          const serviceName = data.productName || (data.presupuesto ? data.presupuesto.descripcion : '');
+          this.f.nombreServicio.setValue(serviceName);
+        } else {
+          const prodId = data.productId || data.producto?.id || (typeof data.producto === 'number' ? data.producto : null);
+          this.f.productoId.setValue(prodId);
         }
       }
     });
@@ -285,6 +305,9 @@ export class AddCodingComponent implements OnInit {
       }
     }
 
+    const famObj = this.familias.find(f => f.codigo === this.form.value.familia);
+    const subObj = this.subfamilias.find(s => s.codigo === this.form.value.subfamilia);
+
     const payload = {
       productId: this.form.value.productoId || null,
       presupuestoId: presupuestoId,
@@ -294,7 +317,9 @@ export class AddCodingComponent implements OnInit {
       material: matValue,
       materialesMolde: payloadMats,
       familia: this.form.value.familia,
-      subfamilia: this.form.value.subfamilia
+      subfamilia: this.form.value.subfamilia,
+      familiaId: famObj ? famObj.id : null,
+      subfamiliaId: subObj ? subObj.id : null
     };
 
     try {
