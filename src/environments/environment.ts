@@ -5,8 +5,8 @@ export const environment = {
   //apiUrl: 'https://bofficegiepstage.pafar.com.ve/public/api',
   //apiAuth: 'http://localhost:8090/backost/public',
   //apiUrl: 'http://localhost:8090/backost/public/api',  
-  apiUrl: 'https://bofficecostosstage.pafar.com.ve/public/api',
-  apiAuth: 'https://bofficecostosstage.pafar.com.ve/public',
+  apiUrl: 'https://bof.pafar.com.ve/public/api',
+  apiAuth: 'https://bof.pafar.com.ve/public',
   appUrl: 'http://localhost:4200',  
   wsserver:"https://wsplatformstage.pafar.com.ve",
   localstorage:{
