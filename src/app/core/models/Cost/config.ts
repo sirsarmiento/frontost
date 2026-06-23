@@ -9,7 +9,7 @@ export class Config { //Perfil de la Empresa
     periodo: string;
     direccion: string;
     moneda: string;
-    margenGanancia?: number;
+    minMargenGanancia?: number;
     parametros?: Machine[];
 }
 
