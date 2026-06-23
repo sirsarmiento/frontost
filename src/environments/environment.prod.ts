@@ -2,9 +2,9 @@ export const environment = {
   production: true,
   ttl: 28800000,
   name_system: 'COST',
-  apiUrl: 'https://bofficecostosstage.pafar.com.ve/public/api',
-  apiAuth: 'https://bofficecostosstage.pafar.com.ve/public',
-  appUrl: 'https://bofficecostosstage.pafar.com.ve/',
+  apiUrl: 'https://bof.pafar.com.ve/public/api',
+  apiAuth: 'https://bof.pafar.com.ve/public',
+  appUrl: 'https://bof.pafar.com.ve/',
   wsserver:"https://wsplatformprod.pafar.com.ve",
   localstorage:{
     userKey : 'cusr'
