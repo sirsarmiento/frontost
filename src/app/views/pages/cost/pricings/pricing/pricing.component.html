@@ -24,7 +24,10 @@
 
             <div class="form-group mb-4">
               <label class="font-weight-medium">Margen de Ganancia Deseado (%)</label>
-              <input type="number" class="form-control" [min]="minMargenGanancia" [(ngModel)]="margenDeseado" (input)="calcularPrecioSugerido()">
+              <input type="number" class="form-control" [min]="minMargenGanancia" [(ngModel)]="margenDeseado" (input)="calcularPrecioSugerido()" [class.is-invalid]="margenDeseado < minMargenGanancia">
+              <div *ngIf="margenDeseado < minMargenGanancia" class="text-danger small mt-1">
+                El margen de ganancia debe ser mayor o igual al mínimo configurado ({{ minMargenGanancia }}%). Se calculará usando el {{ minMargenGanancia }}%.
+              </div>
             </div>
 
             <div class="p-4 bg-light rounded text-center border mb-3">

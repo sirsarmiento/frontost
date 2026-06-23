@@ -109,9 +109,9 @@
             <mat-form-field class="w-100">
               <mat-label>Margen Ganancia (%)</mat-label>
               <input type="number" matInput formControlName="margenGanancia" min="0" max="100" [ngClass]="{ 'is-invalid': submitted && f.margenGanancia.errors }">
-              <mat-error *ngIf="submitted && f.margenGanancia.errors">
-                <mat-error *ngIf="f.margenGanancia.errors.required">Ingrese el margen de ganancia</mat-error>
-                <mat-error *ngIf="f.margenGanancia.errors.min">El margen mínimo es {{ minMargenGanancia }}%</mat-error>
+              <mat-error *ngIf="f.margenGanancia.errors">
+                <span *ngIf="f.margenGanancia.errors.required">Ingrese el margen de ganancia</span>
+                <span *ngIf="f.margenGanancia.errors.min">El margen de ganancia debe ser mayor o igual al mínimo configurado ({{ minMargenGanancia }}%)</span>
               </mat-error>
             </mat-form-field>
           </div>

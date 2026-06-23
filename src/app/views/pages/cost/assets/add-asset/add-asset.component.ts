@@ -46,7 +46,13 @@ export class AddAssetComponent implements OnInit {
         this.f.valorResidual.setValue(data.valorResidual);
         this.f.vidaUtil.setValue(data.vidaUtil);
         this.f.fechaCompra.setValue(data.fechaCompra);
-        this.f.tipo.setValue(data.tipo);
+        let tipoNormalizado = data.tipo || '';
+        if (tipoNormalizado.toLowerCase().trim() === 'fijo') {
+          tipoNormalizado = 'Fijo';
+        } else if (tipoNormalizado.toLowerCase().trim() === 'circulante') {
+          tipoNormalizado = 'Circulante';
+        }
+        this.f.tipo.setValue(tipoNormalizado);
 
         this.f.cantidad.setValue(data.cantidad);
         this.f.unidadMedida.setValue(data.unidadMedida);
@@ -55,14 +61,20 @@ export class AddAssetComponent implements OnInit {
         this.f.ubicacion.setValue(data.ubicacion);
         this.f.valorUnitario.setValue(data.valorUnitario);
 
-        this.f.categoria.setValue(data.categoria || (data.tipo === 'Fijo' ? 'Mobiliario' : ''));
+        let categoriaNormalizada = data.categoria || '';
+        if (categoriaNormalizada.toLowerCase().trim() === 'mobiliario') {
+          categoriaNormalizada = 'Mobiliario';
+        } else if (categoriaNormalizada.toLowerCase().trim() === 'equipo') {
+          categoriaNormalizada = 'Equipo';
+        }
+        this.f.categoria.setValue(categoriaNormalizada || (tipoNormalizado === 'Fijo' ? 'Mobiliario' : ''));
         this.f.subcategoria.setValue(data.subcategoria);
         this.f.consumoMaquina.setValue(data.consumoMaquina);
         this.f.tarifa.setValue(data.tarifa);
         this.f.costoMantenimiento.setValue(data.costoMantenimiento);
 
         this.id = data.id;
-        this.actualizarValidaciones(data.tipo);
+        this.actualizarValidaciones(tipoNormalizado);
       }
     });
   }

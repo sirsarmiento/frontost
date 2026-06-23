@@ -277,7 +277,8 @@
                   <input type="number" matInput formControlName="minMargenGanancia" min="0" max="100"
                     placeholder="Ej: 30">
                   <mat-error *ngIf="submitted && f.minMargenGanancia.errors">
-                    <mat-error *ngIf="f.minMargenGanancia.errors.min">Debe ser mayor o igual a 0</mat-error>
+                    <span *ngIf="f.minMargenGanancia.errors.min">Debe ser mayor o igual a 0</span>
+                    <span *ngIf="f.minMargenGanancia.errors.max">Debe ser menor o igual a 100</span>
                   </mat-error>
                 </mat-form-field>
               </div>

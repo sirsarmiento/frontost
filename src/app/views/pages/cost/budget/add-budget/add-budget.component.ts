@@ -93,7 +93,7 @@ export class AddBudgetComponent implements OnInit {
       const configs = resp.data || [];
       if (configs.length > 0) {
         const config = configs[0];
-        this.actualizarMinMargenGanancia(config.minMargenGanancia || 0);
+        this.actualizarMinMargenGanancia(config.margenGanancia || 0);
       }
     });
   }
@@ -102,7 +102,10 @@ export class AddBudgetComponent implements OnInit {
     this.assetService.getAll().subscribe({
       next: (resp: any) => {
         const assets = resp.data || [];
-        this.maquinasList = assets.filter((asset: Asset) => asset.tipo === 'Fijo' && asset.categoria === 'Equipo');
+        this.maquinasList = assets.filter((asset: Asset) => 
+          asset.tipo?.toLowerCase().trim() === 'fijo' && 
+          asset.categoria?.toLowerCase().trim() === 'equipo'
+        );
         this.actualizarCostoMaquina();
         this.actualizarMinMargenGanancia();
 

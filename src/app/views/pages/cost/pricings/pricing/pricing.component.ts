@@ -57,10 +57,7 @@ export class PricingComponent implements OnInit {
       const configs = resp.data || [];
       if (configs.length > 0) {
         const config = configs[0];
-        const params = config.parametros || [];
-        this.minMargenGanancia = params.length > 0 
-          ? Math.max(...params.map((p: any) => p.minMargenGanancia || 0)) 
-          : 0;
+        this.minMargenGanancia = config.margenGanancia || 0;
         // set default to minimum margin
         this.margenDeseado = this.minMargenGanancia;
         this.calcularPrecioSugerido();
@@ -142,12 +139,9 @@ export class PricingComponent implements OnInit {
     const costo = Number(this.costoUnitarioPrecio) || 0;
     let margen = Number(this.margenDeseado) || 0;
 
-    if (margen < this.minMargenGanancia) {
-      this.margenDeseado = this.minMargenGanancia;
-      margen = this.minMargenGanancia;
-    }
-
-    const factorGanancia = margen < 1 ? margen : margen / 100;
+    // Use minMargenGanancia as fallback for the suggested price calculation if the input is smaller
+    const activeMargen = margen < this.minMargenGanancia ? this.minMargenGanancia : margen;
+    const factorGanancia = activeMargen < 1 ? activeMargen : activeMargen / 100;
 
     if (factorGanancia >= 1) {
       // Evitar división por cero si el margen es 100% o mayor
